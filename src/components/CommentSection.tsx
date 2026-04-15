@@ -12,6 +12,7 @@ interface CommentSectionProps {
 export default function CommentSection({ postId }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -53,6 +54,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       if (!supabaseUrl || supabaseUrl.includes('your-project')) {
         // Mock add comment if Supabase is not configured
+        if (!email.includes('@')) throw new Error('Email tidak valid');
         const newComment: Comment = {
           id: Date.now().toString(),
           post_id: postId,
@@ -63,9 +65,19 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         };
         setComments([newComment, ...comments]);
         setName('');
+        setEmail('');
         setContent('');
         setLoading(false);
         return;
+      }
+
+      // Pengecekan Aman (Panggil Fungsi RPC di Database yang punya akses khusus)
+      const { data: isSubscriber, error: subError } = await supabase.rpc('check_is_subscriber', { 
+        check_email: email.trim() 
+      });
+        
+      if (subError || !isSubscriber) {
+        throw new Error('Hanya subscriber yang dapat berkomentar. Silakan berlangganan Newsletter terlebih dahulu!');
       }
 
       const { data, error: insertError } = await supabase
@@ -82,6 +94,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       if (data && data.length > 0) {
         setComments([data[0] as Comment, ...comments]);
         setName('');
+        setEmail('');
         setContent('');
       }
     } catch (err) {
@@ -105,18 +118,33 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           </div>
         )}
 
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Nama <span className="text-red-500">*</span></label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Masukkan nama kamu"
-            className="w-full h-11 px-4 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all"
-            required
-            maxLength={50}
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Nama <span className="text-red-500">*</span></label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nama kamu"
+              className="w-full h-11 px-4 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all"
+              required
+              maxLength={50}
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Langganan <span className="text-red-500">*</span></label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email yang kamu subscribe"
+              className="w-full h-11 px-4 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all"
+              required
+            />
+          </div>
         </div>
 
         <div className="mb-4">

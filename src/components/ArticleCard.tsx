@@ -9,6 +9,8 @@ interface ArticleCardProps {
   authorName: string;
   createdAt: string;
   readingTime: number;
+  similarityScore?: number;
+  highlightWords?: string[];
 }
 
 export default function ArticleCard({
@@ -18,10 +20,45 @@ export default function ArticleCard({
   authorName,
   createdAt,
   readingTime,
+  similarityScore,
+  highlightWords = [],
 }: ArticleCardProps) {
+  // Fungsi Helper Untuk Men-Highlight Teks via Information Retrieval Token Matches
+  const renderHighlightedText = (text: string, wordsToHighlight: string[]) => {
+    if (!wordsToHighlight || wordsToHighlight.length === 0) return text;
+    
+    // Sort words by length descending so longer words match first against partial overlaps
+    const safeWords = wordsToHighlight
+      .filter((w) => w.trim().length > 0)
+      .sort((a, b) => b.length - a.length)
+      .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')); 
+
+    if (safeWords.length === 0) return text;
+
+    const regex = new RegExp(`(${safeWords.join('|')})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, i) =>
+      regex.test(part) ? (
+        <mark key={i} className="bg-yellow-200 text-gray-900 rounded-sm px-0.5 font-bold">
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  };
   return (
     <Link href={`/post/${slug}`} className="group block">
-      <article className="bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/60 hover:-translate-y-1">
+      <article className="relative bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/60 hover:-translate-y-1">
+        {/* Lencana Similarity (IR) */}
+        {similarityScore !== undefined && similarityScore > 0 && (
+          <div className="absolute top-3 right-3 z-20 bg-green-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 bg-opacity-90 rounded-full shadow-lg flex items-center gap-1">
+            <span>🔥</span>
+            Akurasi {similarityScore}%
+          </div>
+        )}
+        
         {/* Thumbnail */}
         <div className="relative w-full aspect-[4/3] overflow-hidden bg-gray-100">
           {coverUrl ? (
@@ -44,7 +81,7 @@ export default function ArticleCard({
         {/* Content */}
         <div className="p-4 sm:p-5">
           <h3 className="text-[15px] sm:text-[16px] font-bold text-gray-900 leading-snug line-clamp-2 mb-4 group-hover:text-blue-600 transition-colors">
-            {title}
+            {renderHighlightedText(title, highlightWords)}
           </h3>
 
           {/* Author meta */}

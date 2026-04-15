@@ -4,6 +4,9 @@ import Footer from '@/components/Footer';
 import CommentSection from '@/components/CommentSection';
 import { seedPosts } from '@/lib/seed-data';
 import { formatDate } from '@/lib/utils';
+import Link from 'next/link';
+import NewsletterSection from '@/components/NewsletterSection';
+import ViewTracker from '@/components/ViewTracker';
 import type { Post } from '@/types/post';
 import type { Metadata } from 'next';
 
@@ -51,12 +54,15 @@ export default async function PostPage({ params }: PageProps) {
     <main className="min-h-screen bg-white">
       <Navbar />
 
-      <article className="max-w-[800px] mx-auto px-6 py-12 sm:py-20">
+      <article className="max-w-[720px] mx-auto px-6 py-10 sm:py-16">
         {/* Category badge */}
         <div className="mb-4">
-          <span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600">
-            {post.category}
-          </span>
+          <Link 
+            href="/#kategori" 
+            className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+          >
+            #{post.category}
+          </Link>
         </div>
 
         {/* Title */}
@@ -79,12 +85,12 @@ export default async function PostPage({ params }: PageProps) {
 
         {/* Cover image */}
         {post.cover_url && (
-          <div className="w-full aspect-video rounded-2xl overflow-hidden bg-gray-100 mb-10">
+          <div className="w-full max-h-[400px] rounded-2xl overflow-hidden bg-gray-100 mb-10 flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.cover_url}
               alt={post.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full max-h-[400px] object-cover"
             />
           </div>
         )}
@@ -98,9 +104,17 @@ export default async function PostPage({ params }: PageProps) {
           ))}
         </div>
 
-        {/* Categories */}
-        <CommentSection postId={post.id} />
+        {/* Comments */}
+        <div className="mt-12 pt-8 border-t border-gray-100">
+          <CommentSection postId={post.id} />
+        </div>
       </article>
+
+      {/* Analytics Hidden Tracker */}
+      <ViewTracker postId={post.id} />
+
+      {/* Newsletter */}
+      <NewsletterSection />
 
       <Footer />
     </main>

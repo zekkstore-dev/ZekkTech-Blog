@@ -3,9 +3,9 @@ import SectionHeader from './SectionHeader';
 
 const categories: { name: string; icon: string; variant: 'blue' | 'white'; href: string }[] = [
   { name: 'Pilihan Editor', icon: '/images/icon-category/Vector.svg', variant: 'blue', href: '/category/pilihan-editor' },
-  { name: 'CSS Dasar', icon: '/images/icon-category/Vector-3.svg', variant: 'white', href: '/category/css-dasar' },
-  { name: 'Javascript Tingkat Dasar', icon: '/images/icon-category/Vector-1.svg', variant: 'blue', href: '/category/javascript-tingkat-dasar' },
-  { name: 'React JS', icon: '/images/icon-category/Vector-2.svg', variant: 'white', href: '/category/react-js' },
+  { name: 'Tutorial Teknologi', icon: '/images/icon-category/Vector-3.svg', variant: 'white', href: '/category/tutorial-teknologi' },
+  { name: 'Berita Teknologi', icon: '/images/icon-category/Vector-1.svg', variant: 'blue', href: '/category/berita-teknologi' },
+  { name: 'Template', icon: '/images/icon-category/Vector-2.svg', variant: 'white', href: '/category/template' },
   { name: 'Tips & Trik', icon: '/images/icon-category/Dashboard.svg', variant: 'blue', href: '/category/tips-trik' },
 ];
 

@@ -23,8 +23,28 @@ async function getAllPosts(): Promise<Post[]> {
   }
 }
 
+async function getStats() {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl || supabaseUrl.includes('your-project')) {
+      return { views: 0, subs: 0 };
+    }
+    const { createServerSupabaseClient } = await import('@/lib/supabase/server');
+    const supabase = await createServerSupabaseClient();
+    
+    // Using exact=true to get count effectively
+    const { count: vCount } = await supabase.from('page_views').select('*', { count: 'exact', head: true });
+    const { count: sCount } = await supabase.from('subscribers').select('*', { count: 'exact', head: true });
+    
+    return { views: vCount || 0, subs: sCount || 0 };
+  } catch {
+    return { views: 0, subs: 0 };
+  }
+}
+
 export default async function AdminDashboard() {
   const posts = await getAllPosts();
+  const stats = await getStats();
 
   return (
     <div>
@@ -43,6 +63,33 @@ export default async function AdminDashboard() {
           </svg>
           Buat Artikel Baru
         </Link>
+      </div>
+
+      {/* Stats Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">Total Artikel</p>
+            <h4 className="text-3xl font-bold text-gray-900">{posts.length}</h4>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-xl font-bold">📝</div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">Total Pengunjung</p>
+            <h4 className="text-3xl font-bold text-gray-900">{stats.views}</h4>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500 text-xl font-bold">👁️</div>
+        </div>
+
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">Total Subscribers</p>
+            <h4 className="text-3xl font-bold text-gray-900">{stats.subs}</h4>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-500 text-xl font-bold">📧</div>
+        </div>
       </div>
 
       {/* Post Table */}

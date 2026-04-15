@@ -13,7 +13,7 @@ export default function Footer() {
               <Image src="/images/ZekkTech.png" alt="ZekkTech" width={120} height={30} className="h-[30px] w-auto brightness-0 invert" />
             </Link>
             <p className="text-[14px] text-gray-400 mb-5">
-              Digitaldastin by <span className="text-blue-400 font-medium">ZakariaMP</span>
+              ZekkTech Blog by <span className="text-blue-400 font-medium">ZakariaMP</span>
             </p>
             {/* Social icons */}
             <div className="flex items-center gap-3">
@@ -48,11 +48,11 @@ export default function Footer() {
 
           {/* Category */}
           <div>
-            <h3 className="text-sm font-bold text-white mb-5 uppercase tracking-wider">Category</h3>
+            <h3 className="text-sm font-bold text-white mb-5 uppercase tracking-wider">Kategori</h3>
             <ul className="space-y-3">
-              {['Tips & Tricks', 'Technology News', 'Fun Facts', 'Tutorial', 'Other Categories'].map((item) => (
+              {['Berita Teknologi', 'Tutorial Teknologi', 'Template', 'Tips & Trik'].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="text-[14px] text-gray-400 hover:text-blue-400 transition-colors">{item}</Link>
+                  <Link href={`/blog?search=${encodeURIComponent(item)}`} className="text-[14px] text-gray-400 hover:text-blue-400 transition-colors">{item}</Link>
                 </li>
               ))}
             </ul>
@@ -60,11 +60,11 @@ export default function Footer() {
 
           {/* About Me */}
           <div>
-            <h3 className="text-sm font-bold text-white mb-5 uppercase tracking-wider">About Me</h3>
+            <h3 className="text-sm font-bold text-white mb-5 uppercase tracking-wider">Tentang Saya</h3>
             <ul className="space-y-3">
-              {['About me', 'Project', 'Performance'].map((item) => (
+              {['Profil Penulis', 'Portofolio', 'Hubungi Kami'].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="text-[14px] text-gray-400 hover:text-blue-400 transition-colors">{item}</Link>
+                  <Link href="/about" className="text-[14px] text-gray-400 hover:text-blue-400 transition-colors">{item}</Link>
                 </li>
               ))}
             </ul>
