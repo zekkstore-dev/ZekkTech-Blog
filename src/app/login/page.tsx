@@ -11,7 +11,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (state?.success) {
       router.push('/admin');
-      router.refresh(); // Refresh to catch new cookies
+      router.refresh(); // refresh biar cookie barunya kebaca
     }
   }, [state?.success, router]);
 

@@ -31,7 +31,9 @@ export default function PostForm({ post, mode }: PostFormProps) {
   const [slug, setSlug] = useState(post?.slug || '');
   const [content, setContent] = useState(post?.content || '');
   const [excerpt, setExcerpt] = useState(post?.excerpt || '');
-  const [category, setCategory] = useState(post?.category || CATEGORIES[0]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    post?.category ? post.category.split(', ') : [CATEGORIES[0]]
+  );
   const [authorName, setAuthorName] = useState(post?.author_name || 'Kadek Surya');
   const [featured, setFeatured] = useState(post?.featured || false);
   const [published, setPublished] = useState(post?.published || false);
@@ -40,7 +42,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Auto-generate slug from title
+  // otomatis bikin slug dari judul biar ga perlu ketik manual
   useEffect(() => {
     if (mode === 'create' && title) {
       setSlug(generateSlug(title));
@@ -61,27 +63,31 @@ export default function PostForm({ post, mode }: PostFormProps) {
     setError('');
 
     try {
-      // Validation
+      // validasi input dulu
       if (!title.trim()) throw new Error('Judul wajib diisi');
       if (!slug.trim()) throw new Error('Slug wajib diisi');
       if (!content.trim()) throw new Error('Konten wajib diisi');
+      if (selectedCategories.length === 0) throw new Error('Minimal pilih 1 Kategori');
 
       let coverUrl = post?.cover_url || '';
 
-      // Upload cover image if new file selected
+      // upload gambar cover ke server kita, nanti di-forward ke R2
       if (coverFile) {
-        const fileExt = coverFile.name.split('.').pop();
-        const fileName = `${slug}-${Date.now()}.${fileExt}`;
-        const { error: uploadError } = await supabase.storage
-          .from('covers')
-          .upload(fileName, coverFile, { upsert: true });
+        const formData = new FormData();
+        formData.append('file', coverFile);
 
-        if (uploadError) throw new Error(`Upload gagal: ${uploadError.message}`);
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData, // ga perlu set Content-Type, browser otomatis handle multipart
+        });
 
-        const { data: urlData } = supabase.storage
-          .from('covers')
-          .getPublicUrl(fileName);
-        coverUrl = urlData.publicUrl;
+        if (!uploadRes.ok) {
+          const errData = await uploadRes.json();
+          throw new Error(`Upload gagal: ${errData.error}`);
+        }
+
+        const { publicUrl } = await uploadRes.json();
+        coverUrl = publicUrl;
       }
 
       const postData = {
@@ -90,7 +96,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
         content: content.trim(),
         excerpt: excerpt.trim() || title.trim().slice(0, 150),
         cover_url: coverUrl,
-        category,
+        category: selectedCategories.join(', '),
         author_name: authorName.trim(),
         reading_time: estimateReadingTime(content),
         featured,
@@ -160,19 +166,31 @@ export default function PostForm({ post, mode }: PostFormProps) {
       </div>
 
       {/* Category & Author Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">Kategori</label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full h-12 px-4 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-          >
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Kategori (Bisa Pilih Banyak)</label>
+          <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <button
+                key={cat}
+                type="button"
+                onClick={() => {
+                  setSelectedCategories(prev => 
+                    prev.includes(cat) 
+                      ? prev.filter(c => c !== cat) 
+                      : [...prev, cat]
+                  );
+                }}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-full border transition-all ${
+                  selectedCategories.includes(cat)
+                    ? 'bg-blue-500 text-white border-blue-500'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-blue-400 hover:text-blue-500'
+                }`}
+              >
+                {cat}
+              </button>
             ))}
-          </select>
+          </div>
         </div>
         <div>
           <label htmlFor="author" className="block text-sm font-semibold text-gray-700 mb-2">Nama Penulis</label>
@@ -201,36 +219,47 @@ export default function PostForm({ post, mode }: PostFormProps) {
 
       {/* Content */}
       <div>
-        <label htmlFor="content" className="block text-sm font-semibold text-gray-700 mb-2">
-          Konten <span className="text-red-500">*</span>
-        </label>
+        <div className="flex justify-between items-end mb-2">
+          <label htmlFor="content" className="block text-sm font-semibold text-gray-700">
+            Konten <span className="text-red-500">*</span>
+          </label>
+          <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md flex items-center gap-1">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/></svg>
+            Markdown Supported (Anti-XSS)
+          </span>
+        </div>
         <textarea
           id="content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="Tulis konten artikel di sini..."
+          placeholder="Tulis konten artikel bebas styling dengan aturan Markdown (contoh: # Judul Besat, **Tebal**, dll)..."
           rows={16}
           className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-y font-mono text-sm leading-relaxed"
           required
         />
+        <p className="mt-2 text-xs text-gray-500 font-medium flex items-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+           Komentar atau tag HTML kasar (&lt;script&gt;) otomatis di-Block demi menghindari aksi defacing!
+        </p>
       </div>
 
       {/* Cover Image */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Cover Image</label>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">Cover Image (Wajib Rasio 16:9)</label>
         <div className="flex items-start gap-4">
           {coverPreview && (
-            <div className="w-40 h-28 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+            <div className="w-40 aspect-video rounded-xl overflow-hidden bg-gray-100 shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={coverPreview} alt="Cover preview" className="w-full h-full object-cover" />
             </div>
           )}
-          <label className="flex-1 flex flex-col items-center justify-center h-28 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-400 transition-colors cursor-pointer">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-gray-400 mb-1">
+          <label className="flex-1 flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-400 transition-colors cursor-pointer bg-gray-50 hover:bg-blue-50/50">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-gray-400 mb-2">
               <path d="M12 16V8M12 8L9 11M12 8L15 11M3 16V17C3 18.657 4.343 20 6 20H18C19.657 20 21 18.657 21 17V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span className="text-sm text-gray-500">Pilih gambar</span>
-            <input type="file" accept="image/*" onChange={handleCoverChange} className="hidden" />
+            <span className="text-sm font-semibold text-gray-700 mb-1">Klik untuk memilih gambar lokal</span>
+            <span className="text-xs text-gray-500 text-center px-4">Tipe: <span className="font-mono text-blue-500">.JPG, .PNG, .WEBP</span> (Maksimal yang disarankan 150KB)</span>
+            <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onChange={handleCoverChange} className="hidden" />
           </label>
         </div>
       </div>

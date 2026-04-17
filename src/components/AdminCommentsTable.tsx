@@ -12,10 +12,18 @@ export default function AdminCommentsTable({ initialComments }: { initialComment
   const handleDelete = async (id: string) => {
     if (!confirm('Apakah Anda yakin ingin menghapus komentar ini?')) return;
     
-    // Optimistic UI
+    // hapus dulu dari tampilan biar responsif, baru hapus di db
     setComments(comments.filter(c => c.id !== id));
     
     await supabase.from('comments').delete().eq('id', id);
+  };
+
+  const handleApprove = async (id: string) => {
+    // update tampilan duluan biar ga nunggu loading
+    setComments(comments.map(c => c.id === id ? { ...c, is_approved: true } : c));
+    
+    // baru update ke database benerannya
+    await supabase.from('comments').update({ is_approved: true }).eq('id', id);
   };
 
   return (
@@ -38,7 +46,18 @@ export default function AdminCommentsTable({ initialComments }: { initialComment
             ) : comments.map((c) => (
               <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
                 <td className="px-6 py-4 align-top">
-                  <div className="font-medium text-gray-900">{c.user_name}</div>
+                  <div className="font-medium text-gray-900 flex items-center gap-2">
+                    {c.user_name}
+                    {c.is_approved ? (
+                      <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                        Disetujui
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
+                        Menunggu
+                      </span>
+                    )}
+                  </div>
                   <div className="text-xs text-gray-400 mt-1">{formatDate(c.created_at)}</div>
                 </td>
                 <td className="px-6 py-4 text-gray-700 align-top whitespace-pre-wrap max-w-sm">
@@ -52,12 +71,22 @@ export default function AdminCommentsTable({ initialComments }: { initialComment
                   ) : <span className="text-gray-400">Artikel tak dikenal</span>}
                 </td>
                 <td className="px-6 py-4 text-right align-top">
-                  <button
-                    onClick={() => handleDelete(c.id)}
-                    className="text-red-500 hover:text-red-700 font-medium px-3 py-1 rounded bg-red-50 hover:bg-red-100 transition-colors text-xs"
-                  >
-                    Hapus
-                  </button>
+                  <div className="flex items-center justify-end gap-2">
+                    {!c.is_approved && (
+                      <button
+                        onClick={() => handleApprove(c.id)}
+                        className="text-green-600 hover:text-green-800 font-medium px-3 py-1 rounded bg-green-50 hover:bg-green-100 transition-colors text-xs"
+                      >
+                        Setujui
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDelete(c.id)}
+                      className="text-red-500 hover:text-red-700 font-medium px-3 py-1 rounded bg-red-50 hover:bg-red-100 transition-colors text-xs"
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

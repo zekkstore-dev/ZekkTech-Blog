@@ -9,13 +9,13 @@ import { seedPosts } from '@/lib/seed-data';
 import type { Post } from '@/types/post';
 
 async function getPosts(): Promise<Post[]> {
-  // Try to fetch from Supabase, fall back to seed data
+  // coba ambil dari supabase, kalo gagal pake data dummy aja
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || supabaseUrl.includes('your-project')) {
-      // Supabase not configured, use seed data
+      // supabase belom di-setup, pake data contoh dulu
       return seedPosts;
     }
 

@@ -34,11 +34,11 @@ export default async function AdminLayout({
       {/* Admin Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <Link href="/">
-              <Image src="/images/ZekkTech.png" alt="ZekkTech" width={110} height={28} className="h-[28px] w-auto" />
+              <Image src="/images/ZekkTech.png" alt="ZekkTech" width={110} height={28} className="h-[28px] w-auto relative top-0.5" />
             </Link>
-            <span className="text-sm text-gray-400 hidden sm:inline">/ Admin Dashboard</span>
+            <span className="text-sm font-medium text-gray-400 hidden sm:inline relative top-0.5">/ Admin Dashboard</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/" className="text-sm text-gray-500 hover:text-blue-500 transition-colors">
@@ -54,6 +54,7 @@ export default async function AdminLayout({
           <Link href="/admin" className="text-gray-900 border-b-2 border-gray-900 pb-2">Artikel</Link>
           <Link href="/admin/subscribers" className="text-gray-500 hover:text-gray-900 pb-2">Subscribers</Link>
           <Link href="/admin/comments" className="text-gray-500 hover:text-gray-900 pb-2">Komentar</Link>
+          <Link href="/admin/about" className="text-gray-500 hover:text-gray-900 pb-2">Tentang Saya</Link>
         </nav>
       </div>
 

@@ -22,6 +22,7 @@ export interface Comment {
   post_id: string;
   user_name: string;
   content: string;
+  is_approved?: boolean;
   created_at: string;
   updated_at: string;
 }

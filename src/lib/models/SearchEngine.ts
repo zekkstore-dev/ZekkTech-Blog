@@ -1,7 +1,7 @@
 import { Post } from '@/types/post';
 
 export interface ScoredPost extends Post {
-  similarityScore: number;
+  similarityScore?: number;
   highlightWords: string[];
 }
 
@@ -62,7 +62,7 @@ export class SearchEngine {
     const queryTokens = this.tokenize(query);
     if (queryTokens.length === 0) return posts.map(p => ({ ...p, similarityScore: 0, highlightWords: [] }));
 
-    // 1. Ekstrak koleksi dokumen. Kita fokus ke "Title" (Judul) dan sedikit pembobotan di "Category"
+    // pecahin data jadi teks (vocab), title dibikin dobel biar pencariannya lebih ngena ke judul
     const documents = posts.map(post => {
       const text = `${post.title} ${post.title} ${post.category}`; // Sengaja judul diboboti 2x lipat
       return this.tokenize(text);
@@ -70,28 +70,28 @@ export class SearchEngine {
 
     const totalDocs = documents.length;
 
-    // 2. Kumpulkan Global Kosakata (Vocabulary)
+    // kumpulin semua kata unik dari artikel
     const vocabulary = new Set<string>();
     documents.forEach(doc => doc.forEach(word => vocabulary.add(word)));
     queryTokens.forEach(word => vocabulary.add(word));
     
     const vocabArray = Array.from(vocabulary);
 
-    // 3. Hitung IDF (Inverse Document Frequency)
+    // itung angka langkanya (IDF), makin jarang muncul makin gede valuenya
     const idfCache: Record<string, number> = {};
     vocabArray.forEach(term => {
       const docsContainingTerm = documents.filter(doc => doc.includes(term)).length;
-      // Rumus laplace smoothing untuk menghindari log(0) atau Infinity
+      // laplace smoothing dikit biar ga kena Infinity kalo pembaginya 0
       idfCache[term] = Math.log10(totalDocs / (1 + docsContainingTerm)) + 1; 
     });
 
-    // 4. Hitung Vektor untuk Query
+    // jadikan query vektor matematika
     const queryVector = vocabArray.map(term => {
       const tf = this.calculateTF(term, queryTokens);
       return tf * idfCache[term];
     });
 
-    // 5. Hitung Vektor untuk Semua Dokumen & Temukan Cosine Similarity
+    // adu vektor query vs isi artikel pake Cosine Similarity
     const scoredPosts: ScoredPost[] = posts.map((post, index) => {
       const docTokens = documents[index];
       const docVector = vocabArray.map(term => {
@@ -110,9 +110,9 @@ export class SearchEngine {
       };
     });
 
-    // 6. Filter Artikel yang nyambung saja (> 0%) dan diurutkan dari kemiripan yang paling sempurna
+    // nah ini difilter, buang yang score-nya 0 alias ga nyambung blaaasss, sisanya urutin
     return scoredPosts
-      .filter(post => post.similarityScore > 0)
-      .sort((a, b) => b.similarityScore - a.similarityScore);
+      .filter(post => (post.similarityScore || 0) > 0)
+      .sort((a, b) => (b.similarityScore || 0) - (a.similarityScore || 0));
   }
 }

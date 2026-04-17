@@ -128,3 +128,21 @@ BEGIN
   RETURN EXISTS (SELECT 1 FROM subscribers WHERE email = check_email);
 END;
 $$;
+
+-- ==========================================
+-- TABEL SITE SETTINGS (Konfigurasi Website)
+-- ==========================================
+-- buat nyimpen data dinamis kayak konten "Tentang Saya" dll
+CREATE TABLE IF NOT EXISTS site_settings (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  key TEXT UNIQUE NOT NULL,
+  value TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can read site_settings" ON site_settings FOR SELECT USING (true);
+CREATE POLICY "Authenticated can manage site_settings" ON site_settings FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
+
+CREATE TRIGGER site_settings_updated_at BEFORE UPDATE ON site_settings FOR EACH ROW EXECUTE FUNCTION update_updated_at();

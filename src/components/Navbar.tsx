@@ -12,7 +12,7 @@ export default function Navbar() {
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const router = useRouter();
 
-  // Load search history once on mount
+  // ambil riwayat pencarian dari localStorage pas pertama kali nge-mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem('zekktech_search_history');
@@ -26,7 +26,7 @@ export default function Navbar() {
     e?.preventDefault();
     const query = (directQuery ?? searchQuery).trim();
     if (query) {
-      // Manage History (max 2)
+      // simpen histori pencarian (maks 2 biji)
       let newHistory = [query, ...searchHistory.filter(h => h !== query)];
       newHistory = newHistory.slice(0, 2);
       

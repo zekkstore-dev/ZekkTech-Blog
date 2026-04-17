@@ -2,7 +2,7 @@
 
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
-// Simple in-memory rate limiter for server actions
+// bikin limitasi login per ip/email sederhana aja di ram biar ga kena bruteforce
 const rateLimitMap = new Map<string, { count: number; expiresAt: number }>();
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
@@ -11,7 +11,7 @@ function checkRateLimit(identifier: string): boolean {
   const now = Date.now();
   const record = rateLimitMap.get(identifier);
 
-  // Clean up expired records occasionally
+  // bersihin data limit yang udah expired biar ram server ga bengkak
   if (rateLimitMap.size > 1000) {
     rateLimitMap.forEach((val, key) => {
       if (val.expiresAt < now) rateLimitMap.delete(key);
@@ -49,7 +49,7 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
     return { error: 'Email dan password wajib diisi' };
   }
 
-  // Rate Limiting by email
+  // cek jatah login
   const isAllowed = checkRateLimit(email.toLowerCase());
   if (!isAllowed) {
     return { error: 'Terlalu banyak percobaan. Silakan coba lagi dalam 15 menit.' };
@@ -65,7 +65,7 @@ export async function loginAction(prevState: LoginState, formData: FormData): Pr
     return { error: error.message };
   }
 
-  // Clear rate limit on success
+  // hapus blacklist jatah kl dia sukses masuk
   rateLimitMap.delete(email.toLowerCase());
 
   return { success: true };

@@ -2,52 +2,44 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/client';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
-
-  const supabase = createClient();
+  const [token, setToken] = useState<string>('');
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !email.includes('@')) return;
+    
+    if (!token) {
+      setStatus('error');
+      setMessage('Tunggu verifikasi keamanan selesai...');
+      return;
+    }
 
     setLoading(true);
     setStatus('idle');
     setMessage('');
 
     try {
-      // Periksa koneksi Supabase
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      if (!supabaseUrl || supabaseUrl.includes('your-project')) {
-        // Jika mode dummy, simulasikan sukses
-        await new Promise(resolve => setTimeout(resolve, 800));
-        setStatus('success');
-        setMessage('Terima kasih! (Mode Dummy Berhasil)');
-        setEmail('');
-        setLoading(false);
-        return;
-      }
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), token }),
+      });
 
-      // Pastikan email valid & masukkan ke db
-      const { error } = await supabase
-        .from('subscribers')
-        .insert([{ email: email.trim() }]);
+      const data = await res.json();
 
-      if (error) {
-        if (error.code === '23505') {
-          // Unique constraint error
-          throw new Error('Email ini sudah berlangganan sebelumnya.');
-        }
-        throw new Error('Gagal berlangganan. Silakan coba lagi nanti.');
+      if (!res.ok) {
+        throw new Error(data.error || 'Gagal berlangganan.');
       }
 
       setStatus('success');
-      setMessage('Luar biasa! Terima kasih sudah berlangganan newsletter kami.');
+      setMessage(data.message || 'Luar biasa! Terima kasih sudah berlangganan newsletter kami.');
       setEmail('');
     } catch (err: any) {
       setStatus('error');
@@ -95,12 +87,24 @@ export default function NewsletterSection() {
             />
             <button
               type="submit"
-              disabled={loading || !email.trim()}
+              disabled={loading || !email.trim() || !token}
               className="h-[50px] sm:h-[67px] px-10 bg-blue-500 hover:bg-blue-600 text-white rounded-xl sm:rounded-l-none sm:rounded-r-xl text-[16px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/30 active:scale-[0.98] mt-3 sm:mt-0 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Mengirim...' : 'Berlangganan'}
             </button>
           </form>
+
+          {/* Turnstile Captcha — cuma aktif kalo key-nya udah di-set */}
+          <div className="mt-4 flex justify-center">
+            {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+              <Turnstile
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                onSuccess={(t) => setToken(t)}
+              />
+            ) : (
+              <p className="text-xs text-gray-500/50 italic">Captcha belum dikonfigurasi.</p>
+            )}
+          </div>
 
           {/* Feedback Messages */}
           {status === 'success' && (
