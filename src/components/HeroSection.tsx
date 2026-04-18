@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full bg-white overflow-hidden">
+    <section className="hero-section relative w-full bg-white overflow-hidden transition-colors duration-300">
       {/* Dot pattern background */}
       <div
         className="absolute inset-0"
@@ -22,7 +22,7 @@ export default function HeroSection() {
               Hello World!,{' '}
               <br />
               <span className="lg:text-[40px]"> I&apos;m Zakaria MP{' '}</span>
-              <span className="text-gray-900 lg:text-[35px]">a.k.a</span>{' '}
+              <span className="aka-text text-gray-900 lg:text-[35px]">a.k.a</span>{' '}
               <span className="text-blue-500 underline lg:text-[40px]"><a href="https://github.com/ZekkCode">Zekk</a> </span>
             </h1>
 
@@ -65,7 +65,7 @@ export default function HeroSection() {
 
         {/* Scroll indicator */}
         <div className="flex justify-center mt-8 pb-4">
-          <a href="#kategori" className="animate-bounce">
+          <a href="#kategori" className="scroll-indicator animate-bounce">
             <svg
               width="40"
               height="40"

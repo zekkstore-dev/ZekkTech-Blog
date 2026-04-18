@@ -35,8 +35,8 @@ export default async function EditPostPage({ params }: PageProps) {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Edit Artikel</h1>
-        <p className="text-sm text-gray-500 mt-1">Perbarui konten artikel &quot;{post.title}&quot;</p>
+        <h1 className="admin-title text-2xl font-bold text-gray-900">Edit Artikel</h1>
+        <p className="admin-subtitle-text text-sm text-gray-500 mt-1">Perbarui konten artikel &quot;{post.title}&quot;</p>
       </div>
       <PostForm mode="edit" post={post} />
     </div>

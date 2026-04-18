@@ -53,15 +53,15 @@ export default async function BlogPage(
     : rawPosts.map(p => ({ ...p, similarityScore: undefined, highlightWords: [] }));
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="blog-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
       <Navbar />
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-24 py-16">
         <div className="mb-12">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900  mb-4">
             {searchQuery ? `Hasil Pencarian: "${searchQuery}"` : 'Semua Artikel'}
           </h1>
-          <p className="text-gray-500 text-lg">
+          <p className="blog-description text-gray-500 dark:text-gray-400 text-lg">
             {searchQuery
               ? `Ditemukan ${displayPosts.length} artikel yang sesuai dengan pencarian Anda.`
               : 'Jelajahi seluruh koleksi artikel teknologi, kumpulan tutorial, dan konten inspiratif.'}
@@ -88,10 +88,10 @@ export default async function BlogPage(
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-2xl border border-gray-100">
+          <div className="empty-state text-center py-20 bg-[var(--bg-tertiary)] rounded-2xl border border-gray-100 ">
             <div className="text-4xl mb-4">🔍</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Artikel Tidak Ditemukan</h3>
-            <p className="text-gray-500">Coba gunakan kata kunci pencarian yang lain.</p>
+            <h3 className="text-xl font-bold text-gray-900  mb-2">Artikel Tidak Ditemukan</h3>
+            <p className="text-gray-500 dark:text-gray-400">Coba gunakan kata kunci pencarian yang lain.</p>
           </div>
         )}
       </div>

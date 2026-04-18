@@ -27,10 +27,10 @@ export default function AdminCommentsTable({ initialComments }: { initialComment
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="admin-table bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-colors duration-300">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-gray-500">
-          <thead className="bg-gray-50/50 text-gray-700 font-semibold border-b border-gray-100">
+          <thead className="admin-table-head bg-gray-50/50 text-gray-700 font-semibold border-b border-gray-100 transition-colors duration-300">
             <tr>
               <th className="px-6 py-4 w-48">Pengguna</th>
               <th className="px-6 py-4">Komentar</th>
@@ -44,9 +44,9 @@ export default function AdminCommentsTable({ initialComments }: { initialComment
                 <td colSpan={4} className="px-6 py-8 text-center text-gray-400">Belum ada komentar sama sekali.</td>
               </tr>
             ) : comments.map((c) => (
-              <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
+              <tr key={c.id} className="admin-table-row hover:bg-gray-50/50 transition-colors">
                 <td className="px-6 py-4 align-top">
-                  <div className="font-medium text-gray-900 flex items-center gap-2">
+                  <div className="font-medium text-gray-900 flex items-center gap-2 admin-table-title">
                     {c.user_name}
                     {c.is_approved ? (
                       <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">

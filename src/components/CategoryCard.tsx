@@ -19,7 +19,7 @@ export default function CategoryCard({ name, icon, variant, href }: CategoryCard
         rounded-lg transition-all duration-300 cursor-pointer overflow-hidden
         ${isBlue
           ? 'bg-[#004dff] hover:bg-[#0040d6] shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30'
-          : 'bg-white hover:shadow-md hover:shadow-gray-200/60 border border-gray-100'
+          : 'category-card-white bg-white hover:shadow-md hover:shadow-gray-200/60 border border-gray-100'
         }
       `}
     >

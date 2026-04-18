@@ -46,7 +46,7 @@ export default async function HomePage() {
 
   return (
     <main 
-      className="min-h-screen bg-white"
+      className="min-h-screen bg-[var(--bg-primary)] transition-colors duration-300"
       style={{
         backgroundImage: 'url(/images/Dot.svg)',
         backgroundRepeat: 'repeat',
@@ -57,7 +57,7 @@ export default async function HomePage() {
       <HeroSection />
       <CategorySection />
 
-      <div className="bg-white pt-6 pb-4">
+      <div className="articles-bg bg-[var(--bg-secondary)] pt-6 pb-4 transition-colors duration-300">
         <ArticleSection title="Pilihan Editor" posts={featuredPosts} linkHref="/category/pilihan-editor" />
         <ArticleSection title="Tutorial Teknologi" posts={tutorialPosts} linkHref="/category/tutorial-teknologi" />
         <ArticleSection title="Berita Teknologi" posts={beritaPosts} linkHref="/category/berita-teknologi" />

@@ -19,7 +19,7 @@ export default function ShareBox({ title, slug }: ShareBoxProps) {
   // kalo URL belum ready (SSR), tampilin placeholder
   if (!articleUrl) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+      <div className="share-box bg-white rounded-2xl border border-gray-100 p-5 shadow-sm transition-colors duration-300">
         <h4 className="text-sm font-bold text-gray-900 mb-4">Bagikan Artikel</h4>
         <div className="flex items-center gap-2 mb-4">
           {[1, 2, 3, 4, 5].map(i => (
@@ -98,7 +98,7 @@ export default function ShareBox({ title, slug }: ShareBoxProps) {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+    <div className="share-box bg-white rounded-2xl border border-gray-100 p-5 shadow-sm transition-colors duration-300">
       <h4 className="text-sm font-bold text-gray-900 mb-4">Bagikan Artikel</h4>
 
       {/* deretan tombol sosmed */}
@@ -118,10 +118,10 @@ export default function ShareBox({ title, slug }: ShareBoxProps) {
       </div>
 
       {/* garis pemisah + tombol salin link */}
-      <div className="border-t border-gray-100 pt-4">
+      <div className="share-divider border-t border-gray-100 pt-4">
         <button
           onClick={handleCopy}
-          className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+          className={`copy-btn w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
             copied
               ? 'border-green-200 bg-green-50 text-green-600'
               : 'border-gray-200 bg-white text-gray-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600'

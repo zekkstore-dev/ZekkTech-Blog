@@ -52,8 +52,8 @@ export default async function AdminDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Semua Artikel</h1>
-          <p className="text-sm text-gray-500 mt-1">{posts.length} artikel ditemukan</p>
+          <h1 className="admin-title text-2xl font-bold text-gray-900">Semua Artikel</h1>
+          <p className="admin-subtitle-text text-sm text-gray-500 mt-1">{posts.length} artikel ditemukan</p>
         </div>
         <Link
           href="/admin/new"
@@ -68,30 +68,30 @@ export default async function AdminDashboard() {
 
       {/* Stats Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+        <div className="admin-stat-card bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between transition-colors duration-300">
           <div>
-            <p className="text-sm font-medium text-gray-500 mb-1">Total Artikel</p>
-            <h4 className="text-3xl font-bold text-gray-900">{posts.length}</h4>
+            <p className="admin-stat-label text-sm font-medium text-gray-500 mb-1">Total Artikel</p>
+            <h4 className="admin-stat-value text-3xl font-bold text-gray-900">{posts.length}</h4>
           </div>
           <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
             <FileText className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+        <div className="admin-stat-card bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between transition-colors duration-300">
           <div>
-            <p className="text-sm font-medium text-gray-500 mb-1">Total Pengunjung</p>
-            <h4 className="text-3xl font-bold text-gray-900">{stats.views}</h4>
+            <p className="admin-stat-label text-sm font-medium text-gray-500 mb-1">Total Pengunjung</p>
+            <h4 className="admin-stat-value text-3xl font-bold text-gray-900">{stats.views}</h4>
           </div>
           <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
             <Eye className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+        <div className="admin-stat-card bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between transition-colors duration-300">
           <div>
-            <p className="text-sm font-medium text-gray-500 mb-1">Total Subscribers</p>
-            <h4 className="text-3xl font-bold text-gray-900">{stats.subs}</h4>
+            <p className="admin-stat-label text-sm font-medium text-gray-500 mb-1">Total Subscribers</p>
+            <h4 className="admin-stat-value text-3xl font-bold text-gray-900">{stats.subs}</h4>
           </div>
           <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-500">
             <Users className="w-6 h-6" />

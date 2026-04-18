@@ -67,11 +67,11 @@ export default function AdminPostTable({ posts }: AdminPostTableProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+    <div className="admin-table bg-white rounded-2xl border border-gray-100 overflow-hidden transition-colors duration-300">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-100">
+            <tr className="admin-table-head bg-gray-50 border-b border-gray-100 transition-colors duration-300">
               <th className="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Artikel</th>
               <th className="text-left px-4 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Kategori</th>
               <th className="text-left px-4 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Tanggal</th>
@@ -81,9 +81,9 @@ export default function AdminPostTable({ posts }: AdminPostTableProps) {
           </thead>
           <tbody className="divide-y divide-gray-50">
             {posts.map((post) => (
-              <tr key={post.id} className="hover:bg-gray-50/50 transition-colors">
+              <tr key={post.id} className="admin-table-row hover:bg-gray-50/50 transition-colors">
                 <td className="px-6 py-4">
-                  <p className="text-sm font-semibold text-gray-900 line-clamp-1">{post.title}</p>
+                  <p className="admin-table-title text-sm font-semibold text-gray-900 line-clamp-1">{post.title}</p>
                   <p className="text-xs text-gray-400 mt-0.5 font-mono">/{post.slug}</p>
                 </td>
                 <td className="px-4 py-4 hidden sm:table-cell">

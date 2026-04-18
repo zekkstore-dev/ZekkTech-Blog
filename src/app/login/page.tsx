@@ -16,7 +16,7 @@ export default function LoginPage() {
   }, [state?.success, router]);
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
+    <main className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">

@@ -11,7 +11,7 @@ const categories: { name: string; icon: string; variant: 'blue' | 'white'; href:
 
 export default function CategorySection() {
   return (
-    <section id="kategori" className="w-full bg-gray-50 py-16 sm:py-20">
+    <section id="kategori" className="category-section w-full bg-gray-50 py-16 sm:py-20 transition-colors duration-300">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-24">
         <SectionHeader
           title="Telusuri Kategori"

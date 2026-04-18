@@ -94,7 +94,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const visibleComments = showAll ? comments : comments.slice(0, 5);
 
   return (
-    <div className="mt-16 pt-10 border-t border-gray-100">
+    <div className="comment-section mt-16 pt-10 border-t border-gray-100">
       <h3 className="text-2xl font-bold text-gray-900 mb-8">Komentar ({comments.length})</h3>
 
       {/* Tampilkan Pesan Sukses / Error di bagian atas */}
@@ -119,7 +119,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       ) : (
         <div className="space-y-6 mb-12">
           {visibleComments.map((comment) => (
-            <div key={comment.id} className="bg-white border border-gray-100 shadow-sm rounded-2xl p-5 sm:p-6 transition-all hover:shadow-md">
+            <div key={comment.id} className="comment-item bg-white border border-gray-100 shadow-sm rounded-2xl p-5 sm:p-6 transition-all hover:shadow-md">
               <div className="flex items-center gap-3 mb-3">
                 {/* Avatar yang presisi sejajar dengan nama */}
                 <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-sm font-bold shrink-0">
@@ -148,7 +148,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       )}
 
       {/* Form Pindah ke Bawah */}
-      <form onSubmit={handleSubmit} className="mb-12 bg-gray-50 p-6 sm:p-8 rounded-2xl">
+      <form onSubmit={handleSubmit} className="comment-form mb-12 bg-gray-50 p-6 sm:p-8 rounded-2xl transition-colors duration-300">
         <h4 className="text-lg font-semibold text-gray-800 mb-4">Tinggalkan Komentar</h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTheme } from './ThemeProvider';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
 
   // ambil riwayat pencarian dari localStorage pas pertama kali nge-mount
   useEffect(() => {
@@ -40,17 +42,24 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+    <nav className="navbar-main sticky top-0 z-50 bg-[var(--bg-secondary)] border-b border-gray-100  shadow-sm transition-colors duration-300">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-24 h-[72px] flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="shrink-0">
-          <Image src="/images/ZekkTech.png" alt="ZekkTech" width={120} height={30} className="h-[30px] w-auto" priority />
+          <Image
+            src="/images/ZekkTech.png"
+            alt="ZekkTech"
+            width={120}
+            height={30}
+            className={`h-[30px] w-auto transition-all duration-300 ${theme === 'dark' ? 'brightness-0 invert' : ''}`}
+            priority
+          />
         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-2">
           <div className="flex items-center gap-5 mr-6">
-            <Link href="/" className="text-[14px] font-medium text-gray-900 hover:text-blue-500 transition-colors">
+            <Link href="/" className="text-[14px] font-medium text-gray-900  hover:text-blue-500 transition-colors">
               Home
             </Link>
             <Link href="/blog" className="text-[14px] font-medium text-gray-600 hover:text-blue-500 transition-colors">
@@ -65,25 +74,25 @@ export default function Navbar() {
             <div className="relative flex items-center">
               {searchOpen ? (
                 <div className="relative z-50 flex flex-col items-end">
-                  <form onSubmit={handleSearch} className="flex items-center shadow-sm rounded-md bg-white border border-gray-200">
+                  <form onSubmit={handleSearch} className="search-form flex items-center shadow-sm rounded-md bg-[var(--bg-secondary)] border border-gray-200  transition-colors">
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Ketik & Enter..."
                       autoFocus
-                      className="h-9 px-4 w-48 lg:w-64 text-sm focus:outline-none bg-transparent"
+                      className="h-9 px-4 w-48 lg:w-64 text-sm focus:outline-none bg-transparent text-gray-800"
                     />
                     <button type="submit" className="h-9 px-3 text-gray-400 hover:text-blue-500 transition-colors">
                       <svg width="15" height="15" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-current"><path d="M12.2 12.2L15.5 15.5M14 7.5C14 4.186 11.314 1.5 8 1.5C4.686 1.5 2 4.186 2 7.5C2 10.814 4.686 13.5 8 13.5C11.314 13.5 14 10.814 14 7.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
                     </button>
-                    <button type="button" onClick={() => setSearchOpen(false)} className="h-9 px-3 border-l border-gray-100 text-gray-400 hover:text-red-500 transition-colors">
+                    <button type="button" onClick={() => setSearchOpen(false)} className="h-9 px-3 border-l border-gray-100  text-gray-400 hover:text-red-500 transition-colors">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                     </button>
                   </form>
                   {searchHistory.length > 0 && (
-                    <div className="absolute top-full right-0 mt-2 w-full bg-white border border-gray-100 shadow-xl rounded-lg py-2 px-1 z-[100] animate-in fade-in">
-                      <div className="px-3 pb-2 pt-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-50 mb-1">
+                    <div className="search-history absolute top-full right-0 mt-2 w-full bg-[var(--bg-secondary)] border border-gray-100  shadow-xl rounded-lg py-2 px-1 z-[100] animate-in fade-in transition-colors">
+                      <div className="px-3 pb-2 pt-1 text-[11px] font-bold text-gray-400  uppercase tracking-wider border-b border-gray-50  mb-1">
                         Riwayat Pencarian
                       </div>
                       {searchHistory.map((h, i) => (
@@ -109,6 +118,33 @@ export default function Navbar() {
               )}
             </div>
           </div>
+
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle mr-2"
+            data-theme={theme}
+            aria-label={theme === 'dark' ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}
+            title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
+          >
+            {/* Sun icon */}
+            <svg className="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            {/* Moon icon */}
+            <svg className="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+            </svg>
+          </button>
+
           <a
             href="https://buymeacoffee.com"
             target="_blank"
@@ -120,22 +156,48 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 p-2"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          <span className={`block w-6 h-0.5 bg-gray-900 transition-transform ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`block w-6 h-0.5 bg-gray-900 transition-opacity ${mobileOpen ? 'opacity-0' : ''}`} />
-          <span className={`block w-6 h-0.5 bg-gray-900 transition-transform ${mobileOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-        </button>
+        {/* Mobile: Theme Toggle + Hamburger */}
+        <div className="md:hidden flex items-center gap-2">
+          {/* Dark Mode Toggle (Mobile) */}
+          <button
+            onClick={toggleTheme}
+            className="theme-toggle"
+            data-theme={theme}
+            aria-label={theme === 'dark' ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}
+          >
+            <svg className="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg className="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+            </svg>
+          </button>
+
+          {/* Hamburger */}
+          <button
+            className="flex flex-col gap-1.5 p-2"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger-line block w-6 h-0.5 bg-gray-900 transition-transform ${mobileOpen ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`hamburger-line block w-6 h-0.5 bg-gray-900 transition-opacity ${mobileOpen ? 'opacity-0' : ''}`} />
+            <span className={`hamburger-line block w-6 h-0.5 bg-gray-900 transition-transform ${mobileOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-6 py-6 space-y-4 animate-in slide-in-from-top-2">
-          <Link href="/" className="block text-[14px] font-medium text-gray-900" onClick={() => setMobileOpen(false)}>Home</Link>
+        <div className="mobile-menu md:hidden bg-[var(--bg-secondary)] border-t border-gray-100  px-6 py-6 space-y-4 animate-in slide-in-from-top-2 transition-colors">
+          <Link href="/" className="block text-[14px] font-medium text-gray-900 " onClick={() => setMobileOpen(false)}>Home</Link>
           <Link href="/blog" className="block text-[14px] font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Artikel</Link>
           <Link href="/#kategori" className="block text-[14px] font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Kategori</Link>
           <Link href="/about" className="block text-[14px] font-medium text-gray-600" onClick={() => setMobileOpen(false)}>Tentang Saya</Link>

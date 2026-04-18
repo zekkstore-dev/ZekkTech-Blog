@@ -8,10 +8,10 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ title, linkText = 'Semua Artikel', linkHref = '#' }: SectionHeaderProps) {
   return (
-    <div className="flex items-center justify-between mb-10">
+    <div className="section-header flex items-center justify-between mb-10">
       <div className="flex items-center gap-3">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h2>
-        <div className="hidden sm:block w-8 h-[2px] bg-gray-300 rounded-full" />
+        <div className="divider-line hidden sm:block w-8 h-[2px] bg-gray-300 rounded-full" />
       </div>
       {linkText && (
         <Link

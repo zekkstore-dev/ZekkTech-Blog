@@ -30,8 +30,8 @@ export default async function CommentsDashboard() {
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Moderasi Komentar</h1>
-          <p className="text-sm text-gray-500 mt-1">{comments.length} umpan balik tercatat</p>
+          <h1 className="admin-title text-2xl font-bold text-gray-900">Moderasi Komentar</h1>
+          <p className="admin-subtitle-text text-sm text-gray-500 mt-1">{comments.length} umpan balik tercatat</p>
         </div>
       </div>
 

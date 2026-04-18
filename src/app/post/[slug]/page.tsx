@@ -90,11 +90,11 @@ export default async function PostPage({ params }: PageProps) {
   const categories = post.category.split(',').map(c => c.trim());
 
   return (
-    <main className="min-h-screen bg-gray-50/50">
+    <main className="post-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
       <Navbar />
 
       {/* hero area: judul gede + meta penulis */}
-      <div className="bg-white border-b border-gray-100">
+      <div className="post-hero bg-white border-b border-gray-100 transition-colors duration-300">
         <div className="max-w-5xl mx-auto px-6 py-10 sm:py-14">
           {/* pill kategori */}
           <div className="mb-4 flex flex-wrap gap-2">
@@ -120,8 +120,8 @@ export default async function PostPage({ params }: PageProps) {
               {post.author_name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-800">{post.author_name}</p>
-              <p className="text-xs text-gray-400">
+              <p className="author-name text-sm font-semibold text-gray-800">{post.author_name}</p>
+              <p className="author-meta text-xs text-gray-400">
                 {formatDate(post.created_at)} • {post.reading_time} Menit Dibaca
               </p>
             </div>
@@ -148,7 +148,7 @@ export default async function PostPage({ params }: PageProps) {
             )}
 
             {/* isi artikel dari markdown */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 lg:p-10 shadow-sm mb-8">
+            <div className="post-content-card bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 lg:p-10 shadow-sm mb-8 transition-colors duration-300">
               <div className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-img:rounded-xl prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50/50 prose-blockquote:rounded-r-xl prose-blockquote:py-1 overflow-x-hidden">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {post.content}
@@ -157,7 +157,7 @@ export default async function PostPage({ params }: PageProps) {
             </div>
 
             {/* seksi komentar */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-sm">
+            <div className="comment-section-wrapper bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-sm transition-colors duration-300">
               <CommentSection postId={post.id} />
             </div>
           </article>
@@ -166,7 +166,7 @@ export default async function PostPage({ params }: PageProps) {
           <aside className="w-full lg:w-[260px] shrink-0 order-2">
             <div className="lg:sticky lg:top-24 space-y-5">
               {/* box profil penulis */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm text-center">
+              <div className="sidebar-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm text-center transition-colors duration-300">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold mx-auto mb-3 shadow-md shadow-blue-200">
                   {post.author_name.charAt(0).toUpperCase()}
                 </div>
@@ -178,14 +178,14 @@ export default async function PostPage({ params }: PageProps) {
               </div>
 
               {/* box tags / kategori */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+              <div className="sidebar-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm transition-colors duration-300">
                 <h4 className="text-sm font-bold text-gray-900 mb-3">Tags</h4>
                 <div className="flex flex-wrap gap-2">
                   {categories.map(cat => (
                     <Link
                       key={cat}
                       href={`/blog?search=${encodeURIComponent(cat)}`}
-                      className="inline-flex px-2.5 py-1 rounded-lg text-[11px] font-medium bg-gray-50 text-gray-600 border border-gray-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-100 transition-colors"
+                      className="tag-pill inline-flex px-2.5 py-1 rounded-lg text-[11px] font-medium bg-gray-50 text-gray-600 border border-gray-100 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-100 transition-colors"
                     >
                       #{cat}
                     </Link>

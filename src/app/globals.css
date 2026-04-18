@@ -1,7 +1,44 @@
 @import "tailwindcss";
-
+@custom-variant dark (&:where(.dark, .dark *));
 :root {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Light mode colors */
+  --bg-primary: #f4f7fb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f4f8;
+  --bg-card: #ffffff;
+  --bg-input: #f0f4f8;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-muted: #9ca3af;
+
+  --border-primary: #f3f4f6;
+  --border-secondary: #e5e7eb;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+html.dark {
+  --bg-primary: #0f0f1a;
+  --bg-secondary: #1a1a2e;
+  --bg-tertiary: #16162a;
+  --bg-card: #1e1e36;
+  --bg-input: #24243e;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-muted: #64748b;
+
+  --border-primary: #2e2e4a;
+  --border-secondary: #3b3b5c;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
 }
 
 html {
@@ -10,11 +47,319 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: #fafafa;
-  color: #1a1a2e;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* ============================================
+   DARK MODE OVERRIDES (via html.dark selector)
+   ============================================ */
+
+/* --- Navbar --- */
+html.dark nav.navbar-main {
+  background-color: #16162a;
+  border-color: var(--border-primary);
+}
+html.dark nav.navbar-main a,
+html.dark nav.navbar-main button {
+  color: var(--text-secondary);
+}
+html.dark nav.navbar-main a:hover,
+html.dark nav.navbar-main button:hover {
+  color: #60a5fa;
+}
+html.dark nav.navbar-main .hamburger-line {
+  background-color: #e2e8f0;
+}
+
+/* Navbar search */
+html.dark nav.navbar-main .search-form {
+  background-color: var(--bg-input);
+  border-color: var(--border-secondary);
+}
+html.dark nav.navbar-main .search-form input {
+  color: var(--text-primary);
+}
+html.dark nav.navbar-main .search-form input::placeholder {
+  color: var(--text-muted);
+}
+html.dark nav.navbar-main .search-history {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+}
+html.dark nav.navbar-main .search-history button:hover {
+  background-color: #2563eb20;
+}
+
+/* Mobile menu */
+html.dark nav.navbar-main .mobile-menu {
+  background-color: #16162a;
+  border-color: var(--border-primary);
+}
+
+/* --- Hero Section --- */
+html.dark .hero-section {
+  background-color: var(--bg-secondary) !important;
+}
+html.dark .hero-section h1 {
+  color: var(--text-primary);
+}
+html.dark .hero-section h1 span.aka-text {
+  color: var(--text-secondary);
+}
+html.dark .hero-section p {
+  color: var(--text-secondary);
+}
+html.dark .hero-section input {
+  background-color: var(--bg-input);
+  border-color: var(--border-secondary);
+  color: var(--text-primary);
+}
+html.dark .hero-section input::placeholder {
+  color: var(--text-muted);
+}
+
+/* --- Category Section --- */
+html.dark .category-section {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* White variant category card */
+html.dark .category-card-white {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-primary) !important;
+}
+html.dark .category-card-white p {
+  color: var(--text-primary) !important;
+}
+html.dark .category-card-white .category-icon-dark {
+  filter: brightness(0) saturate(100%) invert(80%) sepia(10%) saturate(500%) hue-rotate(200deg) brightness(100%) contrast(90%);
+}
+
+/* --- Article Section / Card --- */
+html.dark .article-card {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+}
+html.dark .article-card:hover {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+html.dark .article-card h3 {
+  color: var(--text-primary);
+}
+html.dark .article-card .card-excerpt {
+  color: var(--text-tertiary);
+}
+html.dark .article-card .card-date {
+  color: var(--text-muted);
+}
+html.dark .article-card .card-author {
+  color: var(--text-secondary);
+}
+html.dark .article-card .card-footer {
+  border-color: var(--border-primary);
+}
+html.dark .article-card .card-placeholder {
+  background: linear-gradient(to bottom right, #1e3a5f, #1e3353, #1e3a5f);
+}
+html.dark .article-card .category-pill {
+  background-color: #1e3a5f;
+  color: #60a5fa;
+  border-color: #2563eb40;
+}
+
+/* --- Section Headers --- */
+html.dark .section-header h2 {
+  color: var(--text-primary);
+}
+html.dark .section-header a {
+  color: var(--text-tertiary);
+}
+html.dark .section-header .divider-line {
+  background-color: var(--border-secondary);
+}
+
+/* --- Article hub bg --- */
+html.dark .articles-bg {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* --- Footer: keep as-is since already dark --- */
+
+/* --- Newsletter: keep as-is since already dark --- */
+
+/* --- Post Detail Page --- */
+html.dark .post-hero {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-primary) !important;
+}
+html.dark .post-hero h1 {
+  color: var(--text-primary);
+}
+html.dark .post-hero .author-name {
+  color: var(--text-secondary);
+}
+html.dark .post-hero .author-meta {
+  color: var(--text-muted);
+}
+
+html.dark .post-content-card {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+}
+
+/* Prose dark mode */
+html.dark .prose {
+  --tw-prose-body: var(--text-secondary);
+  --tw-prose-headings: var(--text-primary);
+  --tw-prose-links: #60a5fa;
+  --tw-prose-bold: var(--text-primary);
+  --tw-prose-counters: var(--text-tertiary);
+  --tw-prose-bullets: var(--text-muted);
+  --tw-prose-hr: var(--border-secondary);
+  --tw-prose-quotes: var(--text-tertiary);
+  --tw-prose-quote-borders: #3b82f6;
+  --tw-prose-code: #f472b6;
+  --tw-prose-pre-code: #e2e8f0;
+  --tw-prose-pre-bg: #0f172a;
+  --tw-prose-th-borders: var(--border-secondary);
+  --tw-prose-td-borders: var(--border-primary);
+}
+html.dark .prose blockquote {
+  background-color: #1e3a5f30 !important;
+}
+
+/* Sidebar cards */
+html.dark .sidebar-card {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+}
+html.dark .sidebar-card h4 {
+  color: var(--text-primary);
+}
+html.dark .sidebar-card p {
+  color: var(--text-tertiary);
+}
+html.dark .sidebar-card .tag-pill {
+  background-color: var(--bg-input);
+  color: var(--text-secondary);
+  border-color: var(--border-primary);
+}
+html.dark .sidebar-card .tag-pill:hover {
+  background-color: #1e3a5f;
+  color: #60a5fa;
+  border-color: #2563eb40;
+}
+
+/* ShareBox */
+html.dark .share-box {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+}
+html.dark .share-box h4 {
+  color: var(--text-primary);
+}
+html.dark .share-box .copy-btn {
+  border-color: var(--border-secondary);
+  background-color: var(--bg-input);
+  color: var(--text-secondary);
+}
+html.dark .share-box .copy-btn:hover {
+  border-color: #2563eb60;
+  background-color: #1e3a5f;
+  color: #60a5fa;
+}
+html.dark .share-box .share-divider {
+  border-color: var(--border-primary);
+}
+
+/* --- Comment Section --- */
+html.dark .comment-section-wrapper {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+}
+html.dark .comment-section h3 {
+  color: var(--text-primary);
+}
+html.dark .comment-item {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-primary);
+}
+html.dark .comment-item h5 {
+  color: var(--text-primary);
+}
+html.dark .comment-item p {
+  color: var(--text-secondary);
+}
+html.dark .comment-form {
+  background-color: var(--bg-tertiary) !important;
+}
+html.dark .comment-form h4 {
+  color: var(--text-primary);
+}
+html.dark .comment-form label {
+  color: var(--text-secondary);
+}
+html.dark .comment-form input,
+html.dark .comment-form textarea {
+  background-color: var(--bg-input) !important;
+  border-color: var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+}
+html.dark .comment-form input::placeholder,
+html.dark .comment-form textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* --- Blog Listing Page --- */
+html.dark .blog-page {
+  background-color: var(--bg-secondary) !important;
+}
+html.dark .blog-page h1 {
+  color: var(--text-primary);
+}
+html.dark .blog-page .blog-description {
+  color: var(--text-tertiary);
+}
+html.dark .blog-page .empty-state {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-primary);
+}
+html.dark .blog-page .empty-state h3 {
+  color: var(--text-primary);
+}
+html.dark .blog-page .empty-state p {
+  color: var(--text-tertiary);
+}
+
+/* --- About Page --- */
+html.dark .about-page {
+  background-color: var(--bg-secondary) !important;
+}
+html.dark .about-page h1 {
+  color: var(--text-primary);
+}
+html.dark .about-illustration {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-primary);
+}
+
+/* --- Post Detail wrapper --- */
+html.dark .post-page {
+  background-color: var(--bg-primary) !important;
+}
+
+/* --- Scroll indicator --- */
+html.dark .scroll-indicator svg {
+  color: var(--text-muted);
+}
+
+/* ============================================
+   UTILITIES & ANIMATIONS
+   ============================================ */
 
 /* Line clamp utility */
 .line-clamp-1 {
@@ -65,10 +410,22 @@ body {
   background: #9ca3af;
 }
 
+html.dark ::-webkit-scrollbar-thumb {
+  background: #3b3b5c;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4a4a6a;
+}
+
 /* Selection color */
 ::selection {
   background-color: rgba(59, 130, 246, 0.2);
   color: #1a1a2e;
+}
+
+html.dark ::selection {
+  background-color: rgba(59, 130, 246, 0.35);
+  color: #f1f5f9;
 }
 
 /* Category icon: make white SVGs appear as dark blue (#475766) on white cards */
@@ -83,4 +440,234 @@ body {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ============================================
+   DARK MODE TOGGLE BUTTON ANIMATION
+   ============================================ */
+.theme-toggle {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: background-color 0.2s ease;
+}
+.theme-toggle:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+html.dark .theme-toggle:hover {
+  background-color: rgba(96, 165, 250, 0.15);
+}
+
+.theme-toggle svg {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+
+.theme-toggle .sun-icon {
+  position: absolute;
+}
+
+.theme-toggle .moon-icon {
+  position: absolute;
+}
+
+/* transisi smooth masuk/keluar icon */
+.theme-toggle[data-theme="light"] .sun-icon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.theme-toggle[data-theme="light"] .moon-icon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+.theme-toggle[data-theme="dark"] .sun-icon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+.theme-toggle[data-theme="dark"] .moon-icon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* ========================================================
+   ADMIN DASHBOARD DARK MODE HOOKS
+   ======================================================== */
+html.dark .admin-wrapper {
+  background-color: var(--bg-primary) !important;
+}
+
+html.dark .admin-header {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-primary) !important;
+}
+
+html.dark .admin-logo {
+  filter: brightness(0) invert(1);
+}
+
+html.dark .admin-subtitle,
+html.dark .admin-subtitle-text,
+html.dark .admin-stat-label {
+  color: var(--text-tertiary);
+}
+
+html.dark .admin-back-link {
+  color: var(--text-tertiary);
+}
+
+html.dark .admin-back-link:hover {
+  color: #60a5fa; /* blue-400 */
+}
+
+html.dark .admin-nav {
+  border-color: var(--border-secondary) !important;
+}
+
+html.dark .admin-nav-link {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+html.dark .admin-nav-link-inactive {
+  color: var(--text-muted);
+}
+
+html.dark .admin-nav-link-inactive:hover {
+  color: var(--text-primary);
+}
+
+html.dark .admin-title,
+html.dark .admin-stat-value,
+html.dark .admin-table-title {
+  color: var(--text-primary);
+}
+
+html.dark .admin-stat-card,
+html.dark .admin-table,
+html.dark .admin-card {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-primary) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+html.dark .admin-table-head,
+html.dark .admin-card-toolbar {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-primary) !important;
+}
+
+html.dark .admin-table-head th {
+  color: var(--text-secondary);
+}
+
+html.dark .admin-table-row {
+  border-color: var(--border-primary) !important;
+}
+
+html.dark .admin-table-row:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .admin-table-row td,
+html.dark .admin-label {
+  color: var(--text-secondary);
+}
+
+/* Form Input & Textareas */
+html.dark .admin-input,
+html.dark .admin-textarea {
+  background-color: var(--bg-input) !important;
+  border-color: var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+html.dark .admin-input::placeholder,
+html.dark .admin-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+html.dark .admin-input:focus,
+html.dark .admin-textarea:focus {
+  border-color: #3b82f6; /* blue-500 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); /* ring-blue-500/20 */
+}
+
+/* Kategori Buttons */
+html.dark .admin-category-btn {
+  background-color: var(--bg-input) !important;
+  border-color: var(--border-primary) !important;
+  color: var(--text-secondary) !important;
+}
+
+html.dark .admin-category-btn:hover {
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+
+/* Upload Zone */
+html.dark .admin-upload-zone {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-primary) !important;
+}
+
+html.dark .admin-upload-zone:hover {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Cancel / Action Buttons */
+html.dark .admin-cancel-btn {
+  background-color: var(--bg-input) !important;
+  color: var(--text-secondary) !important;
+}
+
+html.dark .admin-cancel-btn:hover {
+  background-color: var(--border-primary);
+  color: var(--text-primary);
+}
+
+/* Admin About Editor preview */
+html.dark .admin-preview-title {
+  color: var(--text-secondary);
+}
+
+/* explicit color for light mode to override tailwind's faint default */
+.admin-preview-content p,
+.admin-preview-content li,   
+.admin-preview-content span {
+  color: #374151 !important; /* text-gray-700 */
+}
+
+html.dark .admin-preview {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-primary) !important;
+}
+
+html.dark .admin-preview-content,
+html.dark .admin-preview-content p,
+html.dark .admin-preview-content span,
+html.dark .admin-preview-content li {
+  color: var(--text-secondary) !important;
+}
+
+html.dark .admin-preview-content strong,
+html.dark .admin-preview-content h1,
+html.dark .admin-preview-content h2,
+html.dark .admin-preview-content h3,
+html.dark .admin-preview-content h4 {
+  color: var(--text-primary) !important;
+}
+
+html.dark .admin-preview-content a {
+  color: #60a5fa;
+}
+
+html.dark .admin-skeleton {
+  background-color: var(--border-primary);
 }
