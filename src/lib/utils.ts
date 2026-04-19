@@ -33,10 +33,40 @@ export function formatDate(dateString: string): string {
   });
 }
 
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 /**
  * Truncate text to a maximum length with ellipsis.
  */
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength).trimEnd() + '...';
+}
+
+/**
+ * Dapatkan Base URL secara cerdas (Netlify, Vercel, Custom Domain, atau Localhost)
+ */
+export function getBaseUrl(): string {
+  // 1. Kalo udah diset manual di ENV (bisa custom domain utama)
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+  
+  // 2. Kalo deploy di Netlify (bisa zekktech.netlify.app)
+  if (process.env.URL) {
+    return process.env.URL;
+  }
+
+  // 3. Fallback hardcore kalau di environment Production
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://zekktech.biz.id';
+  }
+
+  // 4. Lingkungan Development lokal
+  return 'http://localhost:3000';
 }

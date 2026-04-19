@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import { TextEffect } from '@/components/motion-primitives/text-effect';
 
 export default function HeroSection() {
   return (
@@ -28,11 +30,11 @@ export default function HeroSection() {
 
             <div className="flex items-stretch gap-3 mb-8">
               <div className="w-[3px] bg-blue-500 rounded-full shrink-0" />
-              <p className="text-[15px] sm:text-[16px] text-gray-600 leading-relaxed max-w-[580px] font-bold">
+              <TextEffect preset='fade-in-blur' speedReveal={1.1} speedSegment={0.3} className="text-[15px] sm:text-[16px] text-gray-600 leading-relaxed max-w-[580px] font-bold">
                 Di sini aku bakal share tentang teknologi, tips, trik, proyek,
                 dan tutorial seru lainnya! Jangan lupa subscribe biar gak
                 ketinggalan update terbaru!
-              </p>
+              </TextEffect>
             </div>
 
             <form className="flex flex-col sm:flex-row gap-0 max-w-[650px]">

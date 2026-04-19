@@ -75,7 +75,7 @@ export default function NewsletterSection() {
 
         {/* Form Container */}
         <div className="max-w-[708px] mx-auto">
-          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-0">
+          <form onSubmit={handleSubscribe} className="flex flex-col gap-3 sm:flex-row sm:gap-0">
             <input
               type="email"
               value={email}
@@ -83,12 +83,12 @@ export default function NewsletterSection() {
               placeholder="Masukkan email Anda di sini...."
               required
               disabled={loading}
-              className="flex-1 h-[56px] sm:h-[67px] px-6 bg-white/10 border-2 border-white/20 rounded-xl sm:rounded-r-none sm:rounded-l-xl text-[15px] text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all backdrop-blur-sm disabled:opacity-50"
+              className="w-full sm:flex-1 h-[56px] px-6 bg-white/10 border-2 border-white/20 rounded-xl sm:rounded-r-none sm:rounded-l-xl text-[15px] text-white placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all backdrop-blur-sm disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={loading || !email.trim() || !token}
-              className="h-[50px] sm:h-[67px] px-10 bg-blue-500 hover:bg-blue-600 text-white rounded-xl sm:rounded-l-none sm:rounded-r-xl text-[16px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/30 active:scale-[0.98] mt-3 sm:mt-0 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto h-[56px] px-10 bg-blue-500 hover:bg-blue-600 text-white rounded-xl sm:rounded-l-none sm:rounded-r-xl text-[16px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Mengirim...' : 'Berlangganan'}
             </button>

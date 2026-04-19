@@ -3,7 +3,8 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { seedPosts } from '@/lib/seed-data';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NODE_ENV === 'production' ? 'https://zekktech.com' : 'http://localhost:3000';
+  const { getBaseUrl } = await import('@/lib/utils');
+  const baseUrl = getBaseUrl();
   
   // Static routes
   const routes: MetadataRoute.Sitemap = [

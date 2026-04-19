@@ -137,7 +137,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
         if (updateError) throw new Error(updateError.message);
       }
 
-      router.push('/admin');
+      router.push('/__admin');
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Terjadi kesalahan');

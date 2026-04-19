@@ -5,9 +5,37 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**', // Mengizinkan semua image external masuk termasuk Cloudflare R2 untuk kemudahan
+        hostname: '*.r2.dev',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.workers.dev',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
       },
     ],
+  },
+  // Redirect URL lama /admin dan /login ke 404 — jangan biarkan bisa ditebak
+  async redirects() {
+    return [
+      {
+        source: '/admin',
+        destination: '/not-found',
+        permanent: false,
+      },
+      {
+        source: '/admin/:path*',
+        destination: '/not-found',
+        permanent: false,
+      },
+      {
+        source: '/login',
+        destination: '/not-found',
+        permanent: false,
+      },
+    ];
   },
 };
 

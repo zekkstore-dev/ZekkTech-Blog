@@ -11,8 +11,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ['400', '500', '600', '700', '800'],
 });
 
+import { getBaseUrl } from '@/lib/utils';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://zekktech.com' : 'http://localhost:3000'),
+  metadataBase: new URL(getBaseUrl()),
   title: {
     default: 'ZekkTech | Blog Teknologi Indonesia',
     template: '%s | ZekkTech'
@@ -30,10 +32,10 @@ export const metadata: Metadata = {
     description: 'Blog teknologi Indonesia oleh Zakaria MP. Tips, trik, tutorial, dan berita teknologi terbaru.',
     images: [
       {
-        url: '/images/ZekkTech.png',
+        url: '/images/LogoZekkTech.png',
         width: 1200,
         height: 630,
-        alt: 'ZekkTech Blog Banner',
+        alt: 'ZekkTech Blog Logo',
       },
     ],
   },
@@ -41,7 +43,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ZekkTech | Blog Teknologi Indonesia',
     description: 'Blog teknologi Indonesia oleh Zakaria MP. Tips, trik, tutorial, dan berita teknologi terbaru.',
-    images: ['/images/ZekkTech.png'],
+    images: ['/images/LogoZekkTech.png'],
     creator: '@zakariamp',
   },
   robots: {

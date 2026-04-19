@@ -1,4 +1,4 @@
-import { r2Client, R2_BUCKET, getR2PublicUrl } from './client';
+import { getR2Client, getR2Bucket, getR2PublicUrl } from './client';
 import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 /**
@@ -18,9 +18,11 @@ export async function uploadToR2(
   body: Buffer,
   contentType: string
 ): Promise<string> {
-  await r2Client.send(
+  const client = getR2Client();
+  const bucket = getR2Bucket();
+  await client.send(
     new PutObjectCommand({
-      Bucket: R2_BUCKET,
+      Bucket: bucket,
       Key: key,
       Body: body,
       ContentType: contentType,
@@ -34,9 +36,11 @@ export async function uploadToR2(
  * @param key - Nama/path file di dalam bucket
  */
 export async function deleteFromR2(key: string): Promise<void> {
-  await r2Client.send(
+  const client = getR2Client();
+  const bucket = getR2Bucket();
+  await client.send(
     new DeleteObjectCommand({
-      Bucket: R2_BUCKET,
+      Bucket: bucket,
       Key: key,
     })
   );

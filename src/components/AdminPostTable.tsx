@@ -57,7 +57,7 @@ export default function AdminPostTable({ posts }: AdminPostTableProps) {
         </div>
         <p className="text-gray-500 mb-4">Belum ada artikel</p>
         <Link
-          href="/admin/new"
+          href="/__admin/new"
           className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-semibold transition-all"
         >
           Buat Artikel Pertama
@@ -110,7 +110,7 @@ export default function AdminPostTable({ posts }: AdminPostTableProps) {
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-end gap-2">
                     <Link
-                      href={`/admin/edit/${post.id}`}
+                      href={`/__admin/edit/${post.id}`}
                       className="p-2 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-all"
                       title="Edit"
                     >

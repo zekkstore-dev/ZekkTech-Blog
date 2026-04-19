@@ -5,9 +5,27 @@ import { checkR2Connection } from '@/lib/r2/client';
 /**
  * GET /api/health
  * Cek status koneksi Supabase & Cloudflare R2 sekaligus.
- * Hanya bisa diakses Admin (sesi aktif).
+ * HANYA bisa diakses Admin (sesi aktif) — informasi infrastruktur sensitif.
  */
 export async function GET() {
+  // Pastikan cuma admin yang bisa akses endpoint ini
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized — hanya admin yang dapat mengakses health check.' },
+        { status: 401 }
+      );
+    }
+  } catch {
+    return NextResponse.json(
+      { error: 'Unauthorized — gagal memvalidasi sesi.' },
+      { status: 401 }
+    );
+  }
+
   const results = {
     timestamp: new Date().toISOString(),
     supabase: { connected: false, url: '', error: '' },

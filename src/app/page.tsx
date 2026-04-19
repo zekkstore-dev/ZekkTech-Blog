@@ -4,6 +4,7 @@ import CategorySection from '@/components/CategorySection';
 import ArticleSection from '@/components/ArticleSection';
 import NewsletterSection from '@/components/NewsletterSection';
 import Footer from '@/components/Footer';
+import MotionFAQ from '@/components/MotionFAQ';
 import Link from 'next/link';
 import { seedPosts } from '@/lib/seed-data';
 import type { Post } from '@/types/post';
@@ -12,7 +13,6 @@ async function getPosts(): Promise<Post[]> {
   // coba ambil dari supabase, kalo gagal pake data dummy aja
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || supabaseUrl.includes('your-project')) {
       // supabase belom di-setup, pake data contoh dulu
@@ -74,6 +74,7 @@ export default async function HomePage() {
         </div>
       </div>
 
+      <MotionFAQ />
       <NewsletterSection />
       <Footer />
     </main>

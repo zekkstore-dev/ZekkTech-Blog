@@ -40,3 +40,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Google Drive Sync / Binary data
+.tmp.driveupload
+*.tmp.driveupload
+.tmp.drivedownload
+*.tmp.drivedownload
+
+# Folder aset desain (Figma export, mockup, dll) — tidak perlu di-deploy
+/assets/
+
+# File-file besar yang bukan bagian dari build
+*.psd
+*.ai
+*.fig
