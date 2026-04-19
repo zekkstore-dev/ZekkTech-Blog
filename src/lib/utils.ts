@@ -50,23 +50,33 @@ export function truncateText(text: string, maxLength: number): string {
 
 /**
  * Dapatkan Base URL secara cerdas (Netlify, Vercel, Custom Domain, atau Localhost)
+ * Selalu mengembalikan URL valid dengan protokol https:// atau http://
  */
 export function getBaseUrl(): string {
-  // 1. Kalo udah diset manual di ENV (bisa custom domain utama)
+  // Helper: pastikan URL punya protokol
+  const ensureProtocol = (url: string): string => {
+    const trimmed = url.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    return `https://${trimmed}`;
+  };
+
+  // 1. Kalo udah diset manual di ENV (custom domain utama)
   if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL;
-  }
-  
-  // 2. Kalo deploy di Netlify (bisa zekktech.netlify.app)
-  if (process.env.URL) {
-    return process.env.URL;
+    return ensureProtocol(process.env.NEXT_PUBLIC_SITE_URL);
   }
 
-  // 3. Fallback hardcore kalau di environment Production
+  // 2. Kalo deploy di Netlify — injected otomatis oleh Netlify
+  if (process.env.URL) {
+    return ensureProtocol(process.env.URL);
+  }
+
+  // 3. Fallback production
   if (process.env.NODE_ENV === 'production') {
     return 'https://zekktech.biz.id';
   }
 
-  // 4. Lingkungan Development lokal
+  // 4. Development lokal
   return 'http://localhost:3000';
 }
