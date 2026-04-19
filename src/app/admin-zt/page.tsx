@@ -56,7 +56,7 @@ export default async function AdminDashboard() {
           <p className="admin-subtitle-text text-sm text-gray-500 mt-1">{posts.length} artikel ditemukan</p>
         </div>
         <Link
-          href="/__admin/new"
+          href="/admin-zt/new"
           className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/25"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">

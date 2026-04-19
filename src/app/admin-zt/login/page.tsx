@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (state?.success) {
-      router.push('/__admin');
+      router.push('/admin-zt');
       router.refresh();
     }
   }, [state?.success, router]);
