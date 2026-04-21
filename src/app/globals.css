@@ -55,6 +55,36 @@ body {
 }
 
 /* ============================================
+   COPY PROTECTION
+   Semua teks tidak bisa diseleksi kecuali konten artikel
+   ============================================ */
+
+/* Blokir seleksi teks secara global di semua elemen */
+*, *::before, *::after {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Izinkan seleksi HANYA di dalam konten artikel */
+.post-content-card,
+.post-content-card * {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Izinkan seleksi di input, textarea, dan elemen editable */
+input, textarea, [contenteditable], select {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* ============================================
    DARK MODE OVERRIDES (via html.dark selector)
    ============================================ */
 

@@ -18,7 +18,7 @@ export default function HeroSection() {
 
       <div className="relative max-w-[1440px] mx-auto px-6 lg:px-24 pt-20 pb-10 min-h-[calc(100vh-86px)] flex flex-col">
         <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-5 lg:gap-5 flex-1">
-          {/* Left content */}
+          {/* Konten kiri */}
           <div className="flex-1 max-w-[742px] pt-8 lg:pt-16">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-[1.15] tracking-tight mb-6">
               Hello World!,{' '}
@@ -32,27 +32,52 @@ export default function HeroSection() {
               <div className="w-[3px] bg-blue-500 rounded-full shrink-0" />
               <TextEffect preset='fade-in-blur' speedReveal={1.1} speedSegment={0.3} className="text-[15px] sm:text-[16px] text-gray-600 leading-relaxed max-w-[580px] font-bold">
                 Di sini aku bakal share tentang teknologi, tips, trik, proyek,
-                dan tutorial seru lainnya! Jangan lupa subscribe biar gak
-                ketinggalan update terbaru!
+                dan tutorial seru lainnya! Yuk mulai baca dan jangan ketinggalan artikel terbaru!
               </TextEffect>
             </div>
 
-            <form className="flex flex-col sm:flex-row gap-0 max-w-[650px]">
-              <input
-                type="email"
-                placeholder="Masukkan email kamu di sini...."
-                className="flex-1 h-[60px] sm:h-[67px] px-6 bg-gray-50 border-2 border-gray-200 rounded-xl sm:rounded-r-none sm:rounded-l-xl text-[15px] text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
-              />
-              <button
-                type="submit"
-                className="h-[54px] sm:h-[67px] px-8 bg-blue-500 hover:bg-blue-600 text-white rounded-xl sm:rounded-l-none sm:rounded-r-xl text-[16px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] mt-3 sm:mt-0"
+            {/* Ganti form subscribe jadi dua tombol CTA ke halaman artikel */}
+            <div className="flex flex-col sm:flex-row gap-3 max-w-[560px]">
+              {/* Tombol utama: lihat semua artikel */}
+              <Link
+                href="/blog"
+                className="flex items-center justify-center gap-2 h-[56px] px-8 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-[15px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98]"
               >
-                Subscribe
-              </button>
-            </form>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 6h16M4 12h16M4 18h7"/>
+                </svg>
+                Baca Semua Artikel
+              </Link>
+              {/* Tombol sekunder: ke halaman portofolio */}
+              <Link
+                href="/portofolio"
+                className="flex items-center justify-center gap-2 h-[56px] px-8 bg-white border-2 border-gray-200 hover:border-blue-400 text-gray-700 hover:text-blue-600 rounded-xl text-[15px] font-semibold transition-all active:scale-[0.98]"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                Lihat Proyek
+              </Link>
+            </div>
+
+            {/* Label fitur kecil di bawah tombol */}
+            <div className="flex flex-wrap items-center gap-4 mt-5 text-xs text-gray-500 font-medium">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span>
+                Artikel dikupas tuntas
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+                Komentar & diskusi terbuka
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block"></span>
+                Update berkala
+              </span>
+            </div>
           </div>
 
-          {/* Right illustration */}
+          {/* Ilustrasi kanan */}
           <div className="flex-shrink-0 w-[300px] sm:w-[400px] lg:w-[470px] mt-4 lg:mt-10">
             <Image
               src="/images/person-learn-coding.svg"

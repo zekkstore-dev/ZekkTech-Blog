@@ -13,7 +13,7 @@ export default function Footer() {
               <Image src="/images/ZekkTech.png" alt="ZekkTech" width={120} height={30} className="h-[30px] w-auto brightness-0 invert" />
             </Link>
             <p className="text-[14px] text-gray-400 mb-5">
-              ZekkTech Blog by <span className="text-blue-400 font-medium">ZakariaMP</span>
+              ZekkTech Blog by <span className="text-blue-400 font-medium"><a href="https://github.com/ZekkCode">ZakariaMP</a></span>
             </p>
             {/* Social icons */}
             <div className="flex items-center gap-3">
@@ -110,7 +110,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[13px] text-gray-500">© 2025 | ZakariaMP</p>
+          <p className="text-[13px] text-gray-500">© {new Date().getFullYear()} | <a href="https://github.com/ZekkCode">ZakariaMP</a></p>
           <p className="text-[13px] text-gray-500">Build with ☕ &amp; ❤️ eaa</p>
         </div>
       </div>

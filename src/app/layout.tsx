@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import ThemeProvider from '@/components/ThemeProvider';
+import CopyProtection from '@/components/CopyProtection';
 import './globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -84,6 +85,7 @@ export default function RootLayout({
       </head>
       <body className={`${plusJakartaSans.className} antialiased`}>
         <ThemeProvider>
+          <CopyProtection />
           {children}
         </ThemeProvider>
         {process.env.NEXT_PUBLIC_GA_ID && (
