@@ -39,7 +39,7 @@ export default async function PortofolioPage() {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
           {portfolios.length === 0 ? (
             <div className="col-span-full py-16 text-center text-slate-500 dark:text-gray-400 bg-[var(--bg-secondary)] border border-dashed border-gray-200  rounded-3xl flex flex-col items-center justify-center gap-3">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-50"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
@@ -47,16 +47,25 @@ export default async function PortofolioPage() {
             </div>
           ) : (
             portfolios.map(port => (
-              <div key={port.id} className="relative group bg-[var(--bg-secondary)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-sky-500/5 border border-gray-100  transition-all duration-300 hover:-translate-y-1 flex flex-col">
+              <div key={port.id} className="relative group bg-[var(--bg-secondary)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md dark:shadow-none dark:hover:shadow-sky-500/5 border border-gray-100 transition-all duration-300 hover:-translate-y-1 flex flex-col snap-center min-w-[85vw] sm:min-w-[320px] shrink-0 md:min-w-0 md:shrink md:w-auto">
                 
                 {/* Image Header with Badge */}
                 <div className="w-full h-28 lg:h-36 overflow-hidden relative bg-slate-100 dark:bg-slate-800">
                   {port.image_url && (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={port.image_url} alt={port.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   )}
                   <div className="absolute top-2 left-2">
-                    <span className="px-2 py-0.5 bg-teal-100/90 backdrop-blur-md text-teal-700 text-[9px] font-bold ring-1 ring-inset ring-teal-600/20 rounded-full shadow-sm">Completed</span>
+                    {port.status === 'progress' ? (
+                      <span className="px-2 py-0.5 bg-amber-100/90 backdrop-blur-md text-amber-700 text-[9px] font-bold ring-1 ring-inset ring-amber-600/20 rounded-full shadow-sm flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                        In Progress
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 bg-teal-100/90 backdrop-blur-md text-teal-700 text-[9px] font-bold ring-1 ring-inset ring-teal-600/20 rounded-full shadow-sm flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                        Completed
+                      </span>
+                    )}
                   </div>
                 </div>
 

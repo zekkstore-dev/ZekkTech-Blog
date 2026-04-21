@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { uploadToR2, createCoverKey } from '@/lib/r2/storage';
+// import createContentKey juga agar bisa membedakan folder berdasarkan parameter
+import { uploadToR2, createCoverKey, createContentKey } from '@/lib/r2/storage';
 
 // filter tipe file yang boleh masuk
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -19,6 +20,8 @@ export async function POST(request: NextRequest) {
     // tarik filenya dari form data
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
+    // parameter folder: 'content' untuk gambar isi artikel, default ke 'cover'
+    const folder = (formData.get('folder') as string | null) ?? 'cover';
 
     if (!file) {
       return NextResponse.json({ error: 'File wajib dikirim' }, { status: 400 });
@@ -40,9 +43,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ubah ke raw buffer terus tembak ke CDN R2 Cloudflare kita
+    // ubah ke raw buffer lalu tentukan key berdasarkan folder tujuan
     const buffer = Buffer.from(await file.arrayBuffer());
-    const key = createCoverKey(file.name);
+    // kalau folder === 'content', simpan di content/, selain itu di covers/
+    const key = folder === 'content'
+      ? createContentKey(file.name)
+      : createCoverKey(file.name);
     const publicUrl = await uploadToR2(key, buffer, file.type);
 
     return NextResponse.json({ publicUrl, key });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { generateSlug, estimateReadingTime } from '@/lib/utils';
@@ -33,11 +33,11 @@ export default function PostForm({ post, mode }: PostFormProps) {
   const [slug, setSlug] = useState(post?.slug || '');
   const [content, setContent] = useState(post?.content || '');
   const [excerpt, setExcerpt] = useState(post?.excerpt || '');
-  
+
   const initialCats = Array.from(new Set([...CATEGORIES, ...(post?.category ? post.category.split(', ') : [])]));
   const [availableCategories, setAvailableCategories] = useState<string[]>(initialCats);
   const [newCatInput, setNewCatInput] = useState('');
-  
+
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     post?.category ? post.category.split(', ') : [CATEGORIES[0]]
   );
@@ -48,6 +48,19 @@ export default function PostForm({ post, mode }: PostFormProps) {
   const [coverPreview, setCoverPreview] = useState(post?.cover_url || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // === State khusus fitur insert gambar ke konten ===
+  // Apakah sedang ada proses upload gambar konten yang berjalan
+  const [imageUploading, setImageUploading] = useState(false);
+  // Pesan feedback saat upload gambar konten berhasil/gagal
+  const [imageMsg, setImageMsg] = useState('');
+  // Apakah area textarea sedang dalam kondisi di-drag gambar ke atasnya
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+
+  // Ref untuk textarea konten agar kita bisa tahu posisi kursor saat ini
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  // Ref untuk input file tersembunyi yang dipicu dari tombol toolbar
+  const contentImageInputRef = useRef<HTMLInputElement>(null);
 
   // otomatis bikin slug dari judul biar ga perlu ketik manual
   useEffect(() => {
@@ -75,6 +88,112 @@ export default function PostForm({ post, mode }: PostFormProps) {
     if (file) {
       setCoverFile(file);
       setCoverPreview(URL.createObjectURL(file));
+    }
+  };
+
+  /**
+   * Fungsi inti: Upload file gambar ke R2 via /api/upload,
+   * lalu sisipkan teks markdown `![nama-file](url)` di posisi kursor textarea
+   */
+  const uploadContentImage = useCallback(async (file: File) => {
+    // Validasi tipe file: hanya JPG, PNG, WEBP
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      setImageMsg('❌ Hanya JPG, PNG, dan WEBP yang diperbolehkan.');
+      setTimeout(() => setImageMsg(''), 3000);
+      return;
+    }
+
+    setImageUploading(true);
+    setImageMsg('⏳ Mengupload gambar...');
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      // Kirim parameter folder agar API upload tahu ini gambar "content", bukan "cover"
+      formData.append('folder', 'content');
+
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Upload gagal');
+      }
+
+      const { publicUrl } = await res.json();
+
+      // Buat teks markdown yang akan disisipkan ke editor
+      const altText = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+      const markdownSnippet = `\n![${altText}](${publicUrl})\n`;
+
+      // Ambil posisi kursor saat ini dari textarea
+      const textarea = contentRef.current;
+      if (textarea) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+
+        // Sisipkan teks markdown tepat di posisi kursor
+        const newContent =
+          content.substring(0, start) +
+          markdownSnippet +
+          content.substring(end);
+
+        setContent(newContent);
+
+        // Pindahkan kursor ke akhir teks yang baru disisipkan
+        setTimeout(() => {
+          textarea.selectionStart = start + markdownSnippet.length;
+          textarea.selectionEnd = start + markdownSnippet.length;
+          textarea.focus();
+        }, 0);
+      } else {
+        // Fallback: kalau tidak bisa baca posisi kursor, tambahkan di akhir konten
+        setContent(prev => prev + markdownSnippet);
+      }
+
+      setImageMsg('✅ Gambar berhasil disisipkan!');
+      setTimeout(() => setImageMsg(''), 3000);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Upload gagal';
+      setImageMsg(`❌ ${msg}`);
+      setTimeout(() => setImageMsg(''), 4000);
+    } finally {
+      setImageUploading(false);
+    }
+  }, [content]);
+
+  /**
+   * Handler saat pengguna memilih gambar melalui tombol toolbar "🖼️ Sisipkan Gambar"
+   */
+  const handleContentImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      uploadContentImage(file);
+      // Reset input agar file yang sama bisa dipilih lagi
+      e.target.value = '';
+    }
+  };
+
+  /**
+   * Handler Drag & Drop: saat pengguna menyeret gambar ke atas area textarea
+   */
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault(); // wajib dipanggil agar drop bisa terjadi
+    setIsDraggingOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDraggingOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDraggingOver(false);
+
+    // Ambil file pertama yang di-drop, pastikan itu file gambar
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      uploadContentImage(file);
     }
   };
 
@@ -196,9 +315,9 @@ export default function PostForm({ post, mode }: PostFormProps) {
                 <button
                   type="button"
                   onClick={() => {
-                    setSelectedCategories(prev => 
-                      prev.includes(cat) 
-                        ? prev.filter(c => c !== cat) 
+                    setSelectedCategories(prev =>
+                      prev.includes(cat)
+                        ? prev.filter(c => c !== cat)
                         : [...prev, cat]
                     );
                   }}
@@ -266,7 +385,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
         />
       </div>
 
-      {/* Content */}
+      {/* ===== KONTEN ARTIKEL ===== */}
       <div className="space-y-4">
         <div>
           <div className="flex justify-between items-end mb-2">
@@ -278,22 +397,106 @@ export default function PostForm({ post, mode }: PostFormProps) {
               Markdown Supported <span className="hidden sm:inline">(Anti-XSS)</span>
             </span>
           </div>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Tulis konten artikel bebas styling dengan aturan Markdown (contoh: # Judul Besat, **Tebal**, dll)..."
-            rows={12}
-            className="admin-textarea w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-y font-mono text-sm leading-relaxed"
-            required
-          />
+
+          {/* Toolbar di atas textarea: tombol sisipkan gambar */}
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            {/* Input file tersembunyi, dipicu oleh tombol di bawahnya */}
+            <input
+              ref={contentImageInputRef}
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              onChange={handleContentImageChange}
+              className="hidden"
+              aria-label="Pilih gambar untuk disisipkan ke konten"
+            />
+            {/* Tombol utama toolbar: klik akan membuka file picker */}
+            <button
+              type="button"
+              onClick={() => contentImageInputRef.current?.click()}
+              disabled={imageUploading}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-gray-200 rounded-lg hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Upload gambar dan sisipkan ke posisi kursor"
+            >
+              {imageUploading ? (
+                // Spinner saat upload berjalan
+                <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+              ) : (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                </svg>
+              )}
+              {imageUploading ? 'Mengupload...' : '🖼️ Sisipkan Gambar'}
+            </button>
+
+            {/* Link ke Media Library agar pengguna bisa copy URL gambar lama */}
+            <a
+              href="/admin-zt/media"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white border border-gray-200 rounded-lg hover:border-purple-400 hover:text-purple-600 hover:bg-purple-50 transition-all"
+              title="Buka Media Library untuk mengambil URL gambar lama"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+              Media Library
+            </a>
+
+            {/* Pesan feedback upload (berhasil / gagal) */}
+            {imageMsg && (
+              <span className={`text-xs font-medium px-2 py-1 rounded-md ${
+                imageMsg.startsWith('✅') ? 'bg-green-50 text-green-700' :
+                imageMsg.startsWith('❌') ? 'bg-red-50 text-red-700' :
+                'bg-yellow-50 text-yellow-700'
+              }`}>
+                {imageMsg}
+              </span>
+            )}
+          </div>
+
+          {/* Wrapper area drag & drop — membungkus textarea */}
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`relative rounded-xl transition-all ${
+              isDraggingOver
+                ? 'ring-2 ring-blue-400 ring-offset-1'
+                : ''
+            }`}
+          >
+            {/* Overlay hint saat gambar di-drag ke area ini */}
+            {isDraggingOver && (
+              <div className="absolute inset-0 flex items-center justify-center bg-blue-50/90 rounded-xl z-10 pointer-events-none border-2 border-dashed border-blue-400">
+                <div className="text-center">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-blue-500 mx-auto mb-2" stroke="currentColor" strokeWidth="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                  <p className="text-sm font-bold text-blue-600">Lepaskan untuk upload gambar</p>
+                  <p className="text-xs text-blue-500 mt-1">JPG, PNG, WEBP</p>
+                </div>
+              </div>
+            )}
+            <textarea
+              id="content"
+              ref={contentRef}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Tulis konten artikel bebas styling dengan aturan Markdown (contoh: # Judul Besar, **Tebal**, dll)...&#10;&#10;💡 Tips: Seret & lepas gambar ke sini untuk langsung upload!"
+              rows={12}
+              className="admin-textarea w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-y font-mono text-sm leading-relaxed"
+              required
+            />
+          </div>
           <p className="mt-2 text-xs text-gray-500 font-medium flex items-center gap-1.5">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-             Komentar otomatis di-[Block].
+            Konten aman dari XSS. Seret gambar ke area editor untuk upload cepat.
           </p>
         </div>
 
-        {/* Live Preview */}
+        {/* Live Preview konten markdown */}
         <div>
           <h3 className="admin-preview-title text-sm font-semibold text-gray-700 mb-2">Live Preview (Konten)</h3>
           <div className="admin-preview bg-white rounded-xl border border-gray-200 p-6 min-h-[200px] shadow-sm transition-colors duration-300">

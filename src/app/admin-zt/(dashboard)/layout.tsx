@@ -43,7 +43,8 @@ export default async function AdminLayout({
           </div>
           <div className="flex items-center gap-3">
             <AdminThemeToggle />
-            <Link href="/" className="admin-back-link text-sm text-gray-500 hover:text-blue-500 transition-colors">
+            {/* Fix: arahkan ke /blog bukan / agar tidak trigger redirect loop dari middleware */}
+            <Link href="/blog" className="admin-back-link text-sm text-gray-500 hover:text-blue-500 transition-colors">
               ← Lihat Blog
             </Link>
           </div>
@@ -57,6 +58,8 @@ export default async function AdminLayout({
           <Link href="/admin-zt/subscribers" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">Subscribers</Link>
           <Link href="/admin-zt/comments" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">Komentar</Link>
           <Link href="/admin-zt/about" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">Tentang Saya</Link>
+          {/* Link ke halaman Media Library untuk manajemen gambar R2 */}
+          <Link href="/admin-zt/media" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">📂 Media</Link>
         </nav>
       </div>
 

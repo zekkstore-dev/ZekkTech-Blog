@@ -6,6 +6,7 @@ export interface Portfolio {
   demo_url: string;
   repo_url: string;
   tags: string[];
+  status?: 'completed' | 'progress';
   created_at: string;
   updated_at: string;
 }

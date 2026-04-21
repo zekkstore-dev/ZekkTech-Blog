@@ -54,3 +54,9 @@ next-env.d.ts
 *.psd
 *.ai
 *.fig
+
+# File sertifikat SSL — JANGAN pernah di-push ke GitHub
+*.crt
+*.key
+*.p12
+*.pfx
