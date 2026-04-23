@@ -15,7 +15,7 @@ export default function CategoryCard({ name, icon, variant, href }: CategoryCard
     <Link
       href={href}
       className={`
-        group relative flex flex-col items-start justify-end w-[220px] sm:w-full min-w-[180px] h-[200px]
+        group relative flex flex-col items-start justify-end w-[150px] sm:w-[220px] sm:w-full min-w-[140px] sm:min-w-[180px] h-[140px] sm:h-[200px]
         rounded-lg transition-all duration-300 cursor-pointer overflow-hidden
         ${isBlue
           ? 'bg-[#004dff] hover:bg-[#0040d6] shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30'
@@ -24,7 +24,7 @@ export default function CategoryCard({ name, icon, variant, href }: CategoryCard
       `}
     >
       {/* Icon */}
-      <div className="absolute top-[25px] left-1/2 -translate-x-1/2 w-[92px] h-[92px] flex items-center justify-center transition-transform group-hover:scale-110">
+      <div className="absolute top-[18px] sm:top-[25px] left-1/2 -translate-x-1/2 w-[60px] h-[60px] sm:w-[92px] sm:h-[92px] flex items-center justify-center transition-transform group-hover:scale-110">
         <Image
           src={icon}
           alt={name}
@@ -37,7 +37,7 @@ export default function CategoryCard({ name, icon, variant, href }: CategoryCard
       </div>
 
       {/* Label */}
-      <p className={`px-[14px] pb-[14px] text-[20px] font-bold leading-tight capitalize ${
+      <p className={`px-[10px] sm:px-[14px] pb-[10px] sm:pb-[14px] text-[13px] sm:text-[20px] font-bold leading-tight capitalize ${
         isBlue ? 'text-white' : 'text-[#2b2c34]'
       }`}>
         {name}

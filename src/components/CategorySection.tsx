@@ -11,7 +11,7 @@ const categories: { name: string; icon: string; variant: 'blue' | 'white'; href:
 
 export default function CategorySection() {
   return (
-    <section id="kategori" className="category-section w-full bg-gray-50 py-16 sm:py-20 transition-colors duration-300">
+    <section id="kategori" className="category-section w-full bg-gray-50 py-8 sm:py-16 lg:py-20 transition-colors duration-300">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-24">
         <SectionHeader
           title="Telusuri Kategori"
@@ -20,7 +20,7 @@ export default function CategorySection() {
         />
 
         {/* Horizontal scroll on mobile, flex row on desktop */}
-        <div className="flex gap-5 lg:gap-[29px] xl:gap-[37px] overflow-x-auto pb-4 sm:pb-0 snap-x snap-mandatory sm:snap-none scrollbar-hide">
+        <div className="flex gap-3 sm:gap-5 lg:gap-[29px] xl:gap-[37px] overflow-x-auto pb-4 sm:pb-0 snap-x snap-mandatory sm:snap-none scrollbar-hide">
           {categories.map((cat) => (
             <div key={cat.name} className="snap-start shrink-0 sm:shrink">
               <CategoryCard

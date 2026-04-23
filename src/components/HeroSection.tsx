@@ -15,10 +15,10 @@ export default function HeroSection() {
         }}
       />
 
-      <div className="relative max-w-[1440px] mx-auto px-6 lg:px-24 pt-20 pb-10 min-h-[calc(100vh-86px)] flex flex-col">
-        <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-5 lg:gap-5 flex-1">
+      <div className="relative max-w-[1440px] mx-auto px-6 lg:px-24 pt-0 sm:pt-10 lg:pt-20 pb-10 min-h-[calc(100vh-86px)] flex flex-col">
+        <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-0 sm:gap-5 lg:gap-5 flex-1">
           {/* Konten kiri */}
-          <div className="flex-1 max-w-[742px] pt-8 lg:pt-16">
+          <div className="flex-1 max-w-[742px] pt-0 sm:pt-6 lg:pt-16">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-[1.15] tracking-tight mb-6">
               Hello World!,{' '}
               <br />
@@ -60,30 +60,28 @@ export default function HeroSection() {
             </div>
 
             {/* Label fitur kecil di bawah tombol */}
-            <div className="flex flex-wrap items-center gap-4 mt-5 text-xs text-gray-500 font-medium">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-3 sm:mt-5 text-[10px] sm:text-xs text-gray-500 font-medium">
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-green-400 inline-block"></span>
                 Artikel dikupas tuntas
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-400 inline-block"></span>
                 Komentar & diskusi terbuka
               </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block"></span>
+              <span className="flex items-center gap-1">
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-purple-400 inline-block"></span>
                 Update berkala
               </span>
             </div>
           </div>
 
           {/* Ilustrasi kanan */}
-          <div className="flex-shrink-0 w-[300px] sm:w-[400px] lg:w-[470px] mt-4 lg:mt-10">
+          <div className="flex-shrink-0 w-[280px] mx-auto -mb-14 sm:mx-0 sm:mb-0 sm:w-[380px] lg:w-[620px] lg:-mt-35 self-start">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/person-learn-coding.svg"
               alt="Person learning to code illustration"
-              width={470}
-              height={387}
               className="w-full h-auto"
             />
           </div>
