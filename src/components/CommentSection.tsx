@@ -19,6 +19,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [isSubscribeError, setIsSubscribeError] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [token, setToken] = useState<string>('');
   
@@ -26,7 +27,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   useEffect(() => {
     async function fetchComments() {
-      // kalo supabase belom diatur, pake data bohongan dulu / jangan ngeload
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       if (!supabaseUrl || supabaseUrl.includes('your-project')) {
         setFetching(false);
@@ -46,7 +46,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       setFetching(false);
     }
     fetchComments();
-  }, [postId, supabase]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]); // intentionally exclude supabase — object reference changes every render
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +61,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     setLoading(true);
     setError('');
     setSuccessMsg('');
+    setIsSubscribeError(false);
 
     try {
       const res = await fetch('/api/comments', {
@@ -77,7 +79,16 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Gagal mengirim komentar.');
+        const errMsg = data.error || 'Gagal mengirim komentar.';
+        // Jika belum subscribe → scroll ke field email & tampilkan hint
+        if (res.status === 403 && data.error?.toLowerCase().includes('berlangganan')) {
+          const emailField = document.getElementById('comment-email');
+          if (emailField) {
+            emailField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            emailField.focus();
+          }
+        }
+        throw new Error(errMsg);
       }
 
       setSuccessMsg(data.message || 'Komentar berhasil masuk ke database! ✨ Akan ditampilkan setelah disetujui Admin.');
@@ -85,7 +96,12 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       setEmail('');
       setContent('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gagal mengirim komentar');
+      const msg = err instanceof Error ? err.message : 'Gagal mengirim komentar';
+      // Tandai apakah error karena belum subscribe
+      setError(msg);
+      if (msg.toLowerCase().includes('berlangganan')) {
+        setIsSubscribeError(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -99,8 +115,17 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
       {/* Tampilkan Pesan Sukses / Error di bagian atas */}
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-          {error}
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
+          <p className="font-semibold mb-1">Gagal mengirim komentar</p>
+          <p>{error}</p>
+          {isSubscribeError && (
+            <a
+              href="/#subscribe"
+              className="inline-flex items-center gap-1.5 mt-3 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded-lg transition-colors"
+            >
+              Subscribe Sekarang &rarr;
+            </a>
+          )}
         </div>
       )}
 
@@ -167,13 +192,16 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Langganan <span className="text-red-500">*</span></label>
+            <label htmlFor="comment-email" className="block text-sm font-medium text-gray-700 mb-2">
+              Email <span className="text-red-500">*</span>
+              <span className="ml-2 text-[11px] text-gray-400 font-normal">(gunakan email yang dipakai saat subscribe)</span>
+            </label>
             <input
-              id="email"
+              id="comment-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email yang kamu subscribe"
+              placeholder="Email kamu"
               className="w-full h-11 px-4 bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all"
               required
             />

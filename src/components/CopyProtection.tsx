@@ -14,7 +14,7 @@ export default function CopyProtection() {
     const handleCopy = (e: ClipboardEvent) => {
       // Cek apakah copy dilakukan di dalam .post-content-card (konten artikel)
       const selection = window.getSelection();
-      if (!selection || selection.isCollapsed) return;
+      if (!selection || selection.isCollapsed || selection.rangeCount === 0) return;
 
       const range = selection.getRangeAt(0);
       const container = range.commonAncestorContainer;

@@ -3,6 +3,7 @@ import HeroSection from '@/components/HeroSection';
 import CategorySection from '@/components/CategorySection';
 import ArticleSection from '@/components/ArticleSection';
 import NewsletterSection from '@/components/NewsletterSection';
+import SubscribeSection from '@/components/SubscribeSection';
 import Footer from '@/components/Footer';
 import MotionFAQ from '@/components/MotionFAQ';
 import Link from 'next/link';
@@ -75,6 +76,7 @@ export default async function HomePage() {
       </div>
 
       <MotionFAQ />
+      <SubscribeSection />
       <NewsletterSection />
       <Footer />
     </main>
