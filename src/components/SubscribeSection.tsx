@@ -13,6 +13,7 @@ export default function SubscribeSection() {
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [token, setToken] = useState('');
+  const [showCaptcha, setShowCaptcha] = useState(false); // lazy render Turnstile
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,6 +96,7 @@ export default function SubscribeSection() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onFocus={() => setShowCaptcha(true)}
             placeholder="Masukkan email kamu..."
             required
             disabled={loading || status === 'success'}
@@ -109,15 +111,15 @@ export default function SubscribeSection() {
           </button>
         </form>
 
-        {/* Turnstile Captcha */}
-        <div className="mt-4 flex justify-center">
-          {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
+        {/* Turnstile Captcha — hanya muncul setelah user fokus ke input */}
+        {showCaptcha && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+          <div className="mt-4 flex justify-center">
             <Turnstile
               siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               onSuccess={(t) => setToken(t)}
             />
-          ) : null}
-        </div>
+          </div>
+        )}
 
         {/* Feedback */}
         {status === 'success' && (
