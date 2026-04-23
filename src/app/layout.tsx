@@ -83,6 +83,34 @@ export default function RootLayout({
           }}
         />
       </head>
+      {/* JSON-LD Structured Data — WebSite schema untuk Google rich results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "ZekkTech Blog",
+            "url": "https://zekktech.biz.id",
+            "description": "Blog teknologi Indonesia oleh Zakaria MP. Tips, trik, tutorial, dan berita teknologi terbaru.",
+            "inLanguage": "id-ID",
+            "author": {
+              "@type": "Person",
+              "name": "Zakaria MP",
+              "url": "https://zekktech.biz.id/about",
+              "sameAs": ["https://github.com/ZekkCode"]
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://zekktech.biz.id/blog?search={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }}
+      />
       <body className={`${plusJakartaSans.className} antialiased`}>
         <ThemeProvider>
           <CopyProtection />
