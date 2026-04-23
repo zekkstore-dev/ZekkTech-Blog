@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { TextEffect } from '@/components/motion-primitives/text-effect';
 
@@ -79,12 +78,12 @@ export default function HeroSection() {
 
           {/* Ilustrasi kanan */}
           <div className="flex-shrink-0 w-[300px] sm:w-[400px] lg:w-[470px] mt-4 lg:mt-10">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/images/person-learn-coding.svg"
               alt="Person learning to code illustration"
               width={470}
               height={387}
-              priority
               className="w-full h-auto"
             />
           </div>
