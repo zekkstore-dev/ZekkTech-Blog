@@ -7,10 +7,16 @@ import type { Portfolio } from '@/types/portfolio';
 
 export const metadata = {
   title: 'Tentang Saya | ZekkTech',
-  description: 'Profil, Portofolio, dan Sertifikat kreator ZekkTech Blog.',
+  description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
+  openGraph: {
+    title: 'Tentang Saya | ZekkTech',
+    description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
+  },
 };
 
-const fallbackContent = `Halo! Selamat datang di halaman profil kreator **ZekkTech Blog**.`;
+const fallbackContent = `Halo! Selamat datang di halaman profil kreator **ZekkTech Blog**.
+
+Saya adalah seorang **Full-Stack Developer** yang gemar berbagi ilmu seputar teknologi, web development, dan tips programming. Di blog ini saya menulis tutorial, tips & trik, serta pengalaman nyata dalam dunia coding.`;
 
 // Fetching functions
 async function getPageData() {
