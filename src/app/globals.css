@@ -388,6 +388,80 @@ html.dark .scroll-indicator svg {
 }
 
 /* ============================================
+   PROSE CONTENT FIX
+   Tailwind v4 Preflight mereset list-style: none pada semua ol/ul.
+   Restore list markers & heading styles untuk raw HTML di dalam artikel.
+   ============================================ */
+
+/* Ordered list: tampilkan angka */
+.prose ol,
+.post-content-card ol {
+  list-style-type: decimal !important;
+  padding-left: 1.625rem;
+}
+
+/* Unordered list: tampilkan bullet */
+.prose ul,
+.post-content-card ul {
+  list-style-type: disc !important;
+  padding-left: 1.625rem;
+}
+
+/* Nested list */
+.prose ol ol,
+.prose ol ul,
+.prose ul ol,
+.prose ul ul,
+.post-content-card ol ol,
+.post-content-card ol ul,
+.post-content-card ul ol,
+.post-content-card ul ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Nested ordered: gunakan huruf */
+.prose ol ol,
+.post-content-card ol ol {
+  list-style-type: lower-alpha !important;
+}
+
+/* List item spacing */
+.prose li,
+.post-content-card li {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Jika inline style padding-left sudah diset, gunakan itu */
+.prose ol[style],
+.prose ul[style],
+.post-content-card ol[style],
+.post-content-card ul[style] {
+  padding-left: revert;
+}
+
+/* Heading di dalam prose — pastikan tampil bold & besar */
+.prose h1, .post-content-card h1 { font-size: 2rem; font-weight: 800; margin: 1.5rem 0 1rem; }
+.prose h2, .post-content-card h2 { font-size: 1.5rem; font-weight: 700; margin: 1.4rem 0 0.8rem; }
+.prose h3, .post-content-card h3 { font-size: 1.25rem; font-weight: 700; margin: 1.2rem 0 0.6rem; }
+.prose h4, .post-content-card h4 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+.prose h5, .post-content-card h5 { font-size: 1rem; font-weight: 600; margin: 0.8rem 0 0.4rem; }
+.prose h6, .post-content-card h6 { font-size: 0.9rem; font-weight: 600; margin: 0.6rem 0 0.3rem; }
+
+/* HR (garis pemisah) */
+.prose hr,
+.post-content-card hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 1.5rem 0;
+}
+html.dark .prose hr,
+html.dark .post-content-card hr {
+  border-top-color: var(--border-secondary);
+}
+
+/* ============================================
    UTILITIES & ANIMATIONS
    ============================================ */
 
