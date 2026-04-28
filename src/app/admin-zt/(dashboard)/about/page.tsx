@@ -6,7 +6,17 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Portfolio } from '@/types/portfolio';
 
-type Tab = 'profil' | 'portofolio' | 'konten';
+type Tab = 'profil' | 'portofolio' | 'sertifikat' | 'konten';
+
+interface Certificate {
+  id: string;
+  title: string;
+  issuer: string;
+  date: string;
+  image_url: string;
+  cert_url: string;
+  created_at: string;
+}
 
 export default function AdminAboutPage() {
   const supabase = createClient();
@@ -26,7 +36,16 @@ export default function AdminAboutPage() {
   const [techInput, setTechInput] = useState('');
   const [profileAvatar, setProfileAvatar] = useState('');
   const [profileCV, setProfileCV] = useState('');
-  const [profileCert, setProfileCert] = useState('');
+
+  // Sertifikat CRUD
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [showCertForm, setShowCertForm] = useState(false);
+  const [editingCertId, setEditingCertId] = useState<string | null>(null);
+  const [certTitle, setCertTitle] = useState('');
+  const [certIssuer, setCertIssuer] = useState('');
+  const [certDate, setCertDate] = useState('');
+  const [certImageUrl, setCertImageUrl] = useState('');
+  const [certUrl, setCertUrl] = useState('');
 
   // Portfolios
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
@@ -60,15 +79,16 @@ export default function AdminAboutPage() {
           if (s.key === 'profile_techs') setProfileTechs(JSON.parse(s.value || '[]'));
           if (s.key === 'profile_avatar') setProfileAvatar(s.value);
           if (s.key === 'profile_cv') setProfileCV(s.value);
-          if (s.key === 'profile_cert') setProfileCert(s.value);
         });
       }
 
       // Load Portfolios
       const { data: ports } = await supabase.from('portfolios').select('*').order('created_at', { ascending: false });
-      if (ports) {
-        setPortfolios(ports as Portfolio[]);
-      }
+      if (ports) setPortfolios(ports as Portfolio[]);
+
+      // Load Certificates
+      const { data: certs } = await supabase.from('certificates').select('*').order('date', { ascending: false });
+      if (certs) setCertificates(certs as Certificate[]);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -76,18 +96,26 @@ export default function AdminAboutPage() {
     }
   }
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, setter: (val: string) => void) => {
+  const handleFileUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setter: (val: string) => void,
+    folder = 'covers'
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('folder', folder);
       const res = await fetch('/api/upload', { method: 'POST', body: formData });
-      if (!res.ok) throw new Error('Upload gagal');
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Upload gagal');
+      }
       const { publicUrl } = await res.json();
       setter(publicUrl);
     } catch (err) {
-      alert('Gagal upload file');
+      alert(err instanceof Error ? err.message : 'Gagal upload file');
     }
   };
 
@@ -116,7 +144,6 @@ export default function AdminAboutPage() {
         { key: 'profile_techs', value: JSON.stringify(profileTechs) },
         { key: 'profile_avatar', value: profileAvatar },
         { key: 'profile_cv', value: profileCV },
-        { key: 'profile_cert', value: profileCert },
       ]);
       setFeedback({ type: 'success', msg: 'Profil berhasil diperbarui!' });
       setTimeout(() => setFeedback(null), 3000);
@@ -139,6 +166,45 @@ export default function AdminAboutPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  // === Sertifikat handlers ===
+  const resetCertForm = () => {
+    setEditingCertId(null);
+    setCertTitle(''); setCertIssuer(''); setCertDate('');
+    setCertImageUrl(''); setCertUrl('');
+    setShowCertForm(false);
+  };
+
+  const startEditCert = (c: Certificate) => {
+    setEditingCertId(c.id);
+    setCertTitle(c.title); setCertIssuer(c.issuer); setCertDate(c.date);
+    setCertImageUrl(c.image_url); setCertUrl(c.cert_url);
+    setShowCertForm(true);
+  };
+
+  const handleSaveCert = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const payload = { title: certTitle, issuer: certIssuer, date: certDate, image_url: certImageUrl, cert_url: certUrl };
+      if (editingCertId) {
+        await supabase.from('certificates').update(payload).eq('id', editingCertId);
+      } else {
+        await supabase.from('certificates').insert([payload]);
+      }
+      await loadData();
+      resetCertForm();
+      setFeedback({ type: 'success', msg: 'Sertifikat berhasil disimpan!' });
+      setTimeout(() => setFeedback(null), 3000);
+    } catch { setFeedback({ type: 'error', msg: 'Gagal menyimpan sertifikat' }); }
+    finally { setSaving(false); }
+  };
+
+  const handleDeleteCert = async (id: string) => {
+    if (!confirm('Hapus sertifikat ini?')) return;
+    await supabase.from('certificates').delete().eq('id', id);
+    setCertificates(prev => prev.filter(c => c.id !== id));
   };
 
   const resetPortfolioForm = () => {
@@ -227,16 +293,16 @@ export default function AdminAboutPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex bg-gray-100 p-1 rounded-xl mb-8 w-max admin-card">
-        {(['profil', 'portofolio', 'konten'] as Tab[]).map((tab) => (
+      <div className="flex flex-wrap gap-1 bg-gray-100 p-1 rounded-xl mb-8 w-max admin-card">
+        {(['profil', 'portofolio', 'sertifikat', 'konten'] as Tab[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-6 py-2.5 text-sm font-semibold rounded-lg capitalize transition-all ${
+            className={`px-5 py-2 text-sm font-semibold rounded-lg capitalize transition-all ${
               activeTab === tab ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'
             }`}
           >
-            {tab}
+            {tab === 'sertifikat' ? '🏆 Sertifikat' : tab}
           </button>
         ))}
       </div>
@@ -257,7 +323,7 @@ export default function AdminAboutPage() {
                   ) : (
                     <span className="text-gray-400 text-sm">Upload</span>
                   )}
-                  <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, setProfileAvatar)} className="absolute inset-0 opacity-0 cursor-pointer" />
+                  <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, setProfileAvatar, 'avatars')} className="absolute inset-0 opacity-0 cursor-pointer" />
                 </div>
               </div>
               <div className="flex-1 space-y-4">
@@ -302,21 +368,13 @@ export default function AdminAboutPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-              <div>
-                <label className="admin-label block text-sm font-semibold text-gray-700 mb-1">File CV (PDF)</label>
-                <div className="flex gap-2 items-center">
-                  <input type="file" accept=".pdf" onChange={(e) => handleFileUpload(e, setProfileCV)} className="text-xs" />
-                  {profileCV && <a href={profileCV} target="_blank" rel="noreferrer" className="text-xs text-blue-500 underline">Lihat CV</a>}
-                </div>
+            <div className="pt-4 border-t border-gray-100">
+              <label className="admin-label block text-sm font-semibold text-gray-700 mb-1">File CV (PDF)</label>
+              <div className="flex gap-2 items-center">
+                <input type="file" accept=".pdf" onChange={(e) => handleFileUpload(e, setProfileCV, 'documents')} className="text-xs" />
+                {profileCV && <a href={profileCV} target="_blank" rel="noreferrer" className="text-xs text-blue-500 underline">Lihat CV</a>}
               </div>
-              <div>
-                <label className="admin-label block text-sm font-semibold text-gray-700 mb-1">File Sertifikat Utama</label>
-                <div className="flex gap-2 items-center">
-                  <input type="file" accept=".pdf,image/*" onChange={(e) => handleFileUpload(e, setProfileCert)} className="text-xs" />
-                  {profileCert && <a href={profileCert} target="_blank" rel="noreferrer" className="text-xs text-blue-500 underline">Lihat Sertifikat</a>}
-                </div>
-              </div>
+              <p className="text-xs text-gray-400 mt-1">Kelola koleksi sertifikat di tab <strong>🏆 Sertifikat</strong></p>
             </div>
 
             <button onClick={handleSaveProfile} disabled={saving} className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl mt-4">
@@ -402,6 +460,81 @@ export default function AdminAboutPage() {
                 <div className="flex gap-3 pt-4">
                   <button type="submit" disabled={saving} className="px-6 py-2 bg-blue-500 text-white rounded-xl font-bold">Simpan</button>
                   <button type="button" onClick={resetPortfolioForm} className="px-6 py-2 bg-gray-200 text-gray-800 rounded-xl font-bold">Batal</button>
+                </div>
+              </form>
+            )}
+          </div>
+        )}
+
+        {/* ===================== TAB SERTIFIKAT ===================== */}
+        {activeTab === 'sertifikat' && (
+          <div>
+            {!showCertForm ? (
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="admin-title text-xl font-bold">Koleksi Sertifikat</h2>
+                    <p className="text-xs text-gray-400 mt-1">Ditampilkan di halaman <a href="/about" target="_blank" className="text-blue-500 underline">/about</a></p>
+                  </div>
+                  <button onClick={() => setShowCertForm(true)} className="px-4 py-2 bg-blue-500 text-white rounded-xl text-sm font-bold">+ Tambah</button>
+                </div>
+                {certificates.length === 0 ? (
+                  <div className="py-12 text-center text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl">
+                    <p className="text-2xl mb-2">🏆</p>
+                    <p className="font-semibold">Belum ada sertifikat.</p>
+                    <p className="text-sm">Klik &quot;+ Tambah&quot; untuk menambahkan.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {certificates.map(c => (
+                      <div key={c.id} className="border border-gray-100 rounded-xl p-4 flex gap-3 bg-gray-50">
+                        {c.image_url && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={c.image_url} alt={c.title} className="w-16 h-16 object-cover rounded-lg shrink-0" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-gray-900 text-sm truncate">{c.title}</h3>
+                          <p className="text-xs text-gray-500">{c.issuer} · {c.date}</p>
+                          {c.cert_url && <a href={c.cert_url} target="_blank" rel="noreferrer" className="text-xs text-blue-500 underline">Lihat Sertifikat</a>}
+                          <div className="flex gap-2 mt-2">
+                            <button onClick={() => startEditCert(c)} className="text-blue-600 text-xs hover:underline">Edit</button>
+                            <button onClick={() => handleDeleteCert(c.id)} className="text-red-500 text-xs hover:underline">Hapus</button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <form onSubmit={handleSaveCert} className="space-y-4 max-w-xl">
+                <h2 className="admin-title text-xl font-bold mb-4">{editingCertId ? 'Edit Sertifikat' : 'Tambah Sertifikat'}</h2>
+                <div>
+                  <label className="admin-label block text-sm font-semibold mb-1">Judul Sertifikat</label>
+                  <input required value={certTitle} onChange={e => setCertTitle(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" placeholder="Misal: AWS Cloud Practitioner" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Penerbit / Issuer</label>
+                    <input required value={certIssuer} onChange={e => setCertIssuer(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" placeholder="Misal: Amazon" />
+                  </div>
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Tanggal</label>
+                    <input type="month" value={certDate} onChange={e => setCertDate(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" />
+                  </div>
+                </div>
+                <div>
+                  <label className="admin-label block text-sm font-semibold mb-1">Gambar Sertifikat (opsional)</label>
+                  <input type="file" accept="image/*" onChange={e => handleFileUpload(e, setCertImageUrl, 'content')} className="text-xs mb-2" />
+                  {certImageUrl && <img src={certImageUrl} alt="preview" className="h-24 rounded-lg border" />}
+                </div>
+                <div>
+                  <label className="admin-label block text-sm font-semibold mb-1">Link Sertifikat (PDF / URL)</label>
+                  <input type="url" value={certUrl} onChange={e => setCertUrl(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" placeholder="https://..." />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button type="submit" disabled={saving} className="px-6 py-2 bg-blue-500 text-white rounded-xl font-bold">Simpan</button>
+                  <button type="button" onClick={resetCertForm} className="px-6 py-2 bg-gray-200 text-gray-800 rounded-xl font-bold">Batal</button>
                 </div>
               </form>
             )}
