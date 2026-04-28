@@ -7,6 +7,7 @@ import { generateSlug, estimateReadingTime } from '@/lib/utils';
 import type { Post } from '@/types/post';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface PostFormProps {
   post?: Post;
@@ -502,7 +503,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
           <div className="admin-preview bg-white rounded-xl border border-gray-200 p-6 min-h-[200px] shadow-sm transition-colors duration-300">
             {content ? (
               <div className="prose prose-sm max-w-none prose-headings:font-bold prose-a:text-blue-600 prose-strong:text-gray-900 prose-blockquote:border-blue-400 admin-preview-content">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {content}
                 </ReactMarkdown>
               </div>

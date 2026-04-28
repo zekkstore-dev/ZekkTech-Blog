@@ -13,6 +13,7 @@ import type { Post } from '@/types/post';
 import type { Metadata } from 'next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -184,7 +185,7 @@ export default async function PostPage({ params }: PageProps) {
             {/* isi artikel dari markdown */}
             <div className="post-content-card bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 lg:p-10 shadow-sm mb-8 transition-colors duration-300">
               <div className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-img:rounded-xl prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50/50 prose-blockquote:rounded-r-xl prose-blockquote:py-1 overflow-x-hidden">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {post.content}
                 </ReactMarkdown>
               </div>
