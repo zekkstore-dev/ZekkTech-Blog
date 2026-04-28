@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
           // Batasi akses fitur browser yang tidak diperlukan
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
           // Aktifkan DNS prefetch untuk performa
           {
