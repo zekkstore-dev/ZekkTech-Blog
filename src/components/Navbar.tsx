@@ -146,10 +146,10 @@ export default function Navbar() {
               </svg>
             </button>
 
-            <a href="https://buymeacoffee.com" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-[13px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98]">
-              <Image src="/images/simple-icons_buymeacoffee.svg" alt="Coffee" width={16} height={16} />
-              Buy Me A Coffee
+            <a href="https://trakteer.id/zakariamp" target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-[13px] font-semibold transition-all hover:shadow-lg hover:shadow-red-500/25 active:scale-[0.98]">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+              Trakteer
             </a>
           </div>
 
@@ -192,10 +192,10 @@ export default function Navbar() {
                 className="flex-1 text-sm bg-transparent focus:outline-none text-[var(--text-primary)] placeholder:text-gray-400"
               />
             </form>
-            <a href="https://buymeacoffee.com" target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full text-[13px] font-semibold">
-              <Image src="/images/simple-icons_buymeacoffee.svg" alt="Coffee" width={16} height={16} />
-              Buy Me A Coffee
+            <a href="https://trakteer.id/zakariamp" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-full text-[13px] font-semibold">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+              Trakteer
             </a>
           </div>
         )}

@@ -14,51 +14,6 @@ import type { Metadata } from 'next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
-
-// Schema sanitasi: izinkan tag HTML umum tapi blokir script, iframe, & event handler
-const sanitizeSchema = {
-  ...defaultSchema,
-  tagNames: [
-    // heading & teks
-    'h1','h2','h3','h4','h5','h6',
-    'p','br','hr','strong','em','b','i','u','s','del','ins','mark','small','sub','sup',
-    // struktur
-    'div','span','section','article','aside','header','footer','main','nav',
-    'blockquote','pre','code','kbd','samp','var',
-    // list
-    'ul','ol','li','dl','dt','dd',
-    // tabel
-    'table','thead','tbody','tfoot','tr','th','td','caption','colgroup','col',
-    // media (tanpa script/iframe)
-    'img','figure','figcaption','picture','source',
-    // link
-    'a',
-    // interaktif aman
-    'details','summary',
-    // format
-    'abbr','cite','q','time','address',
-  ],
-  attributes: {
-    ...defaultSchema.attributes,
-    // izinkan class & style terbatas untuk styling konten
-    '*': ['className', 'class', 'id', 'style', 'title', 'lang', 'dir'],
-    a: ['href', 'title', 'target', 'rel'],
-    img: ['src', 'alt', 'title', 'width', 'height', 'loading'],
-    td: ['colspan', 'rowspan', 'align'],
-    th: ['colspan', 'rowspan', 'align', 'scope'],
-    time: ['dateTime'],
-    abbr: ['title'],
-    ol: ['start', 'type'],
-    li: ['value'],
-    // blokir event handler (onclick, onerror, dll.) — tidak ada dalam daftar ini
-  },
-  // blokir protokol berbahaya di href/src
-  protocols: {
-    href: ['http', 'https', 'mailto', 'tel'],
-    src: ['http', 'https'],
-  },
-};
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -230,10 +185,7 @@ export default async function PostPage({ params }: PageProps) {
             {/* isi artikel dari markdown */}
             <div className="post-content-card bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 lg:p-10 shadow-sm mb-8 transition-colors duration-300">
               <div className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-img:rounded-xl prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50/50 prose-blockquote:rounded-r-xl prose-blockquote:py-1 overflow-x-hidden">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
-                >
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {post.content}
                 </ReactMarkdown>
               </div>

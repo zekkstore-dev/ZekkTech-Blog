@@ -8,40 +8,6 @@ import type { Post } from '@/types/post';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
-
-// Schema sanitasi: izinkan tag HTML umum tapi blokir script, iframe, & event handler
-const sanitizeSchema = {
-  ...defaultSchema,
-  tagNames: [
-    'h1','h2','h3','h4','h5','h6',
-    'p','br','hr','strong','em','b','i','u','s','del','ins','mark','small','sub','sup',
-    'div','span','section','article','aside','header','footer','main','nav',
-    'blockquote','pre','code','kbd','samp','var',
-    'ul','ol','li','dl','dt','dd',
-    'table','thead','tbody','tfoot','tr','th','td','caption','colgroup','col',
-    'img','figure','figcaption','picture','source',
-    'a',
-    'details','summary',
-    'abbr','cite','q','time','address',
-  ],
-  attributes: {
-    ...defaultSchema.attributes,
-    '*': ['className', 'class', 'id', 'style', 'title', 'lang', 'dir'],
-    a: ['href', 'title', 'target', 'rel'],
-    img: ['src', 'alt', 'title', 'width', 'height', 'loading'],
-    td: ['colspan', 'rowspan', 'align'],
-    th: ['colspan', 'rowspan', 'align', 'scope'],
-    time: ['dateTime'],
-    abbr: ['title'],
-    ol: ['start', 'type'],
-    li: ['value'],
-  },
-  protocols: {
-    href: ['http', 'https', 'mailto', 'tel'],
-    src: ['http', 'https'],
-  },
-};
 
 interface PostFormProps {
   post?: Post;
@@ -537,10 +503,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
           <div className="admin-preview bg-white rounded-xl border border-gray-200 p-6 min-h-[200px] shadow-sm transition-colors duration-300">
             {content ? (
               <div className="prose prose-sm max-w-none prose-headings:font-bold prose-a:text-blue-600 prose-strong:text-gray-900 prose-blockquote:border-blue-400 admin-preview-content">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
-                >
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {content}
                 </ReactMarkdown>
               </div>
