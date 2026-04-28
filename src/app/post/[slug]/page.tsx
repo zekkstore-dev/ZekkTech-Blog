@@ -92,8 +92,10 @@ export default async function PostPage({ params }: PageProps) {
   // pecah kategori biar bisa ditampilin satu-satu
   const categories = post.category.split(',').map(c => c.trim());
 
-  // ambil foto profil dari site_settings (untuk ditampilkan di header artikel)
+  // ambil foto profil, job, dan bio dari site_settings (untuk ditampilkan di header + sidebar)
   let authorAvatar: string | null = null;
+  let authorJob = 'Web Developer';
+  let authorBio = 'Penulis aktif di ZekkTech Blog, berbagi tips dan trik dunia pemrograman.';
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     if (supabaseUrl && !supabaseUrl.includes('your-project')) {
@@ -101,12 +103,17 @@ export default async function PostPage({ params }: PageProps) {
       const supabase = await createServerSupabaseClient();
       const { data: settings } = await supabase
         .from('site_settings')
-        .select('value')
-        .eq('key', 'profile_avatar')
-        .single();
-      if (settings?.value) authorAvatar = settings.value;
+        .select('key, value')
+        .in('key', ['profile_avatar', 'profile_job', 'profile_bio']);
+      if (settings) {
+        settings.forEach(s => {
+          if (s.key === 'profile_avatar' && s.value) authorAvatar = s.value;
+          if (s.key === 'profile_job' && s.value) authorJob = s.value;
+          if (s.key === 'profile_bio' && s.value) authorBio = s.value;
+        });
+      }
     }
-  } catch { /* pakai fallback inisial */ }
+  } catch { /* pakai fallback default */ }
 
   return (
     <main className="post-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
@@ -272,13 +279,23 @@ export default async function PostPage({ params }: PageProps) {
             <div className="lg:sticky lg:top-24 space-y-5">
               {/* box profil penulis */}
               <div className="sidebar-card bg-white rounded-2xl border border-gray-100 p-5 shadow-sm text-center transition-colors duration-300">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold mx-auto mb-3">
-                  {post.author_name.charAt(0).toUpperCase()}
-                </div>
+                {/* foto profil atau inisial */}
+                {authorAvatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={authorAvatar}
+                    alt={post.author_name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-blue-100 mx-auto mb-3"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-xl font-bold mx-auto mb-3">
+                    {post.author_name.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <h4 className="text-sm font-bold text-gray-900">{post.author_name}</h4>
-                <p className="text-xs text-gray-400 mb-3">Web Developer</p>
+                <p className="text-xs text-gray-400 mb-3">{authorJob}</p>
                 <p className="text-xs text-gray-500 leading-relaxed">
-                  Penulis aktif di ZekkTech Blog, berbagi tips dan trik dunia pemrograman.
+                  {authorBio}
                 </p>
               </div>
 
