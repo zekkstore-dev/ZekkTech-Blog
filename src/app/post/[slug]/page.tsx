@@ -201,6 +201,17 @@ export default async function PostPage({ params }: PageProps) {
                     hr: ({ node, ...props }) => (
                       <hr {...props} style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '1.25rem 0', ...(props.style as React.CSSProperties) }} />
                     ),
+                    // eslint-disable-next-line @next/next/no-img-element
+                    img: ({ node, src, alt, ...props }) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={src}
+                        alt={alt || ''}
+                        {...props}
+                        style={{ maxWidth: '100%', borderRadius: '10px', margin: '12px 0', display: 'block', ...(props.style as React.CSSProperties) }}
+                        loading="lazy"
+                      />
+                    ),
                   }}
                 >
                   {post.content}

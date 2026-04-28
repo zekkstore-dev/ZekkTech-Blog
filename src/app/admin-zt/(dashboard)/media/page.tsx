@@ -194,6 +194,22 @@ export default function MediaLibraryPage() {
     });
   };
 
+  /**
+   * Salin tag HTML <img> — gunakan ini saat memasukkan gambar di dalam
+   * elemen HTML seperti <li>, <div>, dll. di mana sintaks markdown ![]()
+   * tidak diproses oleh parser.
+   */
+  const handleCopyHtml = (file: MediaFile) => {
+    const filename = file.key.split('/').pop() ?? file.key;
+    const altText = filename.replace(/^\d+-/, '').replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+    const html = `<img src="${file.url}" alt="${altText}" style="max-width:100%;border-radius:8px;margin:10px 0;" />`;
+
+    navigator.clipboard.writeText(html).then(() => {
+      setCopiedKey(file.key + '-html');
+      setTimeout(() => setCopiedKey(null), 2000);
+    });
+  };
+
   const handleCopyUrl = (file: MediaFile) => {
     navigator.clipboard.writeText(file.url).then(() => {
       setCopiedKey(file.key + '-url');
@@ -370,7 +386,7 @@ export default function MediaLibraryPage() {
                 </p>
                 <p className="text-[9px] text-gray-400 mb-2">{formatSize(file.size)}</p>
 
-                {/* Tombol: Copy Markdown */}
+                {/* Tombol: Copy Markdown — untuk di luar HTML block */}
                 <button
                   onClick={() => handleCopyMarkdown(file)}
                   className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 ${
@@ -380,6 +396,19 @@ export default function MediaLibraryPage() {
                   }`}
                 >
                   {copiedKey === file.key ? '✅ Tersalin!' : '📋 Copy Markdown'}
+                </button>
+
+                {/* Tombol: Copy HTML <img> — untuk di dalam <li>, <div>, dll. */}
+                <button
+                  onClick={() => handleCopyHtml(file)}
+                  className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 ${
+                    copiedKey === file.key + '-html'
+                      ? 'bg-green-500 text-white'
+                      : 'bg-purple-50 text-purple-600 hover:bg-purple-100 border border-purple-100'
+                  }`}
+                  title="Pakai ini jika gambar ada di dalam tag HTML seperti <li>"
+                >
+                  {copiedKey === file.key + '-html' ? '✅ Tersalin!' : '🖼️ Copy HTML <img>'}
                 </button>
 
                 {/* Tombol: Copy URL saja */}
