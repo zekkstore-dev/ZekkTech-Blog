@@ -185,7 +185,24 @@ export default async function PostPage({ params }: PageProps) {
             {/* isi artikel dari markdown */}
             <div className="post-content-card bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 lg:p-10 shadow-sm mb-8 transition-colors duration-300">
               <div className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-img:rounded-xl prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50/50 prose-blockquote:rounded-r-xl prose-blockquote:py-1 overflow-x-hidden">
-                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  components={{
+                    ol: ({ node, ...props }) => (
+                      <ol {...props} style={{ listStyleType: 'decimal', paddingLeft: '1.75rem', margin: '0.75rem 0', ...(props.style as React.CSSProperties) }} />
+                    ),
+                    ul: ({ node, ...props }) => (
+                      <ul {...props} style={{ listStyleType: 'disc', paddingLeft: '1.75rem', margin: '0.75rem 0', ...(props.style as React.CSSProperties) }} />
+                    ),
+                    li: ({ node, ...props }) => (
+                      <li {...props} style={{ marginBottom: '0.3rem', ...(props.style as React.CSSProperties) }} />
+                    ),
+                    hr: ({ node, ...props }) => (
+                      <hr {...props} style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '1.25rem 0', ...(props.style as React.CSSProperties) }} />
+                    ),
+                  }}
+                >
                   {post.content}
                 </ReactMarkdown>
               </div>

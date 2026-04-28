@@ -503,7 +503,24 @@ export default function PostForm({ post, mode }: PostFormProps) {
           <div className="admin-preview bg-white rounded-xl border border-gray-200 p-6 min-h-[200px] shadow-sm transition-colors duration-300">
             {content ? (
               <div className="prose prose-sm max-w-none prose-headings:font-bold prose-a:text-blue-600 prose-strong:text-gray-900 prose-blockquote:border-blue-400 admin-preview-content">
-                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  components={{
+                    ol: ({ node, ...props }) => (
+                      <ol {...props} style={{ listStyleType: 'decimal', paddingLeft: '1.75rem', margin: '0.75rem 0', ...(props.style as React.CSSProperties) }} />
+                    ),
+                    ul: ({ node, ...props }) => (
+                      <ul {...props} style={{ listStyleType: 'disc', paddingLeft: '1.75rem', margin: '0.75rem 0', ...(props.style as React.CSSProperties) }} />
+                    ),
+                    li: ({ node, ...props }) => (
+                      <li {...props} style={{ marginBottom: '0.3rem', ...(props.style as React.CSSProperties) }} />
+                    ),
+                    hr: ({ node, ...props }) => (
+                      <hr {...props} style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '1.25rem 0', ...(props.style as React.CSSProperties) }} />
+                    ),
+                  }}
+                >
                   {content}
                 </ReactMarkdown>
               </div>
