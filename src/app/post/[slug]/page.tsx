@@ -92,6 +92,22 @@ export default async function PostPage({ params }: PageProps) {
   // pecah kategori biar bisa ditampilin satu-satu
   const categories = post.category.split(',').map(c => c.trim());
 
+  // ambil foto profil dari site_settings (untuk ditampilkan di header artikel)
+  let authorAvatar: string | null = null;
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (supabaseUrl && !supabaseUrl.includes('your-project')) {
+      const { createServerSupabaseClient } = await import('@/lib/supabase/server');
+      const supabase = await createServerSupabaseClient();
+      const { data: settings } = await supabase
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'profile_avatar')
+        .single();
+      if (settings?.value) authorAvatar = settings.value;
+    }
+  } catch { /* pakai fallback inisial */ }
+
   return (
     <main className="post-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
       <Navbar />
@@ -111,13 +127,13 @@ export default async function PostPage({ params }: PageProps) {
 
           {/* konten teks di atas gambar */}
           <div className="relative max-w-5xl mx-auto px-6 py-16 sm:py-20 flex flex-col justify-end min-h-[380px] sm:min-h-[420px]">
-            {/* pill kategori */}
+            {/* pill kategori — biru */}
             <div className="mb-4 flex flex-wrap gap-2">
               {categories.map(cat => (
                 <Link
                   key={cat}
                   href={`/blog?search=${encodeURIComponent(cat)}`}
-                  className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30 transition-colors"
+                  className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/80 backdrop-blur-sm text-white border border-blue-400/60 hover:bg-blue-600/90 transition-colors"
                 >
                   #{cat}
                 </Link>
@@ -129,15 +145,28 @@ export default async function PostPage({ params }: PageProps) {
               {post.title}
             </h1>
 
-            {/* info penulis */}
+            {/* info penulis + views */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
-                {post.author_name.charAt(0).toUpperCase()}
-              </div>
-              <div>
+              {/* foto profil atau inisial */}
+              {authorAvatar ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={authorAvatar} alt={post.author_name} className="w-10 h-10 rounded-full object-cover border-2 border-white/50 shrink-0" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                  {post.author_name.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="flex-1">
                 <p className="text-sm font-semibold text-white">{post.author_name}</p>
-                <p className="text-xs text-white/70">
+                <p className="text-xs text-white/70 flex items-center gap-1.5">
                   {formatDate(post.created_at)} • {post.reading_time} Menit Dibaca
+                  {post.views != null && (
+                    <span className="flex items-center gap-1">
+                      <span>•</span>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      {post.views.toLocaleString('id-ID')} Views
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
@@ -162,13 +191,26 @@ export default async function PostPage({ params }: PageProps) {
               {post.title}
             </h1>
             <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-sm font-bold">
-                {post.author_name.charAt(0).toUpperCase()}
-              </div>
+              {/* foto profil atau inisial */}
+              {authorAvatar ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={authorAvatar} alt={post.author_name} className="w-11 h-11 rounded-full object-cover border-2 border-blue-100 shrink-0" />
+              ) : (
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                  {post.author_name.charAt(0).toUpperCase()}
+                </div>
+              )}
               <div>
                 <p className="author-name text-sm font-semibold text-gray-800">{post.author_name}</p>
-                <p className="author-meta text-xs text-gray-400">
+                <p className="author-meta text-xs text-gray-400 flex items-center gap-1.5">
                   {formatDate(post.created_at)} • {post.reading_time} Menit Dibaca
+                  {post.views != null && (
+                    <span className="flex items-center gap-1">
+                      <span>•</span>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      {post.views.toLocaleString('id-ID')} Views
+                    </span>
+                  )}
                 </p>
               </div>
             </div>

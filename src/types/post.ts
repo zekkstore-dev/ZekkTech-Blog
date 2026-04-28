@@ -10,6 +10,7 @@ export interface Post {
   reading_time: number;
   featured: boolean;
   published: boolean;
+  views?: number;
   created_at: string;
   updated_at: string;
 }
