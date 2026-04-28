@@ -90,7 +90,12 @@ export default async function AboutPage() {
               <h1 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-1">{profile.name}</h1>
               <p className="text-slate-500 dark:text-gray-400 font-medium mb-6 text-sm">{profile.job}</p>
               
-              <a href={profile.cv_url ? `/resume?doc=cv` : '#'} className={`w-full flex items-center justify-center gap-2 px-6 py-3 font-bold rounded-xl shadow-lg transition-all ${profile.cv_url ? "bg-[#0ea5e9] hover:bg-[#0284c7] text-white shadow-sky-500/30 hover:-translate-y-0.5" : "bg-gray-200 dark:bg-gray-800 text-gray-500 cursor-not-allowed shadow-none"}`}>
+              <a
+                href={profile.cv_url || '#'}
+                target={profile.cv_url ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                className={`w-full flex items-center justify-center gap-2 px-6 py-3 font-bold rounded-xl shadow-lg transition-all ${profile.cv_url ? "bg-[#0ea5e9] hover:bg-[#0284c7] text-white shadow-sky-500/30 hover:-translate-y-0.5" : "bg-gray-200 dark:bg-gray-800 text-gray-500 cursor-not-allowed shadow-none"}`}
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 {profile.cv_url ? "Download CV" : "CV Belum Diunggah"}
               </a>
@@ -107,11 +112,21 @@ export default async function AboutPage() {
               
               {/* Utility Buttons (Resume/Cert) */}
               <div className="flex flex-wrap gap-3 mb-8 pb-8 border-b border-gray-100 ">
-                <a href={profile.cert_url ? `/resume?doc=cert` : '#'} className={`inline-flex items-center gap-2 px-4 py-2 border rounded-lg font-medium text-sm transition-all shadow-sm ${profile.cert_url ? "border-slate-200  bg-white dark:bg-[#252830] text-slate-700 dark:text-gray-300 hover:border-[#0ea5e9] hover:text-[#0ea5e9]" : "border-dashed border-gray-200  text-gray-400 bg-transparent cursor-not-allowed"}`}>
+                {/* My Sertificate — selalu bisa diklik, mengarah ke halaman /sertifikat */}
+                <a
+                  href="/sertifikat"
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white dark:bg-[#252830] text-slate-700 dark:text-gray-300 hover:border-[#0ea5e9] hover:text-[#0ea5e9] rounded-lg font-medium text-sm transition-all shadow-sm"
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                   My Sertificate
                 </a>
-                <a href={profile.cv_url ? `/resume?doc=cv` : '#'} className={`inline-flex items-center gap-2 px-4 py-2 border rounded-lg font-medium text-sm transition-all shadow-sm ${profile.cv_url ? "border-slate-200  bg-white dark:bg-[#252830] text-slate-700 dark:text-gray-300 hover:border-[#0ea5e9] hover:text-[#0ea5e9]" : "border-dashed border-gray-200  text-gray-400 bg-transparent cursor-not-allowed"}`}>
+                {/* My Resume — langsung buka URL PDF */}
+                <a
+                  href={profile.cv_url || '#'}
+                  target={profile.cv_url ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-2 px-4 py-2 border rounded-lg font-medium text-sm transition-all shadow-sm ${profile.cv_url ? "border-slate-200 bg-white dark:bg-[#252830] text-slate-700 dark:text-gray-300 hover:border-[#0ea5e9] hover:text-[#0ea5e9]" : "border-dashed border-gray-200 text-gray-400 bg-transparent cursor-not-allowed"}`}
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                   My Resume
                 </a>

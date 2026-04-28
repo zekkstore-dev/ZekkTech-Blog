@@ -100,6 +100,16 @@ const nextConfig: NextConfig = {
         destination: '/not-found',
         permanent: false,
       },
+      {
+        source: '/resume',
+        destination: '/not-found',
+        permanent: false,
+      },
+      {
+        source: '/resume/:path*',
+        destination: '/not-found',
+        permanent: false,
+      },
     ];
   },
 };
