@@ -8,6 +8,7 @@ import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import NewsletterSection from '@/components/NewsletterSection';
 import ViewTracker from '@/components/ViewTracker';
+import PostViews from '@/components/PostViews';
 import LiveClock from '@/components/LiveClock';
 import type { Post } from '@/types/post';
 import type { Metadata } from 'next';
@@ -167,13 +168,7 @@ export default async function PostPage({ params }: PageProps) {
                 <p className="text-sm font-semibold text-white">{post.author_name}</p>
                 <p className="text-xs text-white/70 flex items-center gap-1.5">
                   {formatDate(post.created_at)} • {post.reading_time} Menit Dibaca
-                  {post.views != null && (
-                    <span className="flex items-center gap-1">
-                      <span>•</span>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                      {post.views.toLocaleString('id-ID')} Views
-                    </span>
-                  )}
+                  <PostViews postId={post.id} initialViews={post.views} />
                 </p>
               </div>
             </div>
@@ -211,13 +206,7 @@ export default async function PostPage({ params }: PageProps) {
                 <p className="author-name text-sm font-semibold text-gray-800">{post.author_name}</p>
                 <p className="author-meta text-xs text-gray-400 flex items-center gap-1.5">
                   {formatDate(post.created_at)} • {post.reading_time} Menit Dibaca
-                  {post.views != null && (
-                    <span className="flex items-center gap-1">
-                      <span>•</span>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                      {post.views.toLocaleString('id-ID')} Views
-                    </span>
-                  )}
+                  <PostViews postId={post.id} initialViews={post.views} />
                 </p>
               </div>
             </div>
