@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     }
 
     // panggil satpam turnstile buat ngecek
-    const verifyFormData = new FormData();
+    const verifyFormData = new URLSearchParams();
     verifyFormData.append('secret', process.env.TURNSTILE_SECRET_KEY!);
     verifyFormData.append('response', token);
 
@@ -21,7 +21,10 @@ export async function POST(req: Request) {
       'https://challenges.cloudflare.com/turnstile/v0/siteverify',
       {
         method: 'POST',
-        body: verifyFormData,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: verifyFormData.toString(),
       }
     );
 
