@@ -39,7 +39,9 @@ CREATE TABLE IF NOT EXISTS comments (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
   user_name TEXT NOT NULL,
+  user_email TEXT,
   content TEXT NOT NULL,
+  is_approved BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -142,9 +144,9 @@ INSERT INTO posts (id, title, slug, content, excerpt, cover_url, category, autho
 ('22222222-2222-2222-2222-222222222223', 'Template Admin Dashboard Gratis (Tailwind CSS)', 'template-admin-dashboard-gratis', 'Download template admin dashboard siap pakai menggunakan Tailwind CSS dan React terbaik.', 'Download template admin dashboard siap pakai menggunakan Tailwind CSS.', '/images/react-demo.svg', 'Template', '11111111-1111-1111-1111-111111111111', 'Zakaria', 3, false, true, '2025-02-12T10:00:00Z', '2025-02-12T10:00:00Z'),
 ('22222222-2222-2222-2222-222222222224', '5 Tips Menjadi Developer Senior', 'tips-menjadi-developer-senior', 'Opini dan insight mendalam seputar pergeseran mindset dari sekedar coder menjadi problem solver yang andal di industri.', 'Insight mendalam seputar pergeseran mindset programmer handal.', NULL, 'Pilihan Editor', '11111111-1111-1111-1111-111111111111', 'Zakaria', 7, true, true, '2025-02-12T11:00:00Z', '2025-02-12T11:00:00Z');
 
-INSERT INTO comments (post_id, user_name, content) VALUES
-('22222222-2222-2222-2222-222222222222', 'Budi Santoso', 'Wah, tutorialnya sangat mudah dipahami! Terima kasih mas.'),
-('22222222-2222-2222-2222-222222222223', 'Ahmad Faiz', 'Izin download templatenya ya bos!');
+INSERT INTO comments (post_id, user_name, user_email, content, is_approved) VALUES
+('22222222-2222-2222-2222-222222222222', 'Budi Santoso', 'budi.santoso@example.com', 'Wah, tutorialnya sangat mudah dipahami! Terima kasih mas.', true),
+('22222222-2222-2222-2222-222222222223', 'Ahmad Faiz', 'developer.keren@example.com', 'Izin download templatenya ya bos!', true);
 
 INSERT INTO subscribers (email) VALUES
 ('budi.santoso@example.com'),
