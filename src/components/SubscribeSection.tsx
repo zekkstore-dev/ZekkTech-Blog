@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Turnstile } from '@marsidev/react-turnstile';
+import { useState, useRef } from 'react';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 
 /**
  * SubscribeSection — Form subscribe di landing page
@@ -14,6 +14,7 @@ export default function SubscribeSection() {
   const [message, setMessage] = useState('');
   const [token, setToken] = useState('');
   const [showCaptcha, setShowCaptcha] = useState(false); // lazy render Turnstile
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +47,8 @@ export default function SubscribeSection() {
     } catch (err) {
       setStatus('error');
       setMessage(err instanceof Error ? err.message : 'Terjadi kesalahan.');
+      turnstileRef.current?.reset();
+      setToken('');
     } finally {
       setLoading(false);
     }
@@ -115,6 +118,7 @@ export default function SubscribeSection() {
         {showCaptcha && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
           <div className="mt-4 flex justify-center">
             <Turnstile
+              ref={turnstileRef}
               siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               onSuccess={(t) => setToken(t)}
             />

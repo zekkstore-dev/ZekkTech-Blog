@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { formatDate } from '@/lib/utils';
-import { Turnstile } from '@marsidev/react-turnstile';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import type { Comment } from '@/types/post';
 
 interface CommentSectionProps {
@@ -22,6 +22,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [isSubscribeError, setIsSubscribeError] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [token, setToken] = useState<string>('');
+  
+  const turnstileRef = useRef<TurnstileInstance>(null);
   
   const supabase = createClient();
 
@@ -102,6 +104,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       if (msg.toLowerCase().includes('berlangganan')) {
         setIsSubscribeError(true);
       }
+      // Reset Turnstile token on error
+      turnstileRef.current?.reset();
+      setToken('');
     } finally {
       setLoading(false);
     }
@@ -226,6 +231,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         <div className="mb-6">
           {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? (
             <Turnstile
+              ref={turnstileRef}
               siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               onSuccess={(t) => setToken(t)}
             />
