@@ -53,7 +53,30 @@ export async function proxy(request: NextRequest) {
 
   // PENTING: Jangan pake getSession() — bisa aja dari cache lama.
   // getUser() selalu validasi ke Supabase Auth server jadi lebih aman.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Proteksi rute admin-zt (kecuali halaman login)
+  if (
+    request.nextUrl.pathname.startsWith('/admin-zt') &&
+    !request.nextUrl.pathname.startsWith('/admin-zt/login')
+  ) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin-zt/login';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Jika user sudah login dan mencoba mengakses halaman login admin, redirect ke dashboard
+  if (request.nextUrl.pathname === '/admin-zt/login') {
+    if (user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin-zt';
+      return NextResponse.redirect(url);
+    }
+  }
 
   return supabaseResponse;
 }
