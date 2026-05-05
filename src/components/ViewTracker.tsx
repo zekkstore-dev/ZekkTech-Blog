@@ -7,6 +7,10 @@ export default function ViewTracker({ postId }: { postId: string }) {
   useEffect(() => {
     async function trackView() {
       try {
+         // Cek apakah user ini sudah pernah baca artikel ini sebelumnya di browser ini
+         const storageKey = `viewed_${postId}`;
+         if (localStorage.getItem(storageKey)) return;
+
          // skip kalo masih pake data dummy lokal
          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
          if (!supabaseUrl || supabaseUrl.includes('your-project')) return;
@@ -21,7 +25,12 @@ export default function ViewTracker({ postId }: { postId: string }) {
                 // ip dihandle di server, disini cukup user agent aja dulu
             }]);
             
-         if (error) console.error('gagal track view:', error);
+         if (!error) {
+            // Tandai di browser bahwa user sudah baca, supaya kalau di-refresh ga nambah view terus
+            localStorage.setItem(storageKey, 'true');
+         } else {
+            console.error('gagal track view:', error);
+         }
       } catch (err) {
          console.warn('gagal track view (diabaikan):', err);
       }
