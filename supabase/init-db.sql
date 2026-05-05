@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS posts (
   reading_time INT DEFAULT 5,
   featured BOOLEAN DEFAULT FALSE,
   published BOOLEAN DEFAULT FALSE,
+  views INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -112,6 +113,24 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER posts_updated_at BEFORE UPDATE ON posts FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 CREATE TRIGGER comments_updated_at BEFORE UPDATE ON comments FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 CREATE TRIGGER authors_updated_at BEFORE UPDATE ON authors FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- Fungsi untuk update jumlah views di tabel posts
+CREATE OR REPLACE FUNCTION increment_post_views()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.post_id IS NOT NULL THEN
+    UPDATE posts
+    SET views = COALESCE(views, 0) + 1
+    WHERE id = NEW.post_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_page_view_insert
+AFTER INSERT ON page_views
+FOR EACH ROW
+EXECUTE FUNCTION increment_post_views();
 
 
 -- ==========================================
