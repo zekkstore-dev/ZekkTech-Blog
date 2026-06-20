@@ -4,6 +4,7 @@ import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Portfolio } from '@/types/portfolio';
+import FloatingIcons from '@/components/FloatingIcons';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
@@ -74,17 +75,18 @@ export default async function AboutPage() {
   const { profile, portfolios } = await getPageData();
 
   return (
-    <main className="about-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
+    <main className="about-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300 relative">
+      <FloatingIcons />
       <Navbar />
 
-      <article className="max-w-[900px] mx-auto px-6 py-12 md:py-20 animate-fade-in-up">
+      <article className="max-w-[900px] mx-auto px-6 py-12 md:py-20 animate-fade-in-up relative z-[1]">
         
         {/* ================= Profil Section ================= */}
         <div id="profil" className="mb-20 scroll-mt-24">
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Left Column: Avatar & Download CTA */}
             <div className="w-full md:w-64 flex flex-col items-center shrink-0">
-              <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-3xl overflow-hidden border-[6px] border-white dark:border-[#1a1d24] shadow-xl relative mb-6">
+              <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-2xl overflow-hidden border-[6px] border-white dark:border-[#1a1d24] shadow-xl relative mb-6">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
               </div>
@@ -103,7 +105,7 @@ export default async function AboutPage() {
             </div>
 
             {/* Right Column: Hello, Bio & Buttons */}
-            <div className="flex-1 w-full bg-[var(--bg-secondary)] rounded-3xl p-8 shadow-sm border border-gray-100 /50">
+            <div className="flex-1 w-full bg-[var(--bg-secondary)] rounded-xl p-8 shadow-sm border border-gray-100 /50">
               <h2 className="text-3xl font-extrabold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
                 Hello! <span>👋</span>
               </h2>
@@ -148,9 +150,9 @@ export default async function AboutPage() {
 
         {/* ================= Markdown Story ================= */}
         {profile.markdown && (
-          <div className="mb-20 bg-[var(--bg-secondary)] p-8 rounded-3xl shadow-sm border border-gray-100 /50">
+          <div className="mb-20 bg-[var(--bg-secondary)] p-8 rounded-xl shadow-sm border border-gray-100 /50">
             <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-6">Tentang Perjalanan Saya</h2>
-            <div className="prose prose-slate max-w-none text-[15px] leading-relaxed text-slate-600 dark:text-gray-300 [&>p]:text-slate-600 dark:[&>p]:text-gray-300 [&>ul]:text-slate-600 dark:[&>ul]:text-gray-300 [&>ol]:text-slate-600 dark:[&>ol]:text-gray-300 [&_strong]:text-slate-800 dark:[&_strong]:text-gray-100 [&_h2]:text-slate-800 dark:[&_h2]:text-gray-100 [&_h3]:text-slate-800 dark:[&_h3]:text-gray-100">
+            <div className="prose prose-slate max-w-none text-[15px] leading-relaxed text-slate-600 dark:text-gray-300 [&>p]:text-slate-600 dark:[&>p]:text-gray-300 [&>ul]:text-slate-600 dark:[&>ul]:text-gray-300 [&>ol]:text-slate-600 dark:[&>ol]:text-gray-300 [&_strong]:text-slate-800 dark:[&_strong]:text-gray-100 [&_h2]:text-slate-800 dark:[&_h2]:text-gray-100 [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:text-slate-800 dark:[&_h3]:text-gray-100 [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:mb-4 [&_br]:block [&_br]:mb-2">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {profile.markdown}
               </ReactMarkdown>
@@ -167,13 +169,13 @@ export default async function AboutPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
             {portfolios.length === 0 ? (
-              <div className="col-span-full py-16 text-center text-slate-500 dark:text-gray-400 bg-[var(--bg-secondary)] border border-dashed border-gray-200  rounded-3xl flex flex-col items-center justify-center gap-3">
+              <div className="col-span-full py-16 text-center text-slate-500 dark:text-gray-400 bg-[var(--bg-secondary)] border border-dashed border-gray-200  rounded-xl flex flex-col items-center justify-center gap-3">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-50"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                 <p>Belum ada proyek portofolio yang dipublikasikan.<br/><span className="text-sm">Silakan buat dan atur portofolio di Dashboard Admin.</span></p>
               </div>
             ) : (
               portfolios.slice(0, 4).map(port => (
-                <div key={port.id} className="relative group bg-[var(--bg-secondary)] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl dark:shadow-none dark:hover:shadow-sky-500/5 border border-gray-100  transition-all duration-300 hover:-translate-y-1 flex flex-col">
+                <div key={port.id} className="relative group bg-[var(--bg-secondary)] rounded-xl overflow-hidden shadow-sm hover:shadow-xl dark:shadow-none dark:hover:shadow-sky-500/5 border border-gray-100  transition-all duration-300 hover:-translate-y-1 flex flex-col">
                   
                   {/* Image Header with Badge */}
                   <div className="w-full h-48 lg:h-56 overflow-hidden relative bg-slate-100 dark:bg-slate-800">
@@ -234,7 +236,7 @@ export default async function AboutPage() {
 
         {/* ================= Hubungi Kami ================= */}
         <div id="contact" className="scroll-mt-24">
-          <div className="bg-slate-800 dark:bg-[#1a1d24] rounded-3xl p-10 lg:p-14 text-center pb-12 pt-14 text-white relative overflow-hidden shadow-xl border border-gray-800">
+          <div className="bg-slate-800 dark:bg-[#1a1d24] rounded-xl p-10 lg:p-14 text-center pb-12 pt-14 text-white relative overflow-hidden shadow-xl border border-gray-800">
             <h3 className="text-3xl font-extrabold mb-4 pb-2">Punya Ide Proyek Menarik?</h3>
             <p className="text-slate-300 mb-10 max-w-lg mx-auto leading-relaxed text-base">
               Saya secara terbuka menerima peluang freelance, kerjasama, obrolan bisnis, atau sekadar berdiskusi santai tentang teknologi teranyar.

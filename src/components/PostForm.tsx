@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { generateSlug, estimateReadingTime } from '@/lib/utils';
+import { convertToWebP } from '@/lib/image-converter';
 import type { Post } from '@/types/post';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -97,20 +98,22 @@ export default function PostForm({ post, mode }: PostFormProps) {
    * lalu sisipkan teks markdown `![nama-file](url)` di posisi kursor textarea
    */
   const uploadContentImage = useCallback(async (file: File) => {
-    // Validasi tipe file: hanya JPG, PNG, WEBP
-    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    // Validasi tipe file: hanya JPG, PNG, WEBP, SVG
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
     if (!allowed.includes(file.type)) {
-      setImageMsg('❌ Hanya JPG, PNG, dan WEBP yang diperbolehkan.');
+      setImageMsg('❌ Hanya JPG, PNG, WEBP, dan SVG yang diperbolehkan.');
       setTimeout(() => setImageMsg(''), 3000);
       return;
     }
 
     setImageUploading(true);
-    setImageMsg('⏳ Mengupload gambar...');
+    setImageMsg('⏳ Mengonversi ke WebP...');
 
     try {
+      const optimizedFile = await convertToWebP(file);
+      setImageMsg('⏳ Mengupload gambar...');
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', optimizedFile);
       // Kirim parameter folder agar API upload tahu ini gambar "content", bukan "cover"
       formData.append('folder', 'content');
 
@@ -214,8 +217,11 @@ export default function PostForm({ post, mode }: PostFormProps) {
 
       // upload gambar cover ke server kita, nanti di-forward ke R2
       if (coverFile) {
+        setError('Mengonversi cover ke WebP...');
+        const optimizedCover = await convertToWebP(coverFile);
+        
         const formData = new FormData();
-        formData.append('file', coverFile);
+        formData.append('file', optimizedCover);
 
         const uploadRes = await fetch('/api/upload', {
           method: 'POST',
@@ -405,7 +411,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
             <input
               ref={contentImageInputRef}
               type="file"
-              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              accept=".jpg,.jpeg,.png,.webp,.svg,image/jpeg,image/png,image/webp,image/svg+xml"
               onChange={handleContentImageChange}
               className="hidden"
               aria-label="Pilih gambar untuk disisipkan ke konten"
@@ -546,8 +552,8 @@ export default function PostForm({ post, mode }: PostFormProps) {
               <path d="M12 16V8M12 8L9 11M12 8L15 11M3 16V17C3 18.657 4.343 20 6 20H18C19.657 20 21 18.657 21 17V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span className="text-sm font-semibold text-gray-700 mb-1">Klik untuk memilih gambar lokal</span>
-            <span className="text-xs text-gray-500 text-center px-4">Tipe: <span className="font-mono text-blue-500">.JPG, .PNG, .WEBP</span> (Maksimal yang disarankan 150KB)</span>
-            <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onChange={handleCoverChange} className="hidden" />
+            <span className="text-xs text-gray-500 text-center px-4">Tipe: <span className="font-mono text-blue-500">.JPG, .PNG, .WEBP, .SVG</span> (Maksimal yang disarankan 150KB)</span>
+            <input type="file" accept=".jpg,.jpeg,.png,.webp,.svg,image/jpeg,image/png,image/webp,image/svg+xml" onChange={handleCoverChange} className="hidden" />
           </label>
         </div>
       </div>

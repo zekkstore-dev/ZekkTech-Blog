@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { convertToWebP } from '@/lib/image-converter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Portfolio } from '@/types/portfolio';
@@ -104,8 +105,9 @@ export default function AdminAboutPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
+      const processedFile = await convertToWebP(file);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', processedFile);
       formData.append('folder', folder);
       const res = await fetch('/api/upload', { method: 'POST', body: formData });
       if (!res.ok) {

@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import ThemeProvider from '@/components/ThemeProvider';
 import CopyProtection from '@/components/CopyProtection';
+import SubscribePopup from '@/components/SubscribePopup';
 import './globals.css';
 
 const plusJakartaSans = localFont({
@@ -113,6 +114,7 @@ export default function RootLayout({
       <body className={`${plusJakartaSans.className} antialiased`}>
         <ThemeProvider>
           <CopyProtection />
+          <SubscribePopup />
           {children}
         </ThemeProvider>
         {process.env.NEXT_PUBLIC_GA_ID && (

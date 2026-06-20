@@ -65,14 +65,14 @@ export default async function ResumePage({
 
         {/* Warning if no document uploaded */}
         {!currentUrl && (
-          <div className="w-full py-20 text-center bg-[var(--bg-secondary)] rounded-3xl border border-dashed border-gray-300 ">
+          <div className="w-full py-20 text-center bg-[var(--bg-secondary)] rounded-xl border border-dashed border-gray-300 ">
             <p className="text-slate-500 dark:text-gray-400 font-medium">Dokumen ini belum diunggah.</p>
           </div>
         )}
 
         {/* PDF Viewer Canvas */}
         {currentUrl && (
-          <div className="w-full h-[600px] md:h-[800px] bg-[var(--bg-secondary)] rounded-3xl overflow-hidden shadow-xl border border-gray-100 /50 relative">
+          <div className="w-full h-[600px] md:h-[800px] bg-[var(--bg-secondary)] rounded-xl overflow-hidden shadow-xl border border-gray-100 /50 relative">
             {/* Download explicitly fallback */}
             <div className="absolute top-4 right-4 z-10">
               <a href={currentUrl} download target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-slate-800/80 backdrop-blur text-white text-xs font-bold rounded-lg hover:bg-slate-900 transition flex items-center gap-2">

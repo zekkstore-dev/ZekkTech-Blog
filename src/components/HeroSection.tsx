@@ -89,7 +89,7 @@ export default function HeroSection() {
 
         {/* Scroll indicator */}
         <div className="flex justify-center mt-8 pb-4">
-          <a href="#kategori" className="scroll-indicator animate-bounce">
+          <a href="#kategori" className="scroll-indicator hover:translate-y-1 transition-transform duration-300">
             <svg
               width="40"
               height="40"

@@ -43,7 +43,7 @@ export default async function PortofolioPage() {
         
         <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
           {portfolios.length === 0 ? (
-            <div className="col-span-full py-16 text-center text-slate-500 dark:text-gray-400 bg-[var(--bg-secondary)] border border-dashed border-gray-200  rounded-3xl flex flex-col items-center justify-center gap-3">
+            <div className="col-span-full py-16 text-center text-slate-500 dark:text-gray-400 bg-[var(--bg-secondary)] border border-dashed border-gray-200  rounded-xl flex flex-col items-center justify-center gap-3">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-50"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
               <p className="text-sm">Belum ada proyek portofolio.<br/><span className="text-xs">Silakan buat dan atur portofolio di Dashboard Admin.</span></p>
             </div>
