@@ -60,3 +60,8 @@ next-env.d.ts
 *.key
 *.p12
 *.pfx
+
+# Windows folder config files
+desktop.ini
+[Dd]esktop.ini
+

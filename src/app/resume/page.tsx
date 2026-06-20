@@ -2,6 +2,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 // Define the shape of searchParams, we are receiving them from Next.js Page Props
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Dokumen | ZekkTech',
   description: 'Melihat Curriculum Vitae dan Sertifikat',

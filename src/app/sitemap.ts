@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { seedPosts } from '@/lib/seed-data';
+export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { getBaseUrl } = await import('@/lib/utils');

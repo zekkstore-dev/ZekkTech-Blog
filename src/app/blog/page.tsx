@@ -5,6 +5,7 @@ import { seedPosts } from '@/lib/seed-data';
 import type { Post } from '@/types/post';
 import NewsletterSection from '@/components/NewsletterSection';
 import { SearchEngine, ScoredPost } from '@/lib/models/SearchEngine';
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Semua Artikel | ZekkTech',

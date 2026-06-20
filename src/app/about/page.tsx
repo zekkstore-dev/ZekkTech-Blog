@@ -4,6 +4,7 @@ import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Portfolio } from '@/types/portfolio';
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Tentang Saya | ZekkTech',

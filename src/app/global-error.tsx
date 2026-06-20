@@ -1,11 +1,11 @@
 'use client';
 
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import localFont from 'next/font/local';
 import Image from 'next/image';
 import './globals.css';
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
+const plusJakartaSans = localFont({
+  src: './fonts/PlusJakartaSans-Variable.woff2',
   display: 'swap',
 });
 

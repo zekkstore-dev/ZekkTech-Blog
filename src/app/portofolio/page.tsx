@@ -2,6 +2,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import type { Portfolio } from '@/types/portfolio';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Portofolio | ZekkTech',
   description: 'Kumpulan proyek portofolio yang pernah dikerjakan.',

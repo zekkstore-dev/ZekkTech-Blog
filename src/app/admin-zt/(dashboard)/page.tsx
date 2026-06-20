@@ -4,6 +4,8 @@ import AdminPostTable from '@/components/AdminPostTable';
 import { seedPosts } from '@/lib/seed-data';
 import type { Post } from '@/types/post';
 
+export const dynamic = 'force-dynamic';
+
 async function getAllPosts(): Promise<Post[]> {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

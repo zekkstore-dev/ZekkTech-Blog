@@ -3,6 +3,8 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Sertifikat | ZekkTech',
   description: 'Koleksi sertifikat dan pencapaian Zakaria MP di dunia teknologi.',

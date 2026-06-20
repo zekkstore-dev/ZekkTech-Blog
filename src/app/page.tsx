@@ -9,6 +9,7 @@ import MotionFAQ from '@/components/MotionFAQ';
 import Link from 'next/link';
 import { seedPosts } from '@/lib/seed-data';
 import type { Post } from '@/types/post';
+export const dynamic = 'force-dynamic';
 
 async function getPosts(): Promise<Post[]> {
   // coba ambil dari supabase, kalo gagal pake data dummy aja
