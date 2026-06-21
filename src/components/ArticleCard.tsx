@@ -87,40 +87,40 @@ export default function ArticleCard({
         </div>
 
         {/* konten card */}
-        <div className="p-4 sm:p-5">
+        <div className="p-2.5 sm:p-5">
           {/* baris atas: kategori + tanggal */}
-          <div className="flex items-center justify-between mb-3">
-            <span className="category-pill inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-600 border border-blue-100">
+          <div className="flex items-center justify-between mb-1.5 sm:mb-3">
+            <span className="category-pill inline-flex px-1.5 py-0.5 rounded-full text-[9px] sm:text-[11px] font-semibold bg-blue-50 text-blue-600 border border-blue-100">
               {primaryCategory}
             </span>
-            <span className="card-date text-[11px] text-gray-400 font-medium">
+            <span className="card-date text-[9px] sm:text-[11px] text-gray-400 font-medium">
               {formatDate(createdAt)}
             </span>
           </div>
 
           {/* judul artikel */}
-          <h3 className="text-[15px] sm:text-base font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-xs sm:text-base font-bold text-gray-900 leading-snug line-clamp-2 mb-1.5 sm:mb-2 group-hover:text-blue-600 transition-colors">
             {renderHighlightedText(title, highlightWords)}
           </h3>
 
-          {/* kutipan singkat / excerpt */}
+          {/* kutipan singkat / excerpt (hanya tampil di layar lebih besar agar hemat ruang mobile) */}
           {excerpt && (
-            <p className="card-excerpt text-[13px] text-gray-500 leading-relaxed line-clamp-2 mb-4">
+            <p className="card-excerpt hidden sm:block text-[13px] text-gray-500 leading-relaxed line-clamp-2 mb-4">
               {excerpt}
             </p>
           )}
 
           {/* footer: avatar penulis + baca selengkapnya */}
-          <div className="card-footer flex items-center justify-between pt-3 border-t border-gray-50">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+          <div className="card-footer flex items-center justify-between pt-2 border-t border-gray-50">
+            <div className="flex items-center gap-1.5">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-[9px] sm:text-[10px] font-bold shrink-0">
                 {authorName.charAt(0).toUpperCase()}
               </div>
-              <span className="card-author text-[12px] font-medium text-gray-600">{authorName}</span>
+              <span className="card-author text-[9px] sm:text-[12px] font-medium text-gray-600 line-clamp-1">{authorName}</span>
             </div>
-            <span className="text-[12px] font-semibold text-blue-500 group-hover:text-blue-600 transition-colors flex items-center gap-1">
+            <span className="text-[9px] sm:text-[12px] font-semibold text-blue-500 group-hover:text-blue-600 transition-colors flex items-center gap-0.5">
               Baca
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-0.5 sm:w-3 sm:h-3">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </span>
