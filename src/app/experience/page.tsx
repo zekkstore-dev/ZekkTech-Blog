@@ -64,7 +64,7 @@ export default async function ExperiencePage() {
         </div>
 
         {/* Timeline */}
-        <ExperienceTimeline experiences={experiences} title="Riwayat Pengalaman" />
+        <ExperienceTimeline experiences={experiences} title="Riwayat Pengalaman" maxItems={100} showViewAll={false} />
       </div>
 
       <Footer />

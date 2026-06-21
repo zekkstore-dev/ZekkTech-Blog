@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface Experience {
   id: string;
@@ -16,18 +17,35 @@ interface Experience {
 interface ExperienceTimelineProps {
   experiences: Experience[];
   title?: string;
+  maxItems?: number;
+  showViewAll?: boolean;
+  viewAllHref?: string;
+  expandOnClick?: boolean;
 }
 
 export default function ExperienceTimeline({
   experiences,
   title = 'Pengalaman & Edukasi',
+  maxItems = 3,
+  showViewAll = true,
+  viewAllHref = '/experience',
+  expandOnClick = true,
 }: ExperienceTimelineProps) {
   const [activeTab, setActiveTab] = useState<'Semua' | 'Kerja' | 'Pendidikan' | 'Volunteers'>('Semua');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const filteredExperiences = experiences.filter((exp) => {
     if (activeTab === 'Semua') return true;
     return exp.type === activeTab;
   });
+
+  const displayExperiences = isExpanded ? filteredExperiences : filteredExperiences.slice(0, maxItems);
+  const hasMore = filteredExperiences.length > maxItems;
+
+  const handleTabChange = (tab: typeof activeTab) => {
+    setActiveTab(tab);
+    setIsExpanded(false);
+  };
 
   const tabs: ('Semua' | 'Pendidikan' | 'Kerja' | 'Volunteers')[] = ['Semua', 'Pendidikan', 'Kerja', 'Volunteers'];
 
@@ -73,7 +91,7 @@ export default function ExperienceTimeline({
           {tabs.map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className={`px-3 py-1 rounded-md font-bold transition-all ${
                 activeTab === tab
                   ? 'bg-white dark:bg-slate-700 text-[#0ea5e9] shadow-sm'
@@ -87,14 +105,14 @@ export default function ExperienceTimeline({
       </div>
 
       {/* Timeline List */}
-      <div className="p-6">
+      <div className="p-6 pb-4">
         {filteredExperiences.length === 0 ? (
           <div className="text-center py-10 text-slate-500 dark:text-gray-400 text-xs">
             Tidak ada data untuk kategori &quot;{activeTab}&quot;.
           </div>
         ) : (
           <div className="relative border-l-2 border-slate-100 dark:border-slate-800 ml-3 md:ml-4 pl-6 md:pl-8 space-y-8 py-2">
-            {filteredExperiences.map((exp, idx) => {
+            {displayExperiences.map((exp, idx) => {
               // Custom colors based on type
               const isPendidikan = exp.type === 'Pendidikan';
               const isVolunteer = exp.type === 'Volunteers';
@@ -150,6 +168,37 @@ export default function ExperienceTimeline({
           </div>
         )}
       </div>
+
+      {/* View All Button */}
+      {hasMore && showViewAll && (
+        <div className="flex justify-center p-4 pt-0 pb-6">
+          <Link
+            href={isExpanded ? '#' : viewAllHref}
+            onClick={(e) => {
+              if (expandOnClick) {
+                e.preventDefault();
+                setIsExpanded(!isExpanded);
+              }
+            }}
+            className="group flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 hover:border-[#0ea5e9] dark:hover:border-[#0ea5e9] hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-all duration-300 py-2.5 px-6 w-full max-w-xs cursor-pointer"
+          >
+            <div className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg
+                className={`w-3.5 h-3.5 text-[#0ea5e9] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </div>
+            <span className="text-xs font-bold text-slate-600 dark:text-gray-300 group-hover:text-[#0ea5e9] transition-colors">
+              {isExpanded ? 'Sembunyikan' : `Lihat Semua (${filteredExperiences.length - maxItems} Lainnya)`}
+            </span>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
