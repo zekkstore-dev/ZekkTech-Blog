@@ -24,7 +24,7 @@ interface SertifikatGridProps {
 
 export default function SertifikatGrid({
   certificates,
-  maxItems = 10,
+  maxItems = 8,
   showViewAll = true,
   viewAllHref = '/sertifikat',
   title = 'Sertifikat',

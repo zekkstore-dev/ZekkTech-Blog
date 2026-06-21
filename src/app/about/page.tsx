@@ -271,7 +271,7 @@ export default async function AboutPage() {
 
         {/* ================= Sertifikat Section ================= */}
         <div id="sertifikat" className="mb-20 scroll-mt-24">
-          <SertifikatGrid certificates={certificates} maxItems={10} title="Sertifikat Terbaru" />
+          <SertifikatGrid certificates={certificates} maxItems={8} title="Sertifikat Terbaru" />
         </div>
 
         {/* ================= Hubungi Kami ================= */}
