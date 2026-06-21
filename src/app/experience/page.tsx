@@ -5,20 +5,20 @@ import ExperienceTimeline from '@/components/ExperienceTimeline';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Pengalaman Profesional | ZekkTech',
-  description: 'Daftar riwayat pengalaman kerja, pendidikan, dan relawan Zakaria MP.',
+  title: 'Pengalaman Profesional Zakaria Mujur Prasetyo | ZekkTech',
+  description: 'Daftar riwayat pengalaman kerja, pendidikan, dan kontribusi relawan Zakaria Mujur Prasetyo (Zekktech) sebagai software developer.',
   alternates: {
     canonical: '/experience',
   },
   openGraph: {
-    title: 'Pengalaman Profesional | ZekkTech',
-    description: 'Daftar riwayat pengalaman kerja, pendidikan, dan relawan Zakaria MP.',
+    title: 'Pengalaman Profesional Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Daftar riwayat pengalaman kerja, pendidikan, dan kontribusi relawan Zakaria Mujur Prasetyo (Zekktech) sebagai software developer.',
     url: '/experience',
     type: 'website',
   },
   twitter: {
-    title: 'Pengalaman Profesional | ZekkTech',
-    description: 'Daftar riwayat pengalaman kerja, pendidikan, dan relawan Zakaria MP.',
+    title: 'Pengalaman Profesional Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Daftar riwayat pengalaman kerja, pendidikan, dan kontribusi relawan Zakaria Mujur Prasetyo (Zekktech) sebagai software developer.',
   },
 };
 

@@ -6,20 +6,20 @@ import PortofolioGrid from '@/components/PortofolioGrid';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Portofolio | ZekkTech',
-  description: 'Kumpulan proyek portofolio yang pernah dikerjakan oleh Zakaria MP.',
+  title: 'Portofolio Zakaria Mujur Prasetyo | ZekkTech',
+  description: 'Kumpulan proyek portofolio software engineering dan web development yang dikerjakan oleh Zakaria Mujur Prasetyo (Zekktech).',
   alternates: {
     canonical: '/portofolio',
   },
   openGraph: {
-    title: 'Portofolio | ZekkTech',
-    description: 'Kumpulan proyek portofolio yang pernah dikerjakan oleh Zakaria MP.',
+    title: 'Portofolio Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Kumpulan proyek portofolio software engineering dan web development yang dikerjakan oleh Zakaria Mujur Prasetyo (Zekktech).',
     url: '/portofolio',
     type: 'website',
   },
   twitter: {
-    title: 'Portofolio | ZekkTech',
-    description: 'Kumpulan proyek portofolio yang pernah dikerjakan oleh Zakaria MP.',
+    title: 'Portofolio Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Kumpulan proyek portofolio software engineering dan web development yang dikerjakan oleh Zakaria Mujur Prasetyo (Zekktech).',
   },
 };
 

@@ -11,20 +11,20 @@ import ExperienceTimeline from '@/components/ExperienceTimeline';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Tentang Saya | ZekkTech',
-  description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
+  title: 'Tentang Zakaria Mujur Prasetyo | ZekkTech',
+  description: 'Kenalan dengan Zakaria Mujur Prasetyo, Full-Stack Developer dan kreator ZekkTech Blog (Zekktech). Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
   alternates: {
     canonical: '/about',
   },
   openGraph: {
-    title: 'Tentang Saya | ZekkTech',
-    description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
+    title: 'Tentang Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Kenalan dengan Zakaria Mujur Prasetyo, Full-Stack Developer dan kreator ZekkTech Blog (Zekktech). Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
     url: '/about',
     type: 'profile',
   },
   twitter: {
-    title: 'Tentang Saya | ZekkTech',
-    description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
+    title: 'Tentang Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Kenalan dengan Zakaria Mujur Prasetyo, Full-Stack Developer dan kreator ZekkTech Blog (Zekktech). Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
   },
 };
 
@@ -35,7 +35,7 @@ Saya adalah seorang **Full-Stack Developer** yang gemar berbagi ilmu seputar tek
 // Fetching functions
 async function getPageData() {
   const defaultProfile = {
-    name: 'ZakariaMP',
+    name: 'Zakaria Mujur Prasetyo',
     job: 'Full-Stack Developer',
     avatar: '/images/person-learn-coding.svg',
     bio: 'Seorang tech enthusiast yang gemar berbagi wawasan baru seputar web development, desain UI/UX, dan teknologi modern.',
@@ -126,7 +126,7 @@ export default async function AboutPage() {
     "@type": "ProfilePage",
     "mainEntity": {
       "@type": "Person",
-      "name": profile.name,
+      "name": profile.name === 'Zakaria' || profile.name === 'Zakaria MP' || profile.name === 'ZakariaMP' ? 'Zakaria Mujur Prasetyo' : profile.name,
       "jobTitle": profile.job,
       "description": profile.bio,
       "image": profile.avatar.startsWith('http') ? profile.avatar : `${baseUrl}${profile.avatar}`,

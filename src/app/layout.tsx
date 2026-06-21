@@ -20,20 +20,20 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   title: {
-    default: 'ZekkTech | Blog Teknologi Indonesia',
+    default: 'ZekkTech | Blog Teknologi Indonesia - Zakaria Mujur Prasetyo',
     template: '%s | ZekkTech'
   },
-  description: 'Blog teknologi Indonesia oleh Zakaria MP. Tips, trik, tutorial, dan berita teknologi terbaru.',
-  keywords: ['blog', 'teknologi', 'indonesia', 'tutorial', 'tips', 'trik', 'javascript', 'css', 'react', 'nextjs', 'web development'],
-  authors: [{ name: 'Zakaria MP' }],
-  creator: 'Zakaria MP',
+  description: 'Blog teknologi Indonesia oleh Zakaria Mujur Prasetyo (Zekktech). Tips, trik, tutorial, dan berita teknologi terbaru.',
+  keywords: ['blog', 'teknologi', 'indonesia', 'tutorial', 'tips', 'trik', 'javascript', 'css', 'react', 'nextjs', 'web development', 'Zakaria Mujur Prasetyo', 'Zekktech', 'ZekkTech Blog', 'Zakaria MP', 'Zakaria Mujur Prasetyo Zekk', 'ZekkCode'],
+  authors: [{ name: 'Zakaria Mujur Prasetyo (Zekk)' }],
+  creator: 'Zakaria Mujur Prasetyo (Zekktech)',
   openGraph: {
     type: 'website',
     locale: 'id_ID',
     url: '/',
     siteName: 'ZekkTech Blog',
-    title: 'ZekkTech | Blog Teknologi Indonesia',
-    description: 'Blog teknologi Indonesia oleh Zakaria MP. Tips, trik, tutorial, dan berita teknologi terbaru.',
+    title: 'ZekkTech | Blog Teknologi Indonesia - Zakaria Mujur Prasetyo',
+    description: 'Blog teknologi Indonesia oleh Zakaria Mujur Prasetyo (Zekktech). Tips, trik, tutorial, dan berita teknologi terbaru.',
     images: [
       {
         url: '/images/LogoZekkTech.png',
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ZekkTech | Blog Teknologi Indonesia',
-    description: 'Blog teknologi Indonesia oleh Zakaria MP. Tips, trik, tutorial, dan berita teknologi terbaru.',
+    title: 'ZekkTech | Blog Teknologi Indonesia - Zakaria Mujur Prasetyo',
+    description: 'Blog teknologi Indonesia oleh Zakaria Mujur Prasetyo (Zekktech). Tips, trik, tutorial, dan berita teknologi terbaru.',
     images: ['/images/LogoZekkTech.png'],
     creator: '@zakariamp',
   },
@@ -98,11 +98,11 @@ export default function RootLayout({
               "@type": "WebSite",
               "name": "ZekkTech Blog",
               "url": "https://zekktech.biz.id",
-              "description": "Blog teknologi Indonesia oleh Zakaria MP. Tips, trik, tutorial, dan berita teknologi terbaru.",
+              "description": "Blog teknologi Indonesia oleh Zakaria Mujur Prasetyo (Zekktech). Tips, trik, tutorial, dan berita teknologi terbaru.",
               "inLanguage": "id-ID",
               "author": {
                 "@type": "Person",
-                "name": "Zakaria MP",
+                "name": "Zakaria Mujur Prasetyo",
                 "url": "https://zekktech.biz.id/about",
                 "sameAs": ["https://github.com/ZekkCode"]
               },

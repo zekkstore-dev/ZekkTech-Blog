@@ -6,20 +6,20 @@ import SertifikatGrid from '@/components/SertifikatGrid';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Sertifikat | ZekkTech',
-  description: 'Koleksi sertifikat dan pencapaian Zakaria MP di dunia teknologi.',
+  title: 'Sertifikat Zakaria Mujur Prasetyo | ZekkTech',
+  description: 'Koleksi sertifikat, lisensi, dan pencapaian profesional Zakaria Mujur Prasetyo (Zekktech) di bidang teknologi dan software development.',
   alternates: {
     canonical: '/sertifikat',
   },
   openGraph: {
-    title: 'Sertifikat | ZekkTech',
-    description: 'Koleksi sertifikat dan pencapaian Zakaria MP di dunia teknologi.',
+    title: 'Sertifikat Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Koleksi sertifikat, lisensi, dan pencapaian profesional Zakaria Mujur Prasetyo (Zekktech) di bidang teknologi dan software development.',
     url: '/sertifikat',
     type: 'website',
   },
   twitter: {
-    title: 'Sertifikat | ZekkTech',
-    description: 'Koleksi sertifikat dan pencapaian Zakaria MP di dunia teknologi.',
+    title: 'Sertifikat Zakaria Mujur Prasetyo | ZekkTech',
+    description: 'Koleksi sertifikat, lisensi, dan pencapaian profesional Zakaria Mujur Prasetyo (Zekktech) di bidang teknologi dan software development.',
   },
 };
 

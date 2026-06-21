@@ -108,7 +108,7 @@ export default async function PostPage({ params }: PageProps) {
     "dateModified": new Date(post.updated_at || post.created_at).toISOString(),
     "author": {
       "@type": "Person",
-      "name": post.author_name,
+      "name": post.author_name === 'Zakaria' || post.author_name === 'Zakaria MP' || post.author_name === 'ZakariaMP' ? 'Zakaria Mujur Prasetyo' : post.author_name,
       "url": `${baseUrl}/about`
     },
     "publisher": {

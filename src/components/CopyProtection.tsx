@@ -37,7 +37,7 @@ export default function CopyProtection() {
       if (!selectedText.trim()) return;
 
       // Teks attribution yang akan ditempel di bawah hasil copy
-      const attribution = `\n\n---\nSumber: ZekkTech Blog oleh Zakaria MP\nWebsite: https://zekktech.biz.id\nKomunitas WhatsApp: https://chat.whatsapp.com/BiwktQom1QS0n588Nw6B8j`;
+      const attribution = `\n\n---\nSumber: ZekkTech Blog oleh Zakaria Mujur Prasetyo (Zekktech)\nWebsite: https://zekktech.biz.id\nKomunitas WhatsApp: https://chat.whatsapp.com/BiwktQom1QS0n588Nw6B8j`;
 
       const finalText = selectedText + attribution;
 
