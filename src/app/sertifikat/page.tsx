@@ -8,6 +8,19 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Sertifikat | ZekkTech',
   description: 'Koleksi sertifikat dan pencapaian Zakaria MP di dunia teknologi.',
+  alternates: {
+    canonical: '/sertifikat',
+  },
+  openGraph: {
+    title: 'Sertifikat | ZekkTech',
+    description: 'Koleksi sertifikat dan pencapaian Zakaria MP di dunia teknologi.',
+    url: '/sertifikat',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Sertifikat | ZekkTech',
+    description: 'Koleksi sertifikat dan pencapaian Zakaria MP di dunia teknologi.',
+  },
 };
 
 interface Certificate {

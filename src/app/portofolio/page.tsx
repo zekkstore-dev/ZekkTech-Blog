@@ -7,7 +7,20 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Portofolio | ZekkTech',
-  description: 'Kumpulan proyek portofolio yang pernah dikerjakan.',
+  description: 'Kumpulan proyek portofolio yang pernah dikerjakan oleh Zakaria MP.',
+  alternates: {
+    canonical: '/portofolio',
+  },
+  openGraph: {
+    title: 'Portofolio | ZekkTech',
+    description: 'Kumpulan proyek portofolio yang pernah dikerjakan oleh Zakaria MP.',
+    url: '/portofolio',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Portofolio | ZekkTech',
+    description: 'Kumpulan proyek portofolio yang pernah dikerjakan oleh Zakaria MP.',
+  },
 };
 
 async function getPortfolios() {

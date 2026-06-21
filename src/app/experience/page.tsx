@@ -7,6 +7,19 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Pengalaman Profesional | ZekkTech',
   description: 'Daftar riwayat pengalaman kerja, pendidikan, dan relawan Zakaria MP.',
+  alternates: {
+    canonical: '/experience',
+  },
+  openGraph: {
+    title: 'Pengalaman Profesional | ZekkTech',
+    description: 'Daftar riwayat pengalaman kerja, pendidikan, dan relawan Zakaria MP.',
+    url: '/experience',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Pengalaman Profesional | ZekkTech',
+    description: 'Daftar riwayat pengalaman kerja, pendidikan, dan relawan Zakaria MP.',
+  },
 };
 
 interface Experience {

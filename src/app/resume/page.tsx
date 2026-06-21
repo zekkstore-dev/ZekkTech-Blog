@@ -7,6 +7,19 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Dokumen | ZekkTech',
   description: 'Melihat Curriculum Vitae dan Sertifikat',
+  alternates: {
+    canonical: '/resume',
+  },
+  openGraph: {
+    title: 'Dokumen | ZekkTech',
+    description: 'Melihat Curriculum Vitae dan Sertifikat',
+    url: '/resume',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Dokumen | ZekkTech',
+    description: 'Melihat Curriculum Vitae dan Sertifikat',
+  },
 };
 
 async function getDocumentUrls() {

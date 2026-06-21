@@ -11,6 +11,19 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Semua Artikel | ZekkTech',
   description: 'Jelajahi seluruh koleksi artikel teknologi, panduan, dan inspirasi kami.',
+  alternates: {
+    canonical: '/blog',
+  },
+  openGraph: {
+    title: 'Semua Artikel | ZekkTech',
+    description: 'Jelajahi seluruh koleksi artikel teknologi, panduan, dan inspirasi kami.',
+    url: '/blog',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Semua Artikel | ZekkTech',
+    description: 'Jelajahi seluruh koleksi artikel teknologi, panduan, dan inspirasi kami.',
+  },
 };
 
 async function getPosts(searchQuery?: string): Promise<Post[]> {

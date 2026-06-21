@@ -62,6 +62,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: post.title,
     description: description,
+    alternates: {
+      canonical: `/post/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: description,
@@ -92,6 +95,36 @@ export default async function PostPage({ params }: PageProps) {
   // kalo artikelnya ga ketemu, lempar ke 404
   if (!post) notFound();
 
+  const { getBaseUrl } = await import('@/lib/utils');
+  const baseUrl = getBaseUrl();
+
+  const blogPostJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt || post.title,
+    "image": post.cover_url || `${baseUrl}/images/LogoZekkTech.png`,
+    "datePublished": new Date(post.created_at).toISOString(),
+    "dateModified": new Date(post.updated_at || post.created_at).toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": post.author_name,
+      "url": `${baseUrl}/about`
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ZekkTech Blog",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${baseUrl}/images/LogoZekkTech.png`
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${baseUrl}/post/${post.slug}`
+    }
+  };
+
   // pecah kategori biar bisa ditampilin satu-satu
   const categories = post.category.split(',').map(c => c.trim());
 
@@ -120,6 +153,10 @@ export default async function PostPage({ params }: PageProps) {
 
   return (
     <main className="post-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostJsonLd) }}
+      />
       <Navbar />
 
       {/* hero area: cover image sebagai background dengan overlay */}

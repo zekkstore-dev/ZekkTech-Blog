@@ -13,7 +13,16 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Tentang Saya | ZekkTech',
   description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
+  alternates: {
+    canonical: '/about',
+  },
   openGraph: {
+    title: 'Tentang Saya | ZekkTech',
+    description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
+    url: '/about',
+    type: 'profile',
+  },
+  twitter: {
     title: 'Tentang Saya | ZekkTech',
     description: 'Kenalan dengan Zakaria MP, Full-Stack Developer dan kreator ZekkTech Blog. Berbagi tips teknologi, tutorial web, dan pengalaman di dunia programming.',
   },
@@ -109,9 +118,29 @@ async function getPageData() {
 
 export default async function AboutPage() {
   const { profile, portfolios, certificates, experiences } = await getPageData();
+  const { getBaseUrl } = await import('@/lib/utils');
+  const baseUrl = getBaseUrl();
+
+  const profileJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": profile.name,
+      "jobTitle": profile.job,
+      "description": profile.bio,
+      "image": profile.avatar.startsWith('http') ? profile.avatar : `${baseUrl}${profile.avatar}`,
+      "url": `${baseUrl}/about`,
+      "sameAs": ["https://github.com/ZekkCode"]
+    }
+  };
 
   return (
     <main className="about-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300 relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(profileJsonLd) }}
+      />
       <FloatingIcons />
       <Navbar />
 

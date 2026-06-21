@@ -16,6 +16,9 @@ import { getBaseUrl } from '@/lib/utils';
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
+  alternates: {
+    canonical: '/',
+  },
   title: {
     default: 'ZekkTech | Blog Teknologi Indonesia',
     template: '%s | ZekkTech'
