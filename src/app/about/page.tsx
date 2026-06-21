@@ -96,7 +96,7 @@ async function getPageData() {
     }
 
     // Fetch Experiences
-    const { data: exps } = await supabase.from('experiences').select('*').order('created_at', { ascending: false });
+    const { data: exps } = await supabase.from('experiences').select('*').order('start_date', { ascending: false });
     if (exps) {
       data.experiences = exps as Experience[];
     }

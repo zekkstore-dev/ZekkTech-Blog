@@ -27,7 +27,8 @@ TRUNCATE TABLE experiences;
 
 -- Sample seed data
 INSERT INTO experiences (title, company, location, start_date, end_date, description, type) VALUES
-('Sistem Informasi', 'Universitas Trunojoyo Madura', 'Bangkalan', '2020-09', '2024-09', 'Belajar Rekayasa Perangkat Lunak, Basis Data, dan Pengembangan Web.', 'Pendidikan'),
+('S1 Teknik Informatika', 'Universitas Trunojoyo Madura', 'Bangkalan', '2024-09', 'Present', 'Fokus pada rekayasa perangkat lunak, pemrograman web, struktur data, dan analisis algoritma.', 'Pendidikan'),
+('SMK Multimedia', 'SMKN 1 Jetis', 'Mojokerto', '2017-07', '2020-06', 'Mempelajari dasar-dasar desain grafis, animasi, videografi, dan dasar pemrograman web.', 'Pendidikan'),
 ('Full-Stack Developer', 'PT Duta Asia Advertising', 'Jakarta', '2023-01', 'Present', 'Mengembangkan aplikasi web internal dan client-facing menggunakan React, Next.js, dan Supabase.', 'Kerja'),
 ('Frontend Developer', 'Freelance', 'Remote', '2021-06', '2022-12', 'Mengerjakan berbagai proyek website dan web app untuk klien dari berbagai industri.', 'Kerja'),
 ('Relawan IT Support', 'Komunitas Sosial', 'Surabaya', '2022-01', '2022-06', 'Membantu instalasi jaringan dan pemeliharaan perangkat keras.', 'Volunteers');

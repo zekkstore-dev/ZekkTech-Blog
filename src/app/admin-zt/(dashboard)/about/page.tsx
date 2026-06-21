@@ -119,7 +119,7 @@ export default function AdminAboutPage() {
       if (certs) setCertificates(certs as Certificate[]);
 
       // Load Experiences
-      const { data: exps } = await supabase.from('experiences').select('*').order('created_at', { ascending: false });
+      const { data: exps } = await supabase.from('experiences').select('*').order('start_date', { ascending: false });
       if (exps) setExperiences(exps as Experience[]);
     } catch (error) {
       console.error('Error loading data:', error);
