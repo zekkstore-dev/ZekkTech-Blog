@@ -595,8 +595,8 @@ export default function AdminAboutPage() {
                   <div>
                     <label className="admin-label block text-sm font-semibold mb-1">Kategori / Section</label>
                     <select value={expType} onChange={e => setExpType(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl bg-white">
-                      <option value="Kerja">Kerja</option>
                       <option value="Pendidikan">Pendidikan</option>
+                      <option value="Kerja">Kerja</option>
                       <option value="Volunteers">Volunteers</option>
                     </select>
                   </div>

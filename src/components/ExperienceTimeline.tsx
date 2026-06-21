@@ -29,7 +29,7 @@ export default function ExperienceTimeline({
     return exp.type === activeTab;
   });
 
-  const tabs: ('Semua' | 'Kerja' | 'Pendidikan' | 'Volunteers')[] = ['Semua', 'Kerja', 'Pendidikan', 'Volunteers'];
+  const tabs: ('Semua' | 'Pendidikan' | 'Kerja' | 'Volunteers')[] = ['Semua', 'Pendidikan', 'Kerja', 'Volunteers'];
 
   // Helper icons
   const getIcon = (type: string) => {
