@@ -6,9 +6,9 @@ import { convertToWebP } from '@/lib/image-converter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Portfolio } from '@/types/portfolio';
-import { User, Briefcase, Trophy, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, Briefcase, Trophy, FileText, CheckCircle, AlertCircle, FolderDot } from 'lucide-react';
 
-type Tab = 'profil' | 'portofolio' | 'sertifikat' | 'konten';
+type Tab = 'profil' | 'experience' | 'portofolio' | 'sertifikat' | 'konten';
 
 interface Certificate {
   id: string;
@@ -19,6 +19,18 @@ interface Certificate {
   cert_url: string;
   section: string;
   created_at: string;
+}
+
+interface Experience {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  start_date: string;
+  end_date: string;
+  description: string;
+  type: string;
+  created_at?: string;
 }
 
 export default function AdminAboutPage() {
@@ -65,6 +77,18 @@ export default function AdminAboutPage() {
   const [portTags, setPortTags] = useState<string[]>([]);
   const [portTagInput, setPortTagInput] = useState('');
 
+  // Experience CRUD
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [showExpForm, setShowExpForm] = useState(false);
+  const [editingExpId, setEditingExpId] = useState<string | null>(null);
+  const [expTitle, setExpTitle] = useState('');
+  const [expCompany, setExpCompany] = useState('');
+  const [expLocation, setExpLocation] = useState('');
+  const [expStartDate, setExpStartDate] = useState('');
+  const [expEndDate, setExpEndDate] = useState('Present');
+  const [expDescription, setExpDescription] = useState('');
+  const [expType, setExpType] = useState('Kerja');
+
   useEffect(() => {
     loadData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,6 +117,10 @@ export default function AdminAboutPage() {
       // Load Certificates
       const { data: certs } = await supabase.from('certificates').select('*').order('date', { ascending: false });
       if (certs) setCertificates(certs as Certificate[]);
+
+      // Load Experiences
+      const { data: exps } = await supabase.from('experiences').select('*').order('created_at', { ascending: false });
+      if (exps) setExperiences(exps as Experience[]);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -260,6 +288,75 @@ export default function AdminAboutPage() {
     setCertificates(prev => prev.filter(c => c.id !== id));
   };
 
+  // === Experience handlers ===
+  const resetExpForm = () => {
+    setEditingExpId(null);
+    setExpTitle('');
+    setExpCompany('');
+    setExpLocation('');
+    setExpStartDate('');
+    setExpEndDate('Present');
+    setExpDescription('');
+    setExpType('Kerja');
+    setShowExpForm(false);
+  };
+
+  const startEditExp = (e: Experience) => {
+    setEditingExpId(e.id);
+    setExpTitle(e.title);
+    setExpCompany(e.company);
+    setExpLocation(e.location || '');
+    setExpStartDate(e.start_date);
+    setExpEndDate(e.end_date || 'Present');
+    setExpDescription(e.description || '');
+    setExpType(e.type || 'Kerja');
+    setShowExpForm(true);
+  };
+
+  const handleSaveExp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const payload = {
+        title: expTitle,
+        company: expCompany,
+        location: expLocation,
+        start_date: expStartDate,
+        end_date: expEndDate,
+        description: expDescription,
+        type: expType,
+      };
+      if (editingExpId) {
+        const { error } = await supabase.from('experiences').update(payload).eq('id', editingExpId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('experiences').insert([payload]);
+        if (error) throw error;
+      }
+      await loadData();
+      resetExpForm();
+      setFeedback({ type: 'success', msg: 'Pengalaman berhasil disimpan!' });
+      setTimeout(() => setFeedback(null), 3000);
+    } catch {
+      setFeedback({ type: 'error', msg: 'Gagal menyimpan pengalaman' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteExp = async (id: string) => {
+    if (!confirm('Hapus pengalaman ini?')) return;
+    try {
+      const { error } = await supabase.from('experiences').delete().eq('id', id);
+      if (error) throw error;
+      setExperiences(prev => prev.filter(e => e.id !== id));
+      setFeedback({ type: 'success', msg: 'Pengalaman berhasil dihapus!' });
+      setTimeout(() => setFeedback(null), 3000);
+    } catch {
+      setFeedback({ type: 'error', msg: 'Gagal menghapus pengalaman' });
+    }
+  };
+
   const resetPortfolioForm = () => {
     setEditingPortfolioId(null);
     setPortTitle('');
@@ -350,7 +447,8 @@ export default function AdminAboutPage() {
       <div className="flex flex-wrap gap-1 bg-gray-100 p-1 rounded-xl mb-8 w-max admin-card">
         {([
           { id: 'profil', label: 'Profil', icon: User },
-          { id: 'portofolio', label: 'Portofolio', icon: Briefcase },
+          { id: 'experience', label: 'Pengalaman', icon: Briefcase },
+          { id: 'portofolio', label: 'Portofolio', icon: FolderDot },
           { id: 'sertifikat', label: 'Sertifikat', icon: Trophy },
           { id: 'konten', label: 'Konten', icon: FileText },
         ] as { id: Tab; label: string; icon: any }[]).map((tab) => {
@@ -445,6 +543,98 @@ export default function AdminAboutPage() {
             <button onClick={handleSaveProfile} disabled={saving} className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl mt-4">
               Simpan Profil
             </button>
+          </div>
+        )}
+
+        {/* ===================== TAB EXPERIENCE ===================== */}
+        {activeTab === 'experience' && (
+          <div>
+            {!showExpForm ? (
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="admin-title text-xl font-bold">Daftar Pengalaman</h2>
+                  <button onClick={() => setShowExpForm(true)} className="px-4 py-2 bg-blue-500 text-white rounded-xl text-sm font-bold">+ Tambah</button>
+                </div>
+                {experiences.length === 0 ? (
+                  <p className="text-gray-500 italic">Belum ada pengalaman.</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {experiences.map(e => (
+                      <div key={e.id} className="border border-gray-100 p-4 rounded-xl flex flex-col justify-between bg-gray-50 admin-input animate-fade-in">
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-2">
+                            <h3 className="font-bold text-gray-900">{e.title}</h3>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">
+                              {e.type}
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-600 font-semibold">{e.company} {e.location ? `· ${e.location}` : ''}</p>
+                          <p className="text-[10px] text-gray-400 mt-1">{e.start_date} — {e.end_date}</p>
+                          {e.description && (
+                            <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed whitespace-pre-line">{e.description}</p>
+                          )}
+                        </div>
+                        <div className="flex gap-2 mt-4 pt-2 border-t border-gray-200/50">
+                          <button onClick={() => startEditExp(e)} className="text-blue-600 text-sm hover:underline">Edit</button>
+                          <button onClick={() => handleDeleteExp(e.id)} className="text-red-500 text-sm hover:underline">Hapus</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <form onSubmit={handleSaveExp} className="space-y-4 max-w-2xl animate-fade-in">
+                <h2 className="admin-title text-xl font-bold mb-6">{editingExpId ? 'Edit Pengalaman' : 'Tambah Pengalaman'}</h2>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Judul / Posisi / Jurusan</label>
+                    <input required value={expTitle} onChange={e => setExpTitle(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" placeholder="Misal: Full-Stack Developer / Teknik Informatika" />
+                  </div>
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Kategori / Section</label>
+                    <select value={expType} onChange={e => setExpType(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl bg-white">
+                      <option value="Kerja">Kerja</option>
+                      <option value="Pendidikan">Pendidikan</option>
+                      <option value="Volunteers">Volunteers</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Perusahaan / Institusi / Organisasi</label>
+                    <input required value={expCompany} onChange={e => setExpCompany(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" placeholder="Misal: PT Tech Solutions / Universitas Trunojoyo" />
+                  </div>
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Lokasi (opsional)</label>
+                    <input value={expLocation} onChange={e => setExpLocation(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" placeholder="Misal: Jakarta / Remote" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Bulan Mulai</label>
+                    <input required type="month" value={expStartDate} onChange={e => setExpStartDate(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" />
+                  </div>
+                  <div>
+                    <label className="admin-label block text-sm font-semibold mb-1">Bulan Selesai (atau 'Present')</label>
+                    <input required value={expEndDate} onChange={e => setExpEndDate(e.target.value)} className="admin-input w-full px-4 py-2 border rounded-xl" placeholder="Misal: 2024-09 atau Present" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="admin-label block text-sm font-semibold mb-1">Deskripsi / Detail Kegiatan</label>
+                  <textarea rows={4} value={expDescription} onChange={e => setExpDescription(e.target.value)} className="admin-textarea w-full px-4 py-2 border rounded-xl" placeholder="Tuliskan tugas, pencapaian, atau apa yang dipelajari..." />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button type="submit" disabled={saving} className="px-6 py-2 bg-blue-500 text-white rounded-xl font-bold">Simpan</button>
+                  <button type="button" onClick={resetExpForm} className="px-6 py-2 bg-gray-200 text-gray-800 rounded-xl font-bold">Batal</button>
+                </div>
+              </form>
+            )}
           </div>
         )}
 

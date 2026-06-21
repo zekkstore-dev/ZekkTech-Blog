@@ -7,6 +7,7 @@ import type { Portfolio } from '@/types/portfolio';
 import FloatingIcons from '@/components/FloatingIcons';
 import PortofolioGrid from '@/components/PortofolioGrid';
 import SertifikatGrid from '@/components/SertifikatGrid';
+import ExperienceTimeline from '@/components/ExperienceTimeline';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
@@ -214,59 +215,13 @@ export default async function AboutPage() {
         {/* ================= Experience Section ================= */}
         {experiences.length > 0 && (
           <div id="experience" className="mb-20 scroll-mt-24">
-            <div className="bg-[var(--bg-secondary)] rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#0ea5e9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                  <h3 className="text-sm font-bold text-slate-800 dark:text-white">Experience</h3>
-                </div>
-                <span className="text-xs text-slate-500 dark:text-gray-400">
-                  {experiences.length} Pengalaman
-                </span>
-              </div>
-              <div className="p-4 space-y-4">
-                {experiences.map((exp, idx) => (
-                  <div key={exp.id} className="flex gap-4">
-                    {/* Timeline line + dot */}
-                    <div className="flex flex-col items-center shrink-0">
-                      <div className={`w-3 h-3 rounded-full border-2 ${idx === 0 ? 'bg-[#0ea5e9] border-[#0ea5e9]' : 'bg-slate-200 dark:bg-slate-700 border-slate-300 dark:border-slate-600'}`}></div>
-                      {idx < experiences.length - 1 && (
-                        <div className="w-0.5 h-full bg-slate-200 dark:bg-slate-700 flex-1 min-h-[24px]"></div>
-                      )}
-                    </div>
-                    {/* Content */}
-                    <div className={`pb-4 ${idx === experiences.length - 1 ? '' : ''} flex-1`}>
-                      <div className="flex items-start justify-between flex-wrap gap-2 mb-1">
-                        <h4 className="font-bold text-slate-800 dark:text-white text-sm">{exp.title}</h4>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-900/30 text-[#0ea5e9] dark:text-sky-300 border border-sky-100 dark:border-sky-800/50 shrink-0">
-                          {exp.type}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500 dark:text-gray-400 mb-1.5">
-                        {exp.company} {exp.location ? `· ${exp.location}` : ''}
-                      </p>
-                      <p className="text-[11px] text-slate-400 dark:text-gray-500 mb-2">
-                        {exp.start_date} — {exp.end_date}
-                      </p>
-                      {exp.description && (
-                        <p className="text-xs text-slate-600 dark:text-gray-300 leading-relaxed">
-                          {exp.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ExperienceTimeline experiences={experiences} title="Experience" />
           </div>
         )}
 
         {/* ================= Portofolio Section ================= */}
         <div id="portofolio" className="mb-20 scroll-mt-24">
-          <PortofolioGrid portfolios={portfolios} maxItems={6} />
+          <PortofolioGrid portfolios={portfolios} maxItems={8} />
         </div>
 
         {/* ================= Sertifikat Section ================= */}

@@ -34,7 +34,7 @@ export default async function PortofolioPage() {
     <main className="min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-12 md:py-20">
-        <PortofolioGrid portfolios={portfolios} maxItems={6} showViewAll={true} expandOnClick={true} title="Semua Portofolio" />
+        <PortofolioGrid portfolios={portfolios} maxItems={8} showViewAll={true} expandOnClick={true} title="Semua Portofolio" />
       </div>
       <Footer />
     </main>

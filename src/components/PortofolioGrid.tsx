@@ -16,7 +16,7 @@ interface PortofolioGridProps {
 
 export default function PortofolioGrid({
   portfolios,
-  maxItems = 6,
+  maxItems = 8,
   showViewAll = true,
   viewAllHref = '/portofolio',
   title = 'Portofolio',
@@ -54,14 +54,14 @@ export default function PortofolioGrid({
       </div>
 
       {/* Grid */}
-      <div className={`p-4 ${isCompact ? 'grid grid-cols-2 sm:grid-cols-3 gap-3' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'}`}>
+      <div className={`p-4 grid grid-cols-2 sm:grid-cols-3 ${isCompact ? 'lg:grid-cols-4 gap-2' : 'lg:grid-cols-4 xl:grid-cols-5 gap-3'}`}>
         {displayPortfolios.map((port) => (
           <div
             key={port.id}
-            className="group bg-[var(--bg-primary)] rounded-xl border border-slate-100 dark:border-slate-800/80 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 flex flex-col"
+            className="group bg-[var(--bg-primary)] rounded-lg border border-slate-100 dark:border-slate-800/80 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 flex flex-col"
           >
             {/* Thumbnail */}
-            <div className={`w-full overflow-hidden relative bg-slate-100 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800/50 ${isCompact ? 'h-20' : 'h-28'}`}>
+            <div className={`w-full overflow-hidden relative bg-slate-100 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800/50 ${isCompact ? 'h-16' : 'h-20'}`}>
               {port.image_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -72,14 +72,14 @@ export default function PortofolioGrid({
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-850 dark:to-slate-900 opacity-60">
-                  <svg className={`opacity-30 text-slate-400 ${isCompact ? 'w-6 h-6' : 'w-8 h-8'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <svg className={`opacity-30 text-slate-400 ${isCompact ? 'w-5 h-5' : 'w-6 h-6'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                   </svg>
                 </div>
               )}
               {/* Status Badge */}
-              <span className={`absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-full text-[7px] font-black ring-1 ring-inset shadow-sm flex items-center gap-0.5 ${
+              <span className={`absolute top-1 left-1 px-1.5 py-0.5 rounded-full text-[6px] font-black ring-1 ring-inset shadow-sm flex items-center gap-0.5 ${
                 port.status === 'progress'
                   ? 'bg-amber-100/90 text-amber-700 ring-amber-600/20'
                   : 'bg-teal-100/90 text-teal-700 ring-teal-600/20'
@@ -90,12 +90,12 @@ export default function PortofolioGrid({
             </div>
 
             {/* Content */}
-            <div className={`flex flex-col flex-1 ${isCompact ? 'p-2' : 'p-3'}`}>
-              <h4 className={`font-bold text-slate-800 dark:text-white line-clamp-1 ${isCompact ? 'text-[10px] mb-0.5' : 'text-xs mb-1'}`}>
+            <div className="p-2 flex flex-col flex-1">
+              <h4 className="font-bold text-slate-800 dark:text-white line-clamp-1 text-[10px] sm:text-[11px] mb-0.5 leading-tight">
                 {port.title}
               </h4>
               {!isCompact && (
-                <p className="text-[10px] text-slate-500 dark:text-gray-400 mb-2 line-clamp-2 leading-relaxed flex-1">
+                <p className="text-[8px] sm:text-[9px] text-slate-500 dark:text-gray-400 mb-1.5 line-clamp-2 leading-relaxed flex-1">
                   {port.description}
                 </p>
               )}
@@ -103,19 +103,19 @@ export default function PortofolioGrid({
               {/* Tags - only show first 2 in compact mode */}
               <div className="flex flex-wrap gap-1 mb-2">
                 {port.tags?.slice(0, isCompact ? 2 : 3).map((tag) => (
-                  <span key={tag} className={`px-1.5 py-0.5 bg-sky-50 dark:bg-sky-900/30 text-[#0ea5e9] dark:text-sky-300 border border-sky-100 dark:border-sky-800/50 rounded text-[7px] font-bold`}>
+                  <span key={tag} className={`px-1 py-0.5 bg-sky-50 dark:bg-sky-900/30 text-[#0ea5e9] dark:text-sky-300 border border-sky-100 dark:border-sky-800/50 rounded text-[6px] sm:text-[7px] font-bold`}>
                     {tag}
                   </span>
                 ))}
               </div>
 
               {/* Action Buttons */}
-              <div className={`grid grid-cols-2 gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/60 ${isCompact ? 'mt-auto' : ''}`}>
+              <div className={`grid grid-cols-2 gap-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800/60 ${isCompact ? 'mt-auto' : ''}`}>
                 <a
                   href={port.repo_url || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center justify-center bg-white dark:bg-transparent border border-slate-200 text-slate-600 dark:text-gray-300 hover:text-[#0ea5e9] hover:border-[#0ea5e9] rounded font-extrabold transition-colors ${isCompact ? 'py-1 text-[8px]' : 'py-1.5 text-[9px]'}`}
+                  className="flex items-center justify-center bg-white dark:bg-transparent border border-slate-200 text-slate-600 dark:text-gray-300 hover:text-[#0ea5e9] hover:border-[#0ea5e9] rounded font-extrabold transition-colors py-1 text-[8px] sm:text-[9px]"
                 >
                   Github
                 </a>
@@ -123,7 +123,7 @@ export default function PortofolioGrid({
                   href={port.demo_url || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center justify-center bg-[#0ea5e9] hover:bg-[#0284c7] text-white rounded font-extrabold transition-colors ${isCompact ? 'py-1 text-[8px]' : 'py-1.5 text-[9px]'}`}
+                  className="flex items-center justify-center bg-[#0ea5e9] hover:bg-[#0284c7] text-white rounded font-extrabold transition-colors py-1 text-[8px] sm:text-[9px]"
                 >
                   Demo
                 </a>
