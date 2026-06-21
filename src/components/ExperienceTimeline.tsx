@@ -105,13 +105,13 @@ export default function ExperienceTimeline({
       </div>
 
       {/* Timeline List */}
-      <div className="p-6 pb-4">
+      <div className="p-4 md:p-6 pb-3 md:pb-4">
         {filteredExperiences.length === 0 ? (
-          <div className="text-center py-10 text-slate-500 dark:text-gray-400 text-xs">
+          <div className="text-center py-8 text-slate-500 dark:text-gray-400 text-xs">
             Tidak ada data untuk kategori &quot;{activeTab}&quot;.
           </div>
         ) : (
-          <div className="relative border-l-2 border-slate-100 dark:border-slate-800 ml-3 md:ml-4 pl-6 md:pl-8 space-y-8 py-2">
+          <div className="relative border-l-2 border-slate-100 dark:border-slate-800 ml-2.5 md:ml-3 pl-5 md:pl-6 space-y-4 py-1">
             {displayExperiences.map((exp, idx) => {
               // Custom colors based on type
               const isPendidikan = exp.type === 'Pendidikan';
@@ -131,33 +131,35 @@ export default function ExperienceTimeline({
               return (
                 <div key={exp.id} className="relative group">
                   {/* Timeline dot with icon */}
-                  <div className={`absolute -left-[35px] md:-left-[43px] top-1.5 w-6 h-6 rounded-full flex items-center justify-center border-4 border-[var(--bg-secondary)] shadow-sm transition-transform duration-300 group-hover:scale-110 ${dotBg}`}>
-                    {getIcon(exp.type)}
+                  <div className={`absolute -left-[31px] md:-left-[36px] top-1.5 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center border-4 border-[var(--bg-secondary)] shadow-sm transition-transform duration-300 group-hover:scale-110 ${dotBg}`}>
+                    <span className="scale-75 md:scale-100 flex items-center justify-center">
+                      {getIcon(exp.type)}
+                    </span>
                   </div>
 
                   {/* Card Content */}
-                  <div className="bg-[var(--bg-primary)] rounded-xl border border-slate-100 dark:border-slate-800/60 p-4 shadow-sm hover:shadow-md transition-all duration-300">
-                    <div className="flex items-start justify-between flex-wrap gap-2 mb-2">
+                  <div className="bg-[var(--bg-primary)] rounded-xl border border-slate-100 dark:border-slate-800/60 p-3 md:p-4 shadow-sm hover:shadow-md transition-all duration-300">
+                    <div className="flex items-start justify-between flex-wrap gap-1.5 mb-1">
                       <div>
-                        <h4 className="font-bold text-slate-800 dark:text-white text-sm md:text-base leading-snug">
+                        <h4 className="font-bold text-slate-800 dark:text-white text-xs md:text-sm leading-snug">
                           {exp.title}
                         </h4>
-                        <p className="text-xs font-semibold text-slate-600 dark:text-gray-300 mt-0.5">
+                        <p className="text-[10px] md:text-xs font-semibold text-slate-600 dark:text-gray-300 mt-0.5">
                           {exp.company} {exp.location ? `· ${exp.location}` : ''}
                         </p>
                       </div>
 
-                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeStyle}`}>
+                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full border ${badgeStyle}`}>
                         {exp.type}
                       </span>
                     </div>
 
-                    <p className="text-[10px] text-slate-400 dark:text-gray-500 mb-3 font-medium">
+                    <p className="text-[9px] md:text-[10px] text-slate-400 dark:text-gray-500 mb-2 font-medium">
                       {exp.start_date} — {exp.end_date}
                     </p>
 
                     {exp.description && (
-                      <div className="text-xs text-slate-600 dark:text-gray-300 leading-relaxed whitespace-pre-line border-t border-slate-100 dark:border-slate-800/50 pt-2.5">
+                      <div className="text-[11px] md:text-xs text-slate-600 dark:text-gray-300 leading-relaxed whitespace-pre-line border-t border-slate-100 dark:border-slate-800/50 pt-1.5">
                         {exp.description}
                       </div>
                     )}
