@@ -74,7 +74,17 @@ export default function FloatingIcons() {
   if (!mounted) return null;
 
   return (
-    <div className="floating-icons" aria-hidden="true">
+    <div 
+      className="floating-icons" 
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        zIndex: 0,
+      }}
+    >
       {icons.map((icon, i) => (
         // eslint-disable-next-line @next/next/no-img-element
         <img

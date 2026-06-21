@@ -6,6 +6,7 @@ import { convertToWebP } from '@/lib/image-converter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Portfolio } from '@/types/portfolio';
+import { User, Briefcase, Trophy, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 
 type Tab = 'profil' | 'portofolio' | 'sertifikat' | 'konten';
 
@@ -16,6 +17,7 @@ interface Certificate {
   date: string;
   image_url: string;
   cert_url: string;
+  section: string;
   created_at: string;
 }
 
@@ -47,6 +49,7 @@ export default function AdminAboutPage() {
   const [certDate, setCertDate] = useState('');
   const [certImageUrl, setCertImageUrl] = useState('');
   const [certUrl, setCertUrl] = useState('');
+  const [certSection, setCertSection] = useState('Lainnya');
 
   // Portfolios
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
@@ -121,6 +124,45 @@ export default function AdminAboutPage() {
     }
   };
 
+  const handleCertFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSaving(true);
+    try {
+      const isPdf = file.type === 'application/pdf' || file.name.endsWith('.pdf');
+      let fileToUpload = file;
+      let folder = 'documents';
+
+      if (!isPdf) {
+        fileToUpload = await convertToWebP(file);
+        folder = 'content';
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileToUpload);
+      formData.append('folder', folder);
+
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Upload gagal');
+      }
+      const { publicUrl } = await res.json();
+      setCertUrl(publicUrl);
+
+      if (!isPdf) {
+        setCertImageUrl(publicUrl);
+      }
+      
+      setFeedback({ type: 'success', msg: 'File sertifikat berhasil diunggah!' });
+      setTimeout(() => setFeedback(null), 3000);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gagal upload file');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const saveSettings = async (keys: { key: string, value: string }[]) => {
     try {
       for (const item of keys) {
@@ -175,6 +217,7 @@ export default function AdminAboutPage() {
     setEditingCertId(null);
     setCertTitle(''); setCertIssuer(''); setCertDate('');
     setCertImageUrl(''); setCertUrl('');
+    setCertSection('Lainnya');
     setShowCertForm(false);
   };
 
@@ -182,6 +225,7 @@ export default function AdminAboutPage() {
     setEditingCertId(c.id);
     setCertTitle(c.title); setCertIssuer(c.issuer); setCertDate(c.date);
     setCertImageUrl(c.image_url); setCertUrl(c.cert_url);
+    setCertSection(c.section || 'Lainnya');
     setShowCertForm(true);
   };
 
@@ -189,7 +233,14 @@ export default function AdminAboutPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const payload = { title: certTitle, issuer: certIssuer, date: certDate, image_url: certImageUrl, cert_url: certUrl };
+      const payload = { 
+        title: certTitle, 
+        issuer: certIssuer, 
+        date: certDate, 
+        image_url: certImageUrl, 
+        cert_url: certUrl,
+        section: certSection || 'Lainnya'
+      };
       if (editingCertId) {
         await supabase.from('certificates').update(payload).eq('id', editingCertId);
       } else {
@@ -290,23 +341,33 @@ export default function AdminAboutPage() {
         <div className={`mb-6 p-4 rounded-xl border text-sm font-medium flex items-center gap-3 ${
           feedback.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
         }`}>
-          <span>{feedback.type === 'success' ? '✅' : '🚨'}</span> {feedback.msg}
+          {feedback.type === 'success' ? <CheckCircle className="w-5 h-5 text-green-600" /> : <AlertCircle className="w-5 h-5 text-red-600" />}
+          <span>{feedback.msg}</span>
         </div>
       )}
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-1 bg-gray-100 p-1 rounded-xl mb-8 w-max admin-card">
-        {(['profil', 'portofolio', 'sertifikat', 'konten'] as Tab[]).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2 text-sm font-semibold rounded-lg capitalize transition-all ${
-              activeTab === tab ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'
-            }`}
-          >
-            {tab === 'sertifikat' ? '🏆 Sertifikat' : tab}
-          </button>
-        ))}
+        {([
+          { id: 'profil', label: 'Profil', icon: User },
+          { id: 'portofolio', label: 'Portofolio', icon: Briefcase },
+          { id: 'sertifikat', label: 'Sertifikat', icon: Trophy },
+          { id: 'konten', label: 'Konten', icon: FileText },
+        ] as { id: Tab; label: string; icon: any }[]).map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-5 py-2 text-sm font-semibold rounded-lg capitalize transition-all inline-flex items-center gap-2 ${
+                activeTab === tab.id ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       <div className="admin-card bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
@@ -376,7 +437,9 @@ export default function AdminAboutPage() {
                 <input type="file" accept=".pdf" onChange={(e) => handleFileUpload(e, setProfileCV, 'documents')} className="text-xs" />
                 {profileCV && <a href={profileCV} target="_blank" rel="noreferrer" className="text-xs text-blue-500 underline">Lihat CV</a>}
               </div>
-              <p className="text-xs text-gray-400 mt-1">Kelola koleksi sertifikat di tab <strong>🏆 Sertifikat</strong></p>
+              <p className="text-xs text-gray-400 mt-1 inline-flex items-center gap-1">
+                Kelola koleksi sertifikat di tab <Trophy className="w-3.5 h-3.5 text-yellow-500" /> <strong>Sertifikat</strong>
+              </p>
             </div>
 
             <button onClick={handleSaveProfile} disabled={saving} className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl mt-4">
@@ -482,7 +545,7 @@ export default function AdminAboutPage() {
                 </div>
                 {certificates.length === 0 ? (
                   <div className="py-12 text-center text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl">
-                    <p className="text-2xl mb-2">🏆</p>
+                    <Trophy className="w-8 h-8 mx-auto mb-2 text-gray-300 animate-pulse" />
                     <p className="font-semibold">Belum ada sertifikat.</p>
                     <p className="text-sm">Klik &quot;+ Tambah&quot; untuk menambahkan.</p>
                   </div>
@@ -496,7 +559,12 @@ export default function AdminAboutPage() {
                         )}
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-gray-900 text-sm truncate">{c.title}</h3>
-                          <p className="text-xs text-gray-500">{c.issuer} · {c.date}</p>
+                          <p className="text-xs text-gray-500">
+                            {c.issuer} · {c.date}
+                            <span className="ml-2 inline-block px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[10px] font-bold tracking-wide uppercase">
+                              {c.section || 'Lainnya'}
+                            </span>
+                          </p>
                           {c.cert_url && <a href={c.cert_url} target="_blank" rel="noreferrer" className="text-xs text-blue-500 underline">Lihat Sertifikat</a>}
                           <div className="flex gap-2 mt-2">
                             <button onClick={() => startEditCert(c)} className="text-blue-600 text-xs hover:underline">Edit</button>
@@ -526,9 +594,41 @@ export default function AdminAboutPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="admin-label block text-sm font-semibold mb-1">Gambar Sertifikat (opsional)</label>
+                  <label className="admin-label block text-sm font-semibold mb-1">Kategori / Section (Folder)</label>
+                  <input 
+                    required 
+                    value={certSection} 
+                    onChange={e => setCertSection(e.target.value)} 
+                    className="admin-input w-full px-4 py-2 border rounded-xl" 
+                    placeholder="Ketik atau pilih kategori..."
+                    list="cert-sections"
+                  />
+                  <datalist id="cert-sections">
+                    <option value="Dicoding" />
+                    <option value="Canva" />
+                    <option value="Coursera" />
+                    <option value="Dibimbing" />
+                    <option value="Linkedin Learning" />
+                    <option value="Mereka-Microsoft-AI_for_My_Future" />
+                    <option value="Mereka-Microsoft-Edukator-Elevate" />
+                    <option value="Universitas Trunojoyo Madura" />
+                    <option value="Lainnya" />
+                  </datalist>
+                </div>
+                <div>
+                  <label className="admin-label block text-sm font-semibold mb-1">Upload File Sertifikat (PDF / Gambar)</label>
+                  <input 
+                    type="file" 
+                    accept=".pdf,image/*" 
+                    onChange={handleCertFileUpload} 
+                    className="text-xs mb-2 w-full p-2 border border-dashed rounded-xl bg-gray-50 cursor-pointer" 
+                  />
+                  <p className="text-[10px] text-gray-400">PDF asli atau Gambar (otomatis jadi WebP). Jika mengunggah gambar, gambar pratayang akan otomatis diisi.</p>
+                </div>
+                <div>
+                  <label className="admin-label block text-sm font-semibold mb-1">Gambar Pratayang / Thumbnail (opsional)</label>
                   <input type="file" accept="image/*" onChange={e => handleFileUpload(e, setCertImageUrl, 'content')} className="text-xs mb-2" />
-                  {certImageUrl && <img src={certImageUrl} alt="preview" className="h-24 rounded-lg border" />}
+                  {certImageUrl && <img src={certImageUrl} alt="preview" className="h-24 rounded-lg border object-cover" />}
                 </div>
                 <div>
                   <label className="admin-label block text-sm font-semibold mb-1">Link Sertifikat (PDF / URL)</label>

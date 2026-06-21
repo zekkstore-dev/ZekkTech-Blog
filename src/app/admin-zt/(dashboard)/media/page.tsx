@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { convertToWebP } from '@/lib/image-converter';
+import { FileText, Image as ImageIcon, User, Zap, UploadCloud, Clipboard, Link2, Trash2, FolderClosed, AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
 
 /**
  * Tipe data untuk setiap item file dari R2
@@ -320,12 +321,12 @@ export default function MediaLibraryPage() {
   };
 
   // Daftar tab filter
-  const filterTabs: { id: FilterTab; label: string }[] = [
+  const filterTabs: { id: FilterTab; label: string; icon?: any }[] = [
     { id: 'all', label: 'Semua' },
-    { id: 'content', label: '📝 Konten Artikel' },
-    { id: 'covers', label: '🖼️ Cover' },
-    { id: 'avatars', label: '👤 Avatar' },
-    { id: 'converter', label: '⚡ WebP Converter Tool' },
+    { id: 'content', label: 'Konten Artikel', icon: FileText },
+    { id: 'covers', label: 'Cover', icon: ImageIcon },
+    { id: 'avatars', label: 'Avatar', icon: User },
+    { id: 'converter', label: 'WebP Converter Tool', icon: Zap },
   ];
 
   // =================================================================
@@ -336,7 +337,10 @@ export default function MediaLibraryPage() {
     <div className="space-y-6">
       {/* Header halaman */}
       <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">📂 Media Library</h1>
+        <h1 className="text-2xl font-extrabold text-gray-900 inline-flex items-center gap-2">
+          <FolderClosed className="w-7 h-7 text-blue-500" />
+          <span>Media Library</span>
+        </h1>
         <p className="text-sm text-gray-500 mt-1">
           Kelola semua gambar yang tersimpan di Cloudflare R2. Upload, salin URL/Markdown, atau hapus sesuai kebutuhan.
         </p>
@@ -383,33 +387,39 @@ export default function MediaLibraryPage() {
             )}
             {/* Pesan feedback upload */}
             {uploadMsg && (
-              <span className={`mt-1 text-xs font-medium px-3 py-1 rounded-full ${
+              <span className={`mt-1 text-xs font-medium px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 ${
                 uploadMsg.startsWith('✅') ? 'bg-green-100 text-green-700' :
                 uploadMsg.startsWith('❌') ? 'bg-red-100 text-red-700' :
                 'bg-yellow-100 text-yellow-700'
               }`}>
-                {uploadMsg}
+                {uploadMsg.startsWith('✅') ? <CheckCircle className="w-3.5 h-3.5 text-green-600" /> :
+                 uploadMsg.startsWith('❌') ? <AlertCircle className="w-3.5 h-3.5 text-red-600" /> :
+                 <RefreshCw className="w-3.5 h-3.5 text-yellow-600 animate-spin" />}
+                <span>{uploadMsg.replace(/^[✅❌⏳]\s*/, '')}</span>
               </span>
             )}
           </div>
         </div>
       )}
 
-      {/* Tab Filter Folder */}
       <div className="flex gap-2 flex-wrap border-b border-gray-200 pb-3">
-        {filterTabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveFilter(tab.id)}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all ${
-              activeFilter === tab.id
-                ? 'bg-blue-500 text-white shadow-sm shadow-blue-200'
-                : 'bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-600'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+        {filterTabs.map(tab => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveFilter(tab.id)}
+              className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all inline-flex items-center gap-1.5 ${
+                activeFilter === tab.id
+                  ? 'bg-blue-500 text-white shadow-sm shadow-blue-200'
+                  : 'bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-600'
+              }`}
+            >
+              {Icon && <Icon className="w-3.5 h-3.5" />}
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
         <span className="ml-auto text-xs text-gray-400 self-center">{files.length} file</span>
       </div>
 
@@ -418,7 +428,8 @@ export default function MediaLibraryPage() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
               <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <span>⚡</span> WebP Converter Tool
+                <Zap className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                <span>WebP Converter Tool</span>
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 Konversi file PNG, JPG, JPEG, SVG lokal Anda ke format WebP teroptimasi secara offline di browser.
@@ -578,16 +589,18 @@ export default function MediaLibraryPage() {
                           {item.convertedFile && item.status !== 'uploaded' && (
                             <button
                               onClick={() => handleUploadConverterFile(item.id, item.convertedFile!)}
-                              className="px-2.5 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 dark:bg-green-900/20 dark:hover:bg-green-900/30 dark:text-green-400 dark:border-green-900/50 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                              className="px-2.5 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 dark:bg-green-900/20 dark:hover:bg-green-900/30 dark:text-green-400 dark:border-green-900/50 rounded-lg text-[10px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                               title="Upload hasil konversi langsung ke R2 Media"
                             >
-                              🚀 Upload ke R2
+                              <UploadCloud className="w-3.5 h-3.5" />
+                              <span>Upload ke R2</span>
                             </button>
                           )}
 
                           {item.status === 'uploaded' && (
-                            <span className="px-2.5 py-1.5 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-lg text-[10px] font-bold flex items-center gap-1">
-                              ✅ Uploaded
+                            <span className="px-2.5 py-1.5 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-lg text-[10px] font-bold flex items-center gap-1.5">
+                              <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+                              <span>Uploaded</span>
                             </span>
                           )}
 
@@ -670,41 +683,71 @@ export default function MediaLibraryPage() {
                     </p>
                     <p className="text-[9px] text-gray-400 dark:text-gray-500 mb-2">{formatSize(file.size)}</p>
 
-                    {/* Tombol: Copy Markdown — untuk di luar HTML block */}
+                    {/* Tombol: Copy Markdown */}
                     <button
                       onClick={() => handleCopyMarkdown(file)}
-                      className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 cursor-pointer ${
+                      className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 cursor-pointer inline-flex items-center justify-center gap-1.5 ${
                         copiedKey === file.key
                           ? 'bg-green-500 text-white'
                           : 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 hover:bg-blue-100 border border-blue-100 dark:border-blue-900/40'
                       }`}
                     >
-                      {copiedKey === file.key ? '✅ Tersalin!' : '📋 Copy Markdown'}
+                      {copiedKey === file.key ? (
+                        <>
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span>Tersalin!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Clipboard className="w-3.5 h-3.5" />
+                          <span>Copy Markdown</span>
+                        </>
+                      )}
                     </button>
 
-                    {/* Tombol: Copy HTML <img> — untuk di dalam <li>, <div>, dll. */}
+                    {/* Tombol: Copy HTML <img> */}
                     <button
                       onClick={() => handleCopyHtml(file)}
-                      className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 cursor-pointer ${
+                      className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 cursor-pointer inline-flex items-center justify-center gap-1.5 ${
                         copiedKey === file.key + '-html'
                           ? 'bg-green-500 text-white'
                           : 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400 hover:bg-purple-100 border border-purple-100 dark:border-purple-900/40'
                       }`}
                       title="Pakai ini jika gambar ada di dalam tag HTML seperti <li>"
                     >
-                      {copiedKey === file.key + '-html' ? '✅ Tersalin!' : '🖼️ Copy HTML <img>'}
+                      {copiedKey === file.key + '-html' ? (
+                        <>
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span>Tersalin!</span>
+                        </>
+                      ) : (
+                        <>
+                          <ImageIcon className="w-3.5 h-3.5" />
+                          <span>Copy HTML &lt;img&gt;</span>
+                        </>
+                      )}
                     </button>
 
                     {/* Tombol: Copy URL saja */}
                     <button
                       onClick={() => handleCopyUrl(file)}
-                      className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 cursor-pointer ${
+                      className={`w-full text-[10px] font-bold py-1.5 rounded-lg transition-all mb-1 cursor-pointer inline-flex items-center justify-center gap-1.5 ${
                         copiedKey === file.key + '-url'
                           ? 'bg-green-500 text-white'
                           : 'bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-100 border border-gray-100 dark:border-gray-700'
                       }`}
                     >
-                      {copiedKey === file.key + '-url' ? '✅ Tersalin!' : '🔗 Copy URL'}
+                      {copiedKey === file.key + '-url' ? (
+                        <>
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span>Tersalin!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Link2 className="w-3.5 h-3.5" />
+                          <span>Copy URL</span>
+                        </>
+                      )}
                     </button>
 
                     {/* Tombol: Hapus */}
@@ -727,9 +770,10 @@ export default function MediaLibraryPage() {
                     ) : (
                       <button
                         onClick={() => setDeleteConfirm(file.key)}
-                        className="w-full text-[10px] font-bold py-1.5 bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400 rounded-lg hover:bg-red-100 border border-red-100 dark:border-red-900/40 transition-all cursor-pointer"
+                        className="w-full text-[10px] font-bold py-1.5 bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400 rounded-lg hover:bg-red-100 border border-red-100 dark:border-red-900/40 transition-all cursor-pointer inline-flex items-center justify-center gap-1.5"
                       >
-                        🗑️ Hapus
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hapus</span>
                       </button>
                     )}
                   </div>

@@ -69,6 +69,8 @@ export default function RootLayout({
     <html lang="id" className={plusJakartaSans.variable} suppressHydrationWarning>
       <head>
         <script
+          id="theme-initializer"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -84,7 +86,9 @@ export default function RootLayout({
         />
         {/* JSON-LD Structured Data — WebSite schema untuk Google rich results */}
         <script
+          id="json-ld-website"
           type="application/ld+json"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

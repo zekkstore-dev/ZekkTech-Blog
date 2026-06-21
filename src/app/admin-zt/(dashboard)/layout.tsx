@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import AdminThemeToggle from './AdminThemeToggle';
+import AdminNav from './AdminNav';
 
 async function checkAuth() {
   try {
@@ -53,14 +54,7 @@ export default async function AdminLayout({
 
       {/* Admin Nav Tabs */}
       <div className="admin-nav max-w-7xl mx-auto px-6 py-6 border-b border-gray-200 transition-colors duration-300">
-        <nav className="flex items-center gap-6 text-sm font-medium overflow-x-auto pb-1 scrollbar-hide">
-          <Link href="/admin-zt" className="admin-nav-link text-gray-900 border-b-2 border-gray-900 pb-2 flex-shrink-0">Artikel</Link>
-          <Link href="/admin-zt/subscribers" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">Subscribers</Link>
-          <Link href="/admin-zt/comments" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">Komentar</Link>
-          <Link href="/admin-zt/about" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">Tentang Saya</Link>
-          {/* Link ke halaman Media Library untuk manajemen gambar R2 */}
-          <Link href="/admin-zt/media" className="admin-nav-link-inactive text-gray-500 hover:text-gray-900 pb-2 flex-shrink-0">📂 Media</Link>
-        </nav>
+        <AdminNav />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">

@@ -5,6 +5,7 @@ import { seedPosts } from '@/lib/seed-data';
 import type { Post } from '@/types/post';
 import NewsletterSection from '@/components/NewsletterSection';
 import { SearchEngine, ScoredPost } from '@/lib/models/SearchEngine';
+import { Search } from 'lucide-react';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
@@ -90,7 +91,7 @@ export default async function BlogPage(
           </div>
         ) : (
           <div className="empty-state text-center py-20 bg-[var(--bg-tertiary)] rounded-2xl border border-gray-100 ">
-            <div className="text-4xl mb-4">🔍</div>
+            <Search className="w-12 h-12 mx-auto mb-4 text-gray-400 dark:text-gray-600" />
             <h3 className="text-xl font-bold text-gray-900  mb-2">Artikel Tidak Ditemukan</h3>
             <p className="text-gray-500 dark:text-gray-400">Coba gunakan kata kunci pencarian yang lain.</p>
           </div>

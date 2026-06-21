@@ -5,6 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Portfolio } from '@/types/portfolio';
 import FloatingIcons from '@/components/FloatingIcons';
+import PortofolioGrid from '@/components/PortofolioGrid';
+import SertifikatGrid from '@/components/SertifikatGrid';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
@@ -33,7 +35,28 @@ async function getPageData() {
     markdown: fallbackContent,
   };
 
-  const data = { profile: defaultProfile, portfolios: [] as Portfolio[] };
+  interface Certificate {
+    id: string;
+    title: string;
+    issuer: string;
+    date: string;
+    image_url: string;
+    cert_url: string;
+    section: string;
+  }
+
+  interface Experience {
+    id: string;
+    title: string;
+    company: string;
+    location: string;
+    start_date: string;
+    end_date: string;
+    description: string;
+    type: string;
+  }
+
+  const data = { profile: defaultProfile, portfolios: [] as Portfolio[], certificates: [] as Certificate[], experiences: [] as Experience[] };
 
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -64,6 +87,18 @@ async function getPageData() {
     if (ports) {
       data.portfolios = ports as Portfolio[];
     }
+
+    // Fetch Certificates
+    const { data: certs } = await supabase.from('certificates').select('*').order('date', { ascending: false });
+    if (certs) {
+      data.certificates = certs as Certificate[];
+    }
+
+    // Fetch Experiences
+    const { data: exps } = await supabase.from('experiences').select('*').order('created_at', { ascending: false });
+    if (exps) {
+      data.experiences = exps as Experience[];
+    }
   } catch (err) {
     console.error(err);
   }
@@ -72,7 +107,7 @@ async function getPageData() {
 }
 
 export default async function AboutPage() {
-  const { profile, portfolios } = await getPageData();
+  const { profile, portfolios, certificates, experiences } = await getPageData();
 
   return (
     <main className="about-page min-h-screen bg-[var(--bg-primary)] transition-colors duration-300 relative">
@@ -113,7 +148,7 @@ export default async function AboutPage() {
                 {profile.bio}
               </p>
               
-              {/* Utility Buttons (Resume/Cert) */}
+              {/* Utility Buttons (Resume/Cert/Portfolio/Experience) */}
               <div className="flex flex-wrap gap-3 mb-8 pb-8 border-b border-gray-100 ">
                 {/* My Sertificate — selalu bisa diklik, mengarah ke halaman /sertifikat */}
                 <a
@@ -132,6 +167,22 @@ export default async function AboutPage() {
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                   My Resume
+                </a>
+                {/* My Portfolio */}
+                <a
+                  href="#portofolio"
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white dark:bg-[#252830] text-slate-700 dark:text-gray-300 hover:border-[#0ea5e9] hover:text-[#0ea5e9] rounded-lg font-medium text-sm transition-all shadow-sm"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                  My Portfolio
+                </a>
+                {/* My Experience */}
+                <a
+                  href="/resume"
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 bg-white dark:bg-[#252830] text-slate-700 dark:text-gray-300 hover:border-[#0ea5e9] hover:text-[#0ea5e9] rounded-lg font-medium text-sm transition-all shadow-sm"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  My Experience
                 </a>
               </div>
 
@@ -160,78 +211,67 @@ export default async function AboutPage() {
           </div>
         )}
 
-        {/* ================= Portofolio Section ================= */}
-        <div id="portofolio" className="mb-24 scroll-mt-24">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-slate-800 dark:text-white mb-4">Portofolio & Proyek</h2>
-            <p className="text-slate-500 dark:text-gray-400">Some of the best works I&apos;ve completed for clients</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            {portfolios.length === 0 ? (
-              <div className="col-span-full py-16 text-center text-slate-500 dark:text-gray-400 bg-[var(--bg-secondary)] border border-dashed border-gray-200  rounded-xl flex flex-col items-center justify-center gap-3">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-50"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                <p>Belum ada proyek portofolio yang dipublikasikan.<br/><span className="text-sm">Silakan buat dan atur portofolio di Dashboard Admin.</span></p>
-              </div>
-            ) : (
-              portfolios.slice(0, 4).map(port => (
-                <div key={port.id} className="relative group bg-[var(--bg-secondary)] rounded-xl overflow-hidden shadow-sm hover:shadow-xl dark:shadow-none dark:hover:shadow-sky-500/5 border border-gray-100  transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                  
-                  {/* Image Header with Badge */}
-                  <div className="w-full h-48 lg:h-56 overflow-hidden relative bg-slate-100 dark:bg-slate-800">
-                    {port.image_url && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={port.image_url} alt={port.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    )}
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-teal-100/90 backdrop-blur-md text-teal-700 text-xs font-bold ring-1 ring-inset ring-teal-600/20 rounded-full shadow-sm">Completed</span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 flex flex-col flex-1">
-                    <div className="flex justify-between items-start gap-4 mb-3">
-                      <h3 className="font-extrabold text-[#1f2937] dark:text-white text-lg line-clamp-1">{port.title}</h3>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-300 dark:text-slate-600 shrink-0"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-                    </div>
-                    
-                    <p className="text-slate-500 dark:text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed flex-1">
-                      {port.description}
-                    </p>
-                    
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {port.tags && port.tags.map(tag => (
-                        <span key={tag} className="px-2.5 py-1 bg-sky-50 dark:bg-sky-900/30 text-[#0ea5e9] dark:text-sky-300 border border-sky-100 dark:border-sky-800/50 rounded-full text-[11px] font-bold">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    {/* Action Buttons */}
-                    <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                      <a href={port.repo_url || '#'} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-transparent border border-slate-200  text-slate-600 dark:text-gray-300 hover:text-[#0ea5e9] hover:border-[#0ea5e9] rounded-xl text-sm font-bold transition-colors">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        Code
-                      </a>
-                      <a href={port.demo_url || '#'} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-4 py-2 bg-[#0ea5e9] hover:bg-[#0284c7] text-white rounded-xl text-sm font-bold transition-colors">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                        Demo
-                      </a>
-                    </div>
-                  </div>
+        {/* ================= Experience Section ================= */}
+        {experiences.length > 0 && (
+          <div id="experience" className="mb-20 scroll-mt-24">
+            <div className="bg-[var(--bg-secondary)] rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30">
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#0ea5e9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <h3 className="text-sm font-bold text-slate-800 dark:text-white">Experience</h3>
                 </div>
-              ))
-            )}
-          </div>
-          
-          {portfolios.length > 4 && (
-            <div className="flex justify-center">
-              <a href="/portofolio" className="px-8 py-3 bg-[var(--bg-secondary)] border-2 border-[#0ea5e9] text-[#0ea5e9] rounded-xl font-bold hover:bg-[#0ea5e9] hover:text-white transition-colors duration-300 shadow-md shadow-sky-500/10">
-                Lihat Semua Portofolio →
-              </a>
+                <span className="text-xs text-slate-500 dark:text-gray-400">
+                  {experiences.length} Pengalaman
+                </span>
+              </div>
+              <div className="p-4 space-y-4">
+                {experiences.map((exp, idx) => (
+                  <div key={exp.id} className="flex gap-4">
+                    {/* Timeline line + dot */}
+                    <div className="flex flex-col items-center shrink-0">
+                      <div className={`w-3 h-3 rounded-full border-2 ${idx === 0 ? 'bg-[#0ea5e9] border-[#0ea5e9]' : 'bg-slate-200 dark:bg-slate-700 border-slate-300 dark:border-slate-600'}`}></div>
+                      {idx < experiences.length - 1 && (
+                        <div className="w-0.5 h-full bg-slate-200 dark:bg-slate-700 flex-1 min-h-[24px]"></div>
+                      )}
+                    </div>
+                    {/* Content */}
+                    <div className={`pb-4 ${idx === experiences.length - 1 ? '' : ''} flex-1`}>
+                      <div className="flex items-start justify-between flex-wrap gap-2 mb-1">
+                        <h4 className="font-bold text-slate-800 dark:text-white text-sm">{exp.title}</h4>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-900/30 text-[#0ea5e9] dark:text-sky-300 border border-sky-100 dark:border-sky-800/50 shrink-0">
+                          {exp.type}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-gray-400 mb-1.5">
+                        {exp.company} {exp.location ? `· ${exp.location}` : ''}
+                      </p>
+                      <p className="text-[11px] text-slate-400 dark:text-gray-500 mb-2">
+                        {exp.start_date} — {exp.end_date}
+                      </p>
+                      {exp.description && (
+                        <p className="text-xs text-slate-600 dark:text-gray-300 leading-relaxed">
+                          {exp.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+          </div>
+        )}
+
+        {/* ================= Portofolio Section ================= */}
+        <div id="portofolio" className="mb-20 scroll-mt-24">
+          <PortofolioGrid portfolios={portfolios} maxItems={6} />
+        </div>
+
+        {/* ================= Sertifikat Section ================= */}
+        <div id="sertifikat" className="mb-20 scroll-mt-24">
+          <SertifikatGrid certificates={certificates} maxItems={6} title="Sertifikat Terbaru" />
         </div>
 
         {/* ================= Hubungi Kami ================= */}

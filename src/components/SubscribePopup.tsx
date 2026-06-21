@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import { usePathname } from 'next/navigation';
 
@@ -162,8 +163,9 @@ export default function SubscribePopup() {
               )}
 
               {status === 'error' && (
-                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs rounded-xl text-left">
-                  ⚠️ {message}
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs rounded-xl text-left flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0 relative top-0.5" />
+                  <span>{message}</span>
                 </div>
               )}
 

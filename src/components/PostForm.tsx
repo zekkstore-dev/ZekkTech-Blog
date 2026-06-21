@@ -9,6 +9,7 @@ import type { Post } from '@/types/post';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import { Image as ImageIcon, Lightbulb, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react';
 
 interface PostFormProps {
   post?: Post;
@@ -426,15 +427,11 @@ export default function PostForm({ post, mode }: PostFormProps) {
             >
               {imageUploading ? (
                 // Spinner saat upload berjalan
-                <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-                </svg>
+                <RefreshCw className="animate-spin w-3.5 h-3.5" />
               ) : (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                </svg>
+                <ImageIcon className="w-3.5 h-3.5" />
               )}
-              {imageUploading ? 'Mengupload...' : '🖼️ Sisipkan Gambar'}
+              <span>{imageUploading ? 'Mengupload...' : 'Sisipkan Gambar'}</span>
             </button>
 
             {/* Link ke Media Library agar pengguna bisa copy URL gambar lama */}
@@ -453,12 +450,15 @@ export default function PostForm({ post, mode }: PostFormProps) {
 
             {/* Pesan feedback upload (berhasil / gagal) */}
             {imageMsg && (
-              <span className={`text-xs font-medium px-2 py-1 rounded-md ${
+              <span className={`text-xs font-medium px-2.5 py-1.5 rounded-md inline-flex items-center gap-1.5 ${
                 imageMsg.startsWith('✅') ? 'bg-green-50 text-green-700' :
                 imageMsg.startsWith('❌') ? 'bg-red-50 text-red-700' :
                 'bg-yellow-50 text-yellow-700'
               }`}>
-                {imageMsg}
+                {imageMsg.startsWith('✅') ? <CheckCircle className="w-3.5 h-3.5 text-green-600" /> :
+                 imageMsg.startsWith('❌') ? <AlertCircle className="w-3.5 h-3.5 text-red-600" /> :
+                 <RefreshCw className="w-3.5 h-3.5 text-yellow-600 animate-spin" />}
+                <span>{imageMsg.replace(/^[✅❌⏳]\s*/, '')}</span>
               </span>
             )}
           </div>
@@ -491,7 +491,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
               ref={contentRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Tulis konten artikel bebas styling dengan aturan Markdown (contoh: # Judul Besar, **Tebal**, dll)...&#10;&#10;💡 Tips: Seret & lepas gambar ke sini untuk langsung upload!"
+              placeholder="Tulis konten artikel bebas styling dengan aturan Markdown (contoh: # Judul Besar, **Tebal**, dll)...&#10;&#10;Tips: Seret & lepas gambar ke sini untuk langsung upload!"
               rows={12}
               className="admin-textarea w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-y font-mono text-sm leading-relaxed"
               required
