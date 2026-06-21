@@ -775,3 +775,15 @@ html.dark .admin-preview-content a {
 html.dark .admin-skeleton {
   background-color: var(--border-primary);
 }
+
+/* Custom text shadow for Hero title on mobile to ensure legibility when overlaid on illustration */
+@media (max-width: 1023px) {
+  .hero-title-mobile-shadow {
+    text-shadow: 
+      0 0 10px var(--bg-primary),
+      0 0 20px var(--bg-primary),
+      0 0 30px var(--bg-primary),
+      0 0 5px var(--bg-primary);
+  }
+}
+

@@ -18,35 +18,39 @@ export default function HeroSection() {
       <div className="relative max-w-[1440px] mx-auto px-6 lg:px-24 pt-0 sm:pt-10 lg:pt-20 pb-10 min-h-[calc(100vh-86px)] flex flex-col">
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-0 sm:gap-5 lg:gap-5 flex-1">
           {/* Konten kiri */}
-          <div className="flex-1 max-w-[742px] pt-0 sm:pt-6 lg:pt-16">
-            <h1 className="text-2xl sm:text-5xl font-extrabold text-gray-900 leading-[1.2] sm:leading-[1.15] tracking-tight mb-4 sm:mb-6">
-              Hello World!,{' '}
-              <br />
-              <span className="lg:text-[40px]"> I&apos;m Zakaria MP{' '}</span>
-              <span className="aka-text text-gray-900 lg:text-[35px]">a.k.a</span>{' '}
-              <span className="text-blue-500 underline lg:text-[40px]"><a href="https://github.com/ZekkCode">Zekk</a> </span>
-            </h1>
+          <div className="relative flex-1 max-w-[742px] pt-0 sm:pt-6 lg:pt-16">
+            
+            {/* Wrapper Heading, Description & Character overlay */}
+            <div className="relative pb-[280px] xs:pb-[340px] lg:pb-0 mb-4 sm:mb-6">
+              {/* Ilustrasi Mobile-only (di belakang text & deskripsi, di atas bg bintik-bintik, di bawah teks) */}
+              <div className="block lg:hidden absolute top-[60px] left-1/2 -translate-x-1/2 w-[380px] xs:w-[440px] max-w-[130%] opacity-100 pointer-events-none z-10">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/person-learn-coding.svg"
+                  alt="Person learning to code illustration"
+                  className="w-full h-auto"
+                />
+              </div>
 
-            {/* Ilustrasi Mobile-only (dibawah Hello World, ukuran lebih gede) */}
-            <div className="block lg:hidden w-full max-w-[340px] xs:max-w-[380px] mx-auto mb-5 mt-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/person-learn-coding.svg"
-                alt="Person learning to code illustration"
-                className="w-full h-auto"
-              />
-            </div>
+              <h1 className="relative z-20 hero-title-mobile-shadow text-2xl sm:text-5xl font-extrabold text-gray-900 dark:text-white leading-[1.2] sm:leading-[1.15] tracking-tight mb-4 sm:mb-6">
+                Hello World!,{' '}
+                <br />
+                <span className="lg:text-[40px]"> I&apos;m Zakaria MP{' '}</span>
+                <span className="aka-text text-gray-900 dark:text-gray-300 lg:text-[35px]">a.k.a</span>{' '}
+                <span className="text-blue-500 underline lg:text-[40px]"><a href="https://github.com/ZekkCode">Zekk</a> </span>
+              </h1>
 
-            <div className="flex items-stretch gap-3 mb-6 sm:mb-8">
-              <div className="w-[3px] bg-blue-500 rounded-full shrink-0" />
-              <TextEffect preset='fade-in-blur' speedReveal={1.1} speedSegment={0.3} className="text-[13px] sm:text-[16px] text-gray-600 leading-relaxed max-w-[580px] font-bold">
-                Di sini aku bakal share tentang teknologi, tips, trik, proyek,
-                dan tutorial seru lainnya! Yuk mulai baca dan jangan ketinggalan artikel terbaru!
-              </TextEffect>
+              <div className="relative z-20 hero-title-mobile-shadow flex items-stretch gap-3">
+                <div className="w-[3px] bg-blue-500 rounded-full shrink-0" />
+                <TextEffect preset='fade-in-blur' speedReveal={1.1} speedSegment={0.3} className="text-[13px] sm:text-[16px] text-gray-600 dark:text-gray-300 leading-relaxed max-w-[580px] font-bold">
+                  Di sini aku bakal share tentang teknologi, tips, trik, proyek,
+                  dan tutorial seru lainnya! Yuk mulai baca dan jangan ketinggalan artikel terbaru!
+                </TextEffect>
+              </div>
             </div>
 
             {/* Ganti form subscribe jadi dua tombol CTA ke halaman artikel */}
-            <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 max-w-[560px]">
+            <div className="relative z-10 flex flex-col sm:flex-row gap-2.5 sm:gap-3 max-w-[560px]">
               {/* Tombol utama: lihat semua artikel */}
               <Link
                 href="/blog"
@@ -60,7 +64,7 @@ export default function HeroSection() {
               {/* Tombol sekunder: ke halaman portofolio */}
               <Link
                 href="/portofolio"
-                className="flex items-center justify-center gap-2 h-[46px] sm:h-[56px] px-6 sm:px-8 bg-white border-2 border-gray-200 hover:border-blue-400 text-gray-700 hover:text-blue-600 rounded-xl text-xs sm:text-[15px] font-semibold transition-all active:scale-[0.98]"
+                className="flex items-center justify-center gap-2 h-[46px] sm:h-[56px] px-6 sm:px-8 bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 text-gray-700 dark:text-gray-300 hover:text-blue-600 rounded-xl text-xs sm:text-[15px] font-semibold transition-all active:scale-[0.98]"
               >
                 <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
@@ -70,7 +74,7 @@ export default function HeroSection() {
             </div>
 
             {/* Label fitur kecil di bawah tombol */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-3 sm:mt-5 text-[9px] sm:text-xs text-gray-500 font-medium">
+            <div className="relative z-10 flex flex-wrap items-center gap-2 sm:gap-4 mt-3 sm:mt-5 text-[9px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">
               <span className="flex items-center gap-1">
                 <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-green-400 inline-block"></span>
                 Artikel dikupas tuntas
