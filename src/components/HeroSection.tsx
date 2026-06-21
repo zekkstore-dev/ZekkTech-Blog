@@ -35,7 +35,7 @@ export default function HeroSection() {
               <h1 className="relative z-20 hero-title-mobile-shadow text-2xl sm:text-5xl font-extrabold text-gray-900 dark:text-white leading-[1.2] sm:leading-[1.15] tracking-tight mb-4 sm:mb-6">
                 Hello World!,{' '}
                 <br />
-                <span className="lg:text-[40px]"> I&apos;m Zakaria MP{' '}</span>
+                <span className="lg:text-[40px]"> I&apos;m Zakaria Mujur Prasetyo{' '}</span>
                 <span className="aka-text text-gray-900 dark:text-gray-300 lg:text-[35px]">a.k.a</span>{' '}
                 <span className="text-blue-500 underline lg:text-[40px]"><a href="https://github.com/ZekkCode">Zekk</a> </span>
               </h1>
@@ -54,7 +54,7 @@ export default function HeroSection() {
               {/* Tombol utama: lihat semua artikel */}
               <Link
                 href="/blog"
-                className="flex items-center justify-center gap-2 h-[46px] sm:h-[56px] px-6 sm:px-8 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-xs sm:text-[15px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98]"
+                className="flex items-center justify-center gap-2 h-[46px] sm:h-[56px] px-6 sm:px-8 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-xs sm:text-[15px] font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] whitespace-nowrap"
               >
                 <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 6h16M4 12h16M4 18h7"/>
@@ -64,7 +64,7 @@ export default function HeroSection() {
               {/* Tombol sekunder: ke halaman portofolio */}
               <Link
                 href="/portofolio"
-                className="flex items-center justify-center gap-2 h-[46px] sm:h-[56px] px-6 sm:px-8 bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 text-gray-700 dark:text-gray-300 hover:text-blue-600 rounded-xl text-xs sm:text-[15px] font-semibold transition-all active:scale-[0.98]"
+                className="flex items-center justify-center gap-2 h-[46px] sm:h-[56px] px-6 sm:px-8 bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 text-gray-700 dark:text-gray-300 hover:text-blue-600 rounded-xl text-xs sm:text-[15px] font-semibold transition-all active:scale-[0.98] whitespace-nowrap"
               >
                 <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
@@ -91,7 +91,7 @@ export default function HeroSection() {
           </div>
 
           {/* Ilustrasi kanan (Desktop-only) */}
-          <div className="hidden lg:block flex-shrink-0 lg:w-[620px] lg:-mt-35 self-start">
+          <div className="hidden lg:block flex-shrink-0 lg:w-[380px] xl:w-[620px] lg:-mt-35 self-start">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/person-learn-coding.svg"
