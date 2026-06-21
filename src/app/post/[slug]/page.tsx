@@ -229,6 +229,25 @@ export default async function PostPage({ params }: PageProps) {
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeRaw]}
                   components={{
+                    // Demote headings to ensure single h1 on page and correct hierarchical flow
+                    h1: ({ node, ...props }) => (
+                      <h2 {...props} className="text-2xl font-bold mt-6 mb-3 text-gray-900 dark:text-white" />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h3 {...props} className="text-xl font-bold mt-5 mb-2.5 text-gray-800 dark:text-gray-100" />
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h4 {...props} className="text-lg font-bold mt-4 mb-2 text-gray-800 dark:text-gray-200" />
+                    ),
+                    h4: ({ node, ...props }) => (
+                      <h5 {...props} className="text-base font-bold mt-3 mb-1.5 text-gray-700 dark:text-gray-300" />
+                    ),
+                    h5: ({ node, ...props }) => (
+                      <h6 {...props} className="text-sm font-bold mt-3 mb-1.5 text-gray-600 dark:text-gray-400" />
+                    ),
+                    h6: ({ node, ...props }) => (
+                      <h6 {...props} className="text-xs font-bold mt-3 mb-1.5 text-gray-500 dark:text-gray-500 uppercase tracking-wider" />
+                    ),
                     ol: ({ node, ...props }) => (
                       <ol {...props} style={{ listStyleType: 'decimal', paddingLeft: '1.75rem', margin: '0.75rem 0', ...(props.style as React.CSSProperties) }} />
                     ),
