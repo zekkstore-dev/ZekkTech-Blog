@@ -21,9 +21,9 @@ export default function HeroSection() {
           <div className="relative flex-1 max-w-[742px] pt-0 sm:pt-6 lg:pt-16">
             
             {/* Wrapper Heading, Description & Character overlay */}
-            <div className="relative pb-[280px] xs:pb-[340px] lg:pb-0 mb-4 sm:mb-6">
-              {/* Ilustrasi Mobile-only (di belakang text & deskripsi, di atas bg bintik-bintik, di bawah teks) */}
-              <div className="block lg:hidden absolute top-[60px] left-1/2 -translate-x-1/2 w-[380px] xs:w-[440px] max-w-[130%] opacity-100 pointer-events-none z-10">
+            <div className="relative pt-[240px] xs:pt-[280px] lg:pt-0 mb-4 sm:mb-6">
+              {/* Ilustrasi Mobile-only (di atas hello world secara vertikal, tapi di belakang overlay-nya) */}
+              <div className="block lg:hidden absolute top-[10px] left-1/2 -translate-x-1/2 w-[360px] xs:w-[400px] max-w-[130%] opacity-100 pointer-events-none z-10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/images/person-learn-coding.svg"
