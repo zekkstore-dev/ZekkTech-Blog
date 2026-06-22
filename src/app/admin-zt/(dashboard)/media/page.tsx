@@ -273,7 +273,7 @@ export default function MediaLibraryPage() {
     // Buat nama alt-text dari nama file (hapus ekstensi dan timestamp awal)
     const filename = file.key.split('/').pop() ?? file.key;
     const altText = filename.replace(/^\d+-/, '').replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
-    const markdown = `![${altText}](${file.url})`;
+    const markdown = `![${altText} oleh ZekkTech (Zakaria Mujur Prasetyo)](${file.url})`;
 
     navigator.clipboard.writeText(markdown).then(() => {
       setCopiedKey(file.key);
@@ -289,7 +289,7 @@ export default function MediaLibraryPage() {
   const handleCopyHtml = (file: MediaFile) => {
     const filename = file.key.split('/').pop() ?? file.key;
     const altText = filename.replace(/^\d+-/, '').replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
-    const html = `<img src="${file.url}" alt="${altText}" style="max-width:100%;border-radius:8px;margin:10px 0;" />`;
+    const html = `<img src="${file.url}" alt="${altText} oleh ZekkTech (Zakaria Mujur Prasetyo)" style="max-width:100%;border-radius:8px;margin:10px 0;" />`;
 
     navigator.clipboard.writeText(html).then(() => {
       setCopiedKey(file.key + '-html');
