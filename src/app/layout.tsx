@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     description: 'Blog teknologi Indonesia oleh Zakaria Mujur Prasetyo (Zekktech). Tips, trik, tutorial, dan berita teknologi terbaru.',
     images: [
       {
-        url: '/images/LogoZekkTech.png',
+        url: '/images/og/home.jpg',
         width: 1200,
         height: 630,
-        alt: 'ZekkTech Blog Logo',
+        alt: 'ZekkTech Blog',
       },
     ],
   },
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ZekkTech | Blog Teknologi Indonesia - Zakaria Mujur Prasetyo',
     description: 'Blog teknologi Indonesia oleh Zakaria Mujur Prasetyo (Zekktech). Tips, trik, tutorial, dan berita teknologi terbaru.',
-    images: ['/images/LogoZekkTech.png'],
+    images: ['/images/og/home.jpg'],
     creator: '@zakariamp',
   },
   robots: {
