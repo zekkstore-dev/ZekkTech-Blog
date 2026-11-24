@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation';
+import fs from 'fs';
+import path from 'path';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CommentSection from '@/components/CommentSection';
@@ -53,8 +55,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Artikel tidak ditemukan | ZekkTech' };
   }
 
-  const defaultImage = '/images/ZekkTech.png';
-  const ogImage = post.cover_url || defaultImage;
+  // og:image pakai berkas JPG statis di public/images/og/<slug>.jpg kalau ada,
+  // supaya preview WhatsApp bisa tampil (WhatsApp tidak mendukung WebP).
+  // Kalau belum ada, pakai URL optimizer yang mengembalikan JPEG.
+  const ogFile = path.join(process.cwd(), 'public', 'images', 'og', `${post.slug}.jpg`);
+  const ogImage = fs.existsSync(ogFile)
+    ? `/images/og/${post.slug}.jpg`
+    : post.cover_url
+      ? `/_next/image?url=${encodeURIComponent(post.cover_url)}&w=1200&q=75`
+      : '/images/ZekkTech.png';
   const description = post.excerpt || post.title;
   const { getBaseUrl } = await import('@/lib/utils');
   const url = `${getBaseUrl()}/post/${post.slug}`;
@@ -74,7 +83,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         {
           url: ogImage,
           width: 1200,
-          height: 630,
+          height: 675,
           alt: post.title,
         },
       ],
