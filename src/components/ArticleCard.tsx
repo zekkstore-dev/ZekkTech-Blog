@@ -74,6 +74,7 @@ export default function ArticleCard({
               src={coverUrl}
               alt={title}
               fill
+              unoptimized
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
